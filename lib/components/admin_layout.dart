@@ -20,6 +20,19 @@ class _AdminLayoutState extends State<AdminLayout> {
   String quickMessage = '';
   String headerSearchQuery = '';
 
+  void _toggleSidebar() {
+    final body = html.document.body;
+    if (body != null) {
+      if (body.classes.contains('sidebar-collapse')) {
+        body.classes.remove('sidebar-collapse');
+        body.classes.add('sidebar-open');
+      } else {
+        body.classes.add('sidebar-collapse');
+        body.classes.remove('sidebar-open');
+      }
+    }
+  }
+
   void _handleLogout() {
     AuthService().logout();
     Router.of(context).push('/login');
@@ -102,12 +115,18 @@ class _AdminLayoutState extends State<AdminLayout> {
       div(classes: 'container-fluid', [
         // Left Navbar Links
         ul(classes: 'navbar-nav', [
-          li(classes: 'nav-item', [
-            a(
-              classes: 'nav-link',
-              attributes: {'data-lte-toggle': 'sidebar', 'role': 'button'},
-              href: '#',
-              [i(classes: 'bi bi-list fs-4', [])],
+          li(classes: 'nav-item me-2', [
+            button(
+              type: ButtonType.button,
+              classes: 'nav-link btn btn-link text-body border-0 p-1 me-1',
+              attributes: {'title': 'Toggle Sidebar Expanded / Collapsed'},
+              events: {
+                'click': (e) {
+                  e.preventDefault();
+                  _toggleSidebar();
+                }
+              },
+              [i(classes: 'bi bi-list fs-4 text-dark', [])],
             ),
           ]),
           li(classes: 'nav-item d-none d-md-block', [
