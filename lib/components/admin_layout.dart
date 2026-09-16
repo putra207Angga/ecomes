@@ -265,7 +265,12 @@ class _AdminLayoutState extends State<AdminLayout> {
                 if (unreadChats > 0)
                   span(
                     classes: 'position-absolute badge rounded-circle bg-danger border border-light p-0 d-flex align-items-center justify-content-center',
-                    styles: Styles(top: 2.px, right: 0.px, width: 18.px, height: 18.px, fontSize: 10.px),
+                    styles: Styles(
+                      position: Position.absolute(top: 2.px, right: 0.px),
+                      width: 18.px,
+                      height: 18.px,
+                      fontSize: 10.px,
+                    ),
                     [Component.text(unreadChats.toString())],
                   ),
               ],
@@ -278,7 +283,12 @@ class _AdminLayoutState extends State<AdminLayout> {
               i(classes: 'bi bi-bell fs-5', []),
               span(
                 classes: 'position-absolute badge rounded-circle bg-warning text-dark border border-light p-0 d-flex align-items-center justify-content-center',
-                styles: Styles(top: 2.px, right: 0.px, width: 18.px, height: 18.px, fontSize: 10.px),
+                styles: Styles(
+                  position: Position.absolute(top: 2.px, right: 0.px),
+                  width: 18.px,
+                  height: 18.px,
+                  fontSize: 10.px,
+                ),
                 [Component.text('5')],
               ),
             ]),
