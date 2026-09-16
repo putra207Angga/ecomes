@@ -173,14 +173,21 @@
         position: relative !important;
       }
 
-      /* Independent Sidebar Scroll with Hidden Scrollbar UI */
-      .app-sidebar {
-        height: 100vh !important;
-        position: fixed !important;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        z-index: 1038;
+      /* Independent Sidebar Scroll with Hidden Scrollbar UI & Proper Content Margin */
+      @media (min-width: 992px) {
+        body.sidebar-expand-lg .app-sidebar {
+          width: 250px !important;
+          position: fixed !important;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          z-index: 1038;
+        }
+        body.sidebar-expand-lg .app-header,
+        body.sidebar-expand-lg .app-main,
+        body.sidebar-expand-lg .app-footer {
+          margin-left: 250px !important;
+        }
       }
 
       .sidebar-wrapper {
