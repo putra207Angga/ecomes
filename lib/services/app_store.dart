@@ -1,0 +1,708 @@
+// ignore_for_file: deprecated_member_use, avoid_web_libraries_in_flutter
+import 'dart:convert';
+import 'dart:html' as html;
+import '../models/app_models.dart';
+
+class AppStore {
+  static final AppStore _instance = AppStore._internal();
+  factory AppStore() => _instance;
+  AppStore._internal() {
+    _loadFromStorage();
+  }
+
+  List<ProductItem> products = [];
+  List<OrderItem> orders = [];
+  List<CustomerItem> customers = [];
+  List<CategoryItem> categories = [];
+  List<BrandItem> brands = [];
+  List<PromoItem> promos = [];
+  List<ReviewItem> reviews = [];
+  List<ChatMessageItem> chatMessages = [];
+  StoreSettings settings = StoreSettings();
+  late LandingConfig landingConfig;
+
+  void _loadFromStorage() {
+    try {
+      final pStr = html.window.localStorage['ecomes_products'];
+      if (pStr != null && pStr.isNotEmpty) {
+        final List list = jsonDecode(pStr);
+        products = list.map((e) => ProductItem.fromJson(e)).toList();
+      } else {
+        _seedProducts();
+      }
+
+      final oStr = html.window.localStorage['ecomes_orders'];
+      if (oStr != null && oStr.isNotEmpty) {
+        final List list = jsonDecode(oStr);
+        orders = list.map((e) => OrderItem.fromJson(e)).toList();
+      } else {
+        _seedOrders();
+      }
+
+      final cStr = html.window.localStorage['ecomes_customers'];
+      if (cStr != null && cStr.isNotEmpty) {
+        final List list = jsonDecode(cStr);
+        customers = list.map((e) => CustomerItem.fromJson(e)).toList();
+      } else {
+        _seedCustomers();
+      }
+
+      final catStr = html.window.localStorage['ecomes_categories'];
+      if (catStr != null && catStr.isNotEmpty) {
+        final List list = jsonDecode(catStr);
+        categories = list.map((e) => CategoryItem.fromJson(e)).toList();
+      } else {
+        _seedCategories();
+      }
+
+      final bStr = html.window.localStorage['ecomes_brands'];
+      if (bStr != null && bStr.isNotEmpty) {
+        final List list = jsonDecode(bStr);
+        brands = list.map((e) => BrandItem.fromJson(e)).toList();
+      } else {
+        _seedBrands();
+      }
+
+      final prStr = html.window.localStorage['ecomes_promos'];
+      if (prStr != null && prStr.isNotEmpty) {
+        final List list = jsonDecode(prStr);
+        promos = list.map((e) => PromoItem.fromJson(e)).toList();
+      } else {
+        _seedPromos();
+      }
+
+      final rStr = html.window.localStorage['ecomes_reviews'];
+      if (rStr != null && rStr.isNotEmpty) {
+        final List list = jsonDecode(rStr);
+        reviews = list.map((e) => ReviewItem.fromJson(e)).toList();
+      } else {
+        _seedReviews();
+      }
+
+      final chStr = html.window.localStorage['ecomes_chats'];
+      if (chStr != null && chStr.isNotEmpty) {
+        final List list = jsonDecode(chStr);
+        chatMessages = list.map((e) => ChatMessageItem.fromJson(e)).toList();
+      } else {
+        _seedChats();
+      }
+
+      final sStr = html.window.localStorage['ecomes_settings'];
+      if (sStr != null && sStr.isNotEmpty) {
+        settings = StoreSettings.fromJson(jsonDecode(sStr));
+      }
+
+      final lStr = html.window.localStorage['ecomes_landing_config'];
+      if (lStr != null && lStr.isNotEmpty) {
+        landingConfig = LandingConfig.fromJson(jsonDecode(lStr));
+      } else {
+        _seedLandingConfig();
+      }
+    } catch (e) {
+      _seedAll();
+    }
+  }
+
+  void saveAll() {
+    html.window.localStorage['ecomes_products'] = jsonEncode(products.map((e) => e.toJson()).toList());
+    html.window.localStorage['ecomes_orders'] = jsonEncode(orders.map((e) => e.toJson()).toList());
+    html.window.localStorage['ecomes_customers'] = jsonEncode(customers.map((e) => e.toJson()).toList());
+    html.window.localStorage['ecomes_categories'] = jsonEncode(categories.map((e) => e.toJson()).toList());
+    html.window.localStorage['ecomes_brands'] = jsonEncode(brands.map((e) => e.toJson()).toList());
+    html.window.localStorage['ecomes_promos'] = jsonEncode(promos.map((e) => e.toJson()).toList());
+    html.window.localStorage['ecomes_reviews'] = jsonEncode(reviews.map((e) => e.toJson()).toList());
+    html.window.localStorage['ecomes_chats'] = jsonEncode(chatMessages.map((e) => e.toJson()).toList());
+    html.window.localStorage['ecomes_settings'] = jsonEncode(settings.toJson());
+    html.window.localStorage['ecomes_landing_config'] = jsonEncode(landingConfig.toJson());
+  }
+
+  void resetToDefault() {
+    _seedAll();
+    saveAll();
+  }
+
+  void _seedAll() {
+    _seedProducts();
+    _seedOrders();
+    _seedCustomers();
+    _seedCategories();
+    _seedBrands();
+    _seedPromos();
+    _seedReviews();
+    _seedChats();
+    settings = StoreSettings();
+    _seedLandingConfig();
+  }
+
+  void _seedLandingConfig() {
+    landingConfig = LandingConfig(
+      storeName: "Abel'z handmade",
+      storeTagline: 'Kerajinan Rajut Estetik & Handcrafted with Love',
+      heroHeadlinePrefix: 'Kehangatan Sentuhan Tangan: ',
+      heroHeadlineHighlight: "Tas & Rajutan Custom Abel'z Handmade",
+      heroDescription: "Setiap karya Abel'z handmade dirajut penuh cinta dan ketelitian oleh Yayuk Wahyuni (@yayukwahyuni26). Temukan tas serut rajut, cup holder eco-friendly, gantungan kunci Miffy doll, dan kado unik buatan tangan.",
+      heroBadge: '100% Handcrafted • Benang Poliindo & Milk Cotton',
+      heroImage: 'images/abelz_hero_cover.png',
+      whatsappNumber: '6281234567890',
+      instagramHandle: '@yayukwahyuni26',
+      landingProducts: [
+        {
+          'id': 'RJ-001',
+          'name': 'Tas Rajut Serut Drawstring Purse 25x25 (Custom Color)',
+          'category': 'Tas Rajut',
+          'price': 165000,
+          'rating': 5,
+          'sold': 245,
+          'image': 'images/abelz_tas_rajut.png',
+          'description': "Tas serut rajut handmade Abel'z handmade berbahan Benang Poliindo berkualitas tinggi. Ukuran 25x25 cm, kuat, awet, dan estetik. PO bebas request warna.",
+          'badge': 'Terlaris 🏆',
+        },
+        {
+          'id': 'RJ-002',
+          'name': 'Cup Holder Rajut Eco-Friendly Drink Sleeve',
+          'category': 'Cup Holder & Sleeve',
+          'price': 35000,
+          'rating': 5,
+          'sold': 310,
+          'image': 'images/abelz_cup_holder.png',
+          'description': 'Pelindung cangkir & gelas kopi rajut ramah lingkungan. Rajutannya lucu, bumi pun happy! Minum tetap cozy tanpa kantong plastik sekali pakai.',
+          'badge': 'Eco Choice 🌱',
+        },
+        {
+          'id': 'RJ-003',
+          'name': 'Gantungan Kunci Boneka Rajut Miffy Doll Charm',
+          'category': 'Gantungan Kunci',
+          'price': 45000,
+          'rating': 5,
+          'sold': 420,
+          'image': 'images/abelz_ganci_miffy.png',
+          'description': 'Gantungan tas & kunci berbentuk boneka kelinci Miffy rajut. Menggunakan Benang Milk Cotton super lembut dan tidak bersabut.',
+          'badge': 'Aesthetic ✨',
+        },
+        {
+          'id': 'RJ-004',
+          'name': 'Ganci Penyu Cute Turtle Crochet Keychain',
+          'category': 'Gantungan Kunci',
+          'price': 28000,
+          'rating': 5,
+          'sold': 180,
+          'image': 'images/abelz_ganci_miffy.png',
+          'description': 'Gantungan kunci kura-kura/penyu rajut imut berbahan Milk Cotton Yarn lembut. Sangat cocok untuk souvenir & kado unik.',
+          'badge': 'Souvenir ⭐',
+        },
+        {
+          'id': 'RJ-005',
+          'name': 'Tote Bag Rajut Handbag Soft Pastel 23x23',
+          'category': 'Tas Rajut',
+          'price': 150000,
+          'rating': 5,
+          'sold': 155,
+          'image': 'images/abelz_tas_rajut.png',
+          'description': 'Tote bag rajut estetik ukuran 23x23 cm dari Benang Poliindo. Tangan dua tali nyaman di pundak, siap menemani aktivitas harian.',
+          'badge': 'New Arrival 🔥',
+        },
+        {
+          'id': 'RJ-006',
+          'name': "Pouch Rajut Multifungsi Abel'z Handmade",
+          'category': 'Tas Rajut',
+          'price': 65000,
+          'rating': 5,
+          'sold': 280,
+          'image': 'images/abelz_hero_cover.png',
+          'description': 'Pouch rajut serbaguna untuk kosmetik atau perlengkapan kecil. Dibuat rapi dengan sistem Pre-Order custom pilihan warna.',
+          'badge': 'Custom PO 🎨',
+        },
+      ],
+      testimonials: [
+        {
+          'name': 'Rina Agustina',
+          'role': 'Pembeli Tas Rajut PO',
+          'comment': "Tas rajut serut dari Abel'z handmade rapi banget rajutannya! Warnanya sesuai request custom saya. Benang Poliindo-nya kokoh dan tahan lama. Recommended banget kak!",
+          'rating': 5,
+          'avatar': 'RA',
+        },
+        {
+          'name': 'Siti Nurhaliza',
+          'role': 'Pelanggan Cup Holder',
+          'comment': 'Cup holder rajutnya lucu sekali! Sering saya pakai pas beli kopi kekinian. Bebas kantong plastik dan minuman tetap hangat/dingin di pegangan. Thx Mbak Yayuk!',
+          'rating': 5,
+          'avatar': 'SN',
+        },
+        {
+          'name': 'Maya Indah',
+          'role': 'Kolektor Ganci Miffy',
+          'comment': 'Gantungan kunci Miffy doll-nya super duper lembut karena benang Milk Cotton. Langsung saya pasang di ransel. Bakal order varian penyu juga nanti!',
+          'rating': 5,
+          'avatar': 'MI',
+        },
+      ],
+    );
+  }
+
+  void updateLandingConfig(LandingConfig config) {
+    landingConfig = config;
+    saveAll();
+  }
+
+  void saveLandingProduct(Map<String, dynamic> item) {
+    final idx = landingConfig.landingProducts.indexWhere((p) => p['id'] == item['id']);
+    if (idx >= 0) {
+      landingConfig.landingProducts[idx] = item;
+    } else {
+      landingConfig.landingProducts.insert(0, item);
+    }
+    saveAll();
+  }
+
+  void deleteLandingProduct(String id) {
+    landingConfig.landingProducts.removeWhere((p) => p['id'] == id);
+    saveAll();
+  }
+
+  void saveTestimonial(Map<String, dynamic> item) {
+    final idx = landingConfig.testimonials.indexWhere((t) => t['name'] == item['name']);
+    if (idx >= 0) {
+      landingConfig.testimonials[idx] = item;
+    } else {
+      landingConfig.testimonials.insert(0, item);
+    }
+    saveAll();
+  }
+
+  void deleteTestimonial(String name) {
+    landingConfig.testimonials.removeWhere((t) => t['name'] == name);
+    saveAll();
+  }
+
+  void _seedProducts() {
+    products = [
+      ProductItem(
+        id: 'RJ-001',
+        name: 'Tas Rajut Serut Drawstring Purse 25x25 (Custom Color)',
+        sku: 'RJT-TAS-SRT-25',
+        category: 'Tas Rajut',
+        price: 165000,
+        stock: 25,
+        image: 'images/abelz_tas_rajut.png',
+        status: 'Aktif',
+        description: "Tas serut rajut handmade Abel'z handmade berbahan Benang Poliindo berkualitas tinggi. Ukuran 25x25 cm, kuat, awet, dan estetik. PO bebas request warna.",
+      ),
+      ProductItem(
+        id: 'RJ-002',
+        name: 'Cup Holder Rajut Eco-Friendly Drink Sleeve',
+        sku: 'RJT-CUP-ECO-02',
+        category: 'Cup Holder & Sleeve',
+        price: 35000,
+        stock: 40,
+        image: 'images/abelz_cup_holder.png',
+        status: 'Aktif',
+        description: 'Pelindung cangkir & gelas kopi rajut ramah lingkungan. Rajutannya lucu, bumi pun happy! Minum tetap cozy tanpa kantong plastik sekali pakai.',
+      ),
+      ProductItem(
+        id: 'RJ-003',
+        name: 'Gantungan Kunci Boneka Rajut Miffy Doll Charm',
+        sku: 'RJT-KEY-MIFFY',
+        category: 'Gantungan Kunci',
+        price: 45000,
+        stock: 50,
+        image: 'images/abelz_ganci_miffy.png',
+        status: 'Aktif',
+        description: 'Gantungan tas & kunci berbentuk boneka kelinci Miffy rajut. Menggunakan Benang Milk Cotton super lembut dan tidak bersabut.',
+      ),
+      ProductItem(
+        id: 'RJ-004',
+        name: 'Ganci Penyu Cute Turtle Crochet Keychain',
+        sku: 'RJT-KEY-TURTLE',
+        category: 'Gantungan Kunci',
+        price: 28000,
+        stock: 35,
+        image: 'images/abelz_ganci_miffy.png',
+        status: 'Aktif',
+        description: 'Gantungan kunci kura-kura/penyu rajut imut berbahan Milk Cotton Yarn lembut. Sangat cocok untuk souvenir & kado unik.',
+      ),
+      ProductItem(
+        id: 'RJ-005',
+        name: 'Tote Bag Rajut Handbag Soft Pastel 23x23',
+        sku: 'RJT-TOTE-PSTL-23',
+        category: 'Tas Rajut',
+        price: 150000,
+        stock: 15,
+        image: 'images/abelz_tas_rajut.png',
+        status: 'Aktif',
+        description: 'Tote bag rajut estetik ukuran 23x23 cm dari Benang Poliindo. Tangan dua tali nyaman di pundak, siap menemani aktivitas harian.',
+      ),
+      ProductItem(
+        id: 'RJ-006',
+        name: "Pouch Rajut Multifungsi Abel'z Handmade",
+        sku: 'RJT-POUCH-MULT',
+        category: 'Tas Rajut',
+        price: 65000,
+        stock: 20,
+        image: 'images/abelz_hero_cover.png',
+        status: 'Aktif',
+        description: 'Pouch rajut serbaguna untuk kosmetik atau perlengkapan kecil. Dibuat rapi dengan sistem Pre-Order custom pilihan warna.',
+      ),
+    ];
+  }
+
+  void _seedOrders() {
+    orders = [
+      OrderItem(
+        id: 'ORD-2026-001',
+        orderNo: 'INV/20260915/RJT/001',
+        customerName: 'Budi Santoso',
+        customerPhone: '081234567890',
+        date: '15 Sep 2026, 14:30',
+        total: 330000,
+        courier: 'JNE Reguler',
+        status: 'Diproses',
+        paymentMethod: 'Midtrans QRIS',
+        trackingNo: '',
+        items: [
+          OrderProductItem(productName: 'Boneka Amigurumi Teddy Bear Premium', qty: 1, price: 145000),
+          OrderProductItem(productName: 'Set Syal & Beanie Hat Pastely Warm Knitted', qty: 1, price: 185000),
+        ],
+      ),
+      OrderItem(
+        id: 'ORD-2026-002',
+        orderNo: 'INV/20260915/RJT/002',
+        customerName: 'Siti Rahma',
+        customerPhone: '089876543210',
+        date: '15 Sep 2026, 11:15',
+        total: 350000,
+        courier: 'Sicepat BEST',
+        status: 'Dikirim',
+        paymentMethod: 'BCA Virtual Account',
+        trackingNo: 'SCP-8899001122',
+        items: [
+          OrderProductItem(productName: 'Boneka Amigurumi Custom Karakter Wisuda', qty: 2, price: 175000),
+        ],
+      ),
+      OrderItem(
+        id: 'ORD-2026-003',
+        orderNo: 'INV/20260914/RJT/003',
+        customerName: 'Rian Hidayat',
+        customerPhone: '085711223344',
+        date: '14 Sep 2026, 09:45',
+        total: 165000,
+        courier: 'GoSend Instant',
+        status: 'Selesai',
+        paymentMethod: 'GoPay',
+        trackingNo: 'GOSEND-998811',
+        items: [
+          OrderProductItem(productName: 'Tas Selempang Handbag Rajut Vintage Daisy', qty: 1, price: 165000),
+        ],
+      ),
+      OrderItem(
+        id: 'ORD-2026-004',
+        orderNo: 'INV/20260914/RJT/004',
+        customerName: 'Dewi Lestari',
+        customerPhone: '081399887766',
+        date: '14 Sep 2026, 08:20',
+        total: 89000,
+        courier: 'JNE Reguler',
+        status: 'Pending',
+        paymentMethod: 'Mandiri Transfer',
+        trackingNo: '',
+        items: [
+          OrderProductItem(productName: 'Sepatu Bayi Rajut Cute Rabbit Bunny Shoes', qty: 1, price: 89000),
+        ],
+      ),
+    ];
+  }
+
+  void _seedCustomers() {
+    customers = [
+      CustomerItem(
+        id: 'CUST-001',
+        name: 'Budi Santoso',
+        email: 'budi.santoso@gmail.com',
+        phone: '081234567890',
+        level: 'VIP Member',
+        totalOrders: 18,
+        totalSpent: 14500000,
+        avatar: 'BS',
+        address: 'Jl. Sudirman No. 12, Jakarta Selatan',
+      ),
+      CustomerItem(
+        id: 'CUST-002',
+        name: 'Siti Rahma',
+        email: 'siti.rahma@yahoo.com',
+        phone: '089876543210',
+        level: 'VIP Member',
+        totalOrders: 12,
+        totalSpent: 9800000,
+        avatar: 'SR',
+        address: 'Jl. Dago No. 88, Bandung',
+      ),
+      CustomerItem(
+        id: 'CUST-003',
+        name: 'Rian Hidayat',
+        email: 'rian.hidayat@gmail.com',
+        phone: '085711223344',
+        level: 'Regular',
+        totalOrders: 4,
+        totalSpent: 2750000,
+        avatar: 'RH',
+        address: 'Jl. Pemuda No. 4, Surabaya',
+      ),
+      CustomerItem(
+        id: 'CUST-004',
+        name: 'Dewi Lestari',
+        email: 'dewi.lestari@outlook.com',
+        phone: '081399887766',
+        level: 'Regular',
+        totalOrders: 2,
+        totalSpent: 1490000,
+        avatar: 'DL',
+        address: 'Jl. Malioboro No. 10, Yogyakarta',
+      ),
+    ];
+  }
+
+  void _seedCategories() {
+    categories = [
+      CategoryItem(id: 'CAT-01', name: 'Tas Rajut', icon: 'bi-bag-heart', productCount: 145),
+      CategoryItem(id: 'CAT-02', name: 'Cup Holder & Sleeve', icon: 'bi-cup-hot-fill', productCount: 98),
+      CategoryItem(id: 'CAT-03', name: 'Gantungan Kunci', icon: 'bi-key-fill', productCount: 210),
+      CategoryItem(id: 'CAT-04', name: 'Pouch & Organiser', icon: 'bi-box-seam-fill', productCount: 85),
+      CategoryItem(id: 'CAT-05', name: 'Souvenir Custom', icon: 'bi-stars', productCount: 112),
+    ];
+  }
+
+  void _seedBrands() {
+    brands = [
+      BrandItem(id: 'BRD-01', name: "Abel'z Handmade Studio", logo: 'bi-heart-fill', country: 'Indonesia', productCount: 250),
+      BrandItem(id: 'BRD-02', name: 'Poliindo Yarn Craft', logo: 'bi-flower1', country: 'Indonesia', productCount: 180),
+      BrandItem(id: 'BRD-03', name: 'Milk Cotton Premium', logo: 'bi-star-fill', country: 'Indonesia', productCount: 195),
+      BrandItem(id: 'BRD-04', name: 'Yayuk Craft Collection', logo: 'bi-gift', country: 'Indonesia', productCount: 120),
+    ];
+  }
+
+  void _seedPromos() {
+    promos = [
+      PromoItem(
+        id: 'PRM-01',
+        code: 'ABELZ2026',
+        discountText: 'Diskon 20% max Rp 50.000',
+        minPurchase: 100000,
+        maxDiscount: 50000,
+        quota: 500,
+        used: 342,
+        expiredDate: '30 Sep 2026',
+        isActive: true,
+      ),
+      PromoItem(
+        id: 'PRM-02',
+        code: 'GRATISONGKIR',
+        discountText: 'Potongan Ongkir Rp 20.000',
+        minPurchase: 150000,
+        maxDiscount: 20000,
+        quota: 1000,
+        used: 890,
+        expiredDate: '15 Okt 2026',
+        isActive: true,
+      ),
+      PromoItem(
+        id: 'PRM-03',
+        code: 'FLASHSALE50',
+        discountText: 'Cashback 50% max Rp 50.000',
+        minPurchase: 100000,
+        maxDiscount: 50000,
+        quota: 200,
+        used: 200,
+        expiredDate: '10 Sep 2026',
+        isActive: false,
+      ),
+    ];
+  }
+
+  void _seedReviews() {
+    reviews = [
+      ReviewItem(
+        id: 'REV-01',
+        customerName: 'Rina Agustina',
+        productTitle: 'Tas Rajut Serut Drawstring Purse 25x25 (Custom Color)',
+        rating: 5,
+        comment: "Tas rajut serutnya bagus banget! Warnanya sesuai request custom saya. Benang Poliindo-nya kokoh dan tahan lama.",
+        date: '15 Sep 2026',
+        replyText: 'Terima kasih Kak Rina! Semoga rajutan Abel\'z handmade selalu menemani hari-harinya 😊',
+        status: 'Dibalas',
+      ),
+      ReviewItem(
+        id: 'REV-02',
+        customerName: 'Siti Nurhaliza',
+        productTitle: 'Cup Holder Rajut Eco-Friendly Drink Sleeve',
+        rating: 5,
+        comment: 'Cup holder rajutnya lucu sekali! Sering saya pakai pas beli kopi kekinian. Bebas kantong plastik dan minuman tetap cozy.',
+        date: '15 Sep 2026',
+        replyText: '',
+        status: 'Perlu Balasan',
+      ),
+      ReviewItem(
+        id: 'REV-03',
+        customerName: 'Maya Indah',
+        productTitle: 'Gantungan Kunci Boneka Rajut Miffy Doll Charm',
+        rating: 5,
+        comment: 'Gantungan kunci Miffy doll-nya super duper lembut karena benang Milk Cotton. Langsung saya pasang di ransel!',
+        date: '14 Sep 2026',
+        replyText: '',
+        status: 'Perlu Balasan',
+      ),
+    ];
+  }
+
+  void _seedChats() {
+    chatMessages = [
+      ChatMessageItem(
+        id: 'CH-1',
+        contactId: 'CUST-001',
+        sender: 'Budi Santoso',
+        text: "Halo kak, apakah tas rajut serut Abel'z handmade ukuran 25x25 ready stok?",
+        time: '14:20',
+        isAdmin: false,
+      ),
+      ChatMessageItem(
+        id: 'CH-2',
+        contactId: 'CUST-001',
+        sender: "Admin Abel'z Handmade",
+        text: 'Halo Kak Budi! Ready stok dan bisa PO request warna sesuai keinginan ya kak 😊',
+        time: '14:22',
+        isAdmin: true,
+      ),
+      ChatMessageItem(
+        id: 'CH-3',
+        contactId: 'CUST-002',
+        sender: 'Siti Rahma',
+        text: 'Kak, resi pesanan INV/20260915/RJT/002 cup holder rajut sudah jalan belum ya?',
+        time: '11:20',
+        isAdmin: false,
+      ),
+    ];
+  }
+
+  // --- CRUD Methods ---
+  void addProduct(ProductItem p) {
+    products.insert(0, p);
+    saveAll();
+  }
+
+  void updateProduct(ProductItem p) {
+    final idx = products.indexWhere((element) => element.id == p.id);
+    if (idx != -1) {
+      products[idx] = p;
+      saveAll();
+    }
+  }
+
+  void deleteProduct(String id) {
+    products.removeWhere((element) => element.id == id);
+    saveAll();
+  }
+
+  void bulkDeleteProducts(List<String> ids) {
+    products.removeWhere((element) => ids.contains(element.id));
+    saveAll();
+  }
+
+  void addOrder(OrderItem order) {
+    orders.insert(0, order);
+    saveAll();
+  }
+
+  void updateOrderStatus(String orderId, String newStatus, {String trackingNo = '', String cancelReason = ''}) {
+    final idx = orders.indexWhere((element) => element.id == orderId);
+    if (idx != -1) {
+      orders[idx].status = newStatus;
+      if (trackingNo.isNotEmpty) orders[idx].trackingNo = trackingNo;
+      if (cancelReason.isNotEmpty) orders[idx].cancelReason = cancelReason;
+      saveAll();
+    }
+  }
+
+  void addCustomer(CustomerItem c) {
+    customers.insert(0, c);
+    saveAll();
+  }
+
+  void toggleCustomerBlock(String id) {
+    final idx = customers.indexWhere((element) => element.id == id);
+    if (idx != -1) {
+      customers[idx].isBlocked = !customers[idx].isBlocked;
+      saveAll();
+    }
+  }
+
+  void addCategory(CategoryItem cat) {
+    categories.insert(0, cat);
+    saveAll();
+  }
+
+  void updateCategory(CategoryItem cat) {
+    final idx = categories.indexWhere((element) => element.id == cat.id);
+    if (idx != -1) {
+      categories[idx] = cat;
+      saveAll();
+    }
+  }
+
+  void deleteCategory(String id) {
+    categories.removeWhere((element) => element.id == id);
+    saveAll();
+  }
+
+  void addBrand(BrandItem b) {
+    brands.insert(0, b);
+    saveAll();
+  }
+
+  void updateBrand(BrandItem b) {
+    final idx = brands.indexWhere((element) => element.id == b.id);
+    if (idx != -1) {
+      brands[idx] = b;
+      saveAll();
+    }
+  }
+
+  void deleteBrand(String id) {
+    brands.removeWhere((element) => element.id == id);
+    saveAll();
+  }
+
+  void addPromo(PromoItem p) {
+    promos.insert(0, p);
+    saveAll();
+  }
+
+  void deletePromo(String id) {
+    promos.removeWhere((element) => element.id == id);
+    saveAll();
+  }
+
+  void togglePromoStatus(String id) {
+    final idx = promos.indexWhere((element) => element.id == id);
+    if (idx != -1) {
+      promos[idx].isActive = !promos[idx].isActive;
+      saveAll();
+    }
+  }
+
+  void replyReview(String reviewId, String reply) {
+    final idx = reviews.indexWhere((element) => element.id == reviewId);
+    if (idx != -1) {
+      reviews[idx].replyText = reply;
+      reviews[idx].status = 'Dibalas';
+      saveAll();
+    }
+  }
+
+  void deleteReview(String id) {
+    reviews.removeWhere((element) => element.id == id);
+    saveAll();
+  }
+
+  void addChatMessage(ChatMessageItem msg) {
+    chatMessages.add(msg);
+    saveAll();
+  }
+}
