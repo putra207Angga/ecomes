@@ -112,8 +112,8 @@ class _AdminLayoutState extends State<AdminLayout> {
           ]),
           li(classes: 'nav-item d-none d-md-block', [
             Link(
-              to: '/',
-              child: a(classes: 'nav-link fw-semibold text-primary', href: '/', [
+              to: '/admin',
+              child: a(classes: 'nav-link fw-semibold text-primary', href: '/admin', [
                 i(classes: 'bi bi-bag-check me-1', []),
                 Component.text('E-Commerce Admin Panel'),
               ]),
@@ -364,8 +364,8 @@ class _AdminLayoutState extends State<AdminLayout> {
         // Brand Header
         div(classes: 'sidebar-brand border-bottom border-secondary', [
           Link(
-            to: '/',
-            child: a(classes: 'brand-link d-flex align-items-center text-decoration-none px-3 py-2', href: '/', [
+            to: '/admin',
+            child: a(classes: 'brand-link d-flex align-items-center text-decoration-none px-3 py-2', href: '/admin', [
               i(classes: 'bi bi-shop brand-image fs-3 me-2 text-warning', []),
               span(classes: 'brand-text fw-bold text-white fs-5', [Component.text('E-COMES ')]),
               span(classes: 'text-warning fs-6 ms-1', [Component.text('v4.9')]),
@@ -383,10 +383,11 @@ class _AdminLayoutState extends State<AdminLayout> {
                 li(classes: 'nav-header text-uppercase text-secondary fw-bold fs-7 px-3 mt-2 mb-1', [
                   Component.text('UTAMA & OPERASIONAL'),
                 ]),
-                _buildNavItem('/', 'Dashboard V1', 'bi-speedometer2', currentPath == '/'),
+                _buildNavItem('/admin', 'Dashboard V1', 'bi-speedometer2', currentPath == '/admin' || currentPath == '/dashboard'),
+                _buildNavItem('/', 'Lihat Toko (Storefront)', 'bi-shop', currentPath == '/', badgeText: 'Live', badgeClass: 'bg-success'),
                 _buildNavItem('/landing-cms', 'Manajemen Landing Page', 'bi-window-stack', currentPath == '/landing-cms' || currentPath == '/admin/landing', badgeText: 'CMS', badgeClass: 'bg-danger'),
-                _buildNavItem('/products', 'Katalog & Stok', 'bi-box-seam', currentPath == '/products', badgeText: 'Hot'),
-                _buildNavItem('/orders', 'Pesanan Toko', 'bi-cart-check', currentPath == '/orders', badgeText: 'Dinamis', badgeClass: 'bg-primary'),
+                _buildNavItem('/products', 'Katalog & Stok', 'bi-box-seam', currentPath == '/products' || currentPath == '/admin/products', badgeText: 'Hot'),
+                _buildNavItem('/orders', 'Pesanan Toko', 'bi-cart-check', currentPath == '/orders' || currentPath == '/admin/orders', badgeText: 'Dinamis', badgeClass: 'bg-primary'),
 
                 li(classes: 'nav-header text-uppercase text-secondary fw-bold fs-7 px-3 mt-3 mb-1', [
                   Component.text('PELANGGAN & PEMASARAN'),

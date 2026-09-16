@@ -172,6 +172,29 @@
       body {
         position: relative !important;
       }
+
+      /* Independent Sidebar Scroll with Hidden Scrollbar UI */
+      .app-sidebar {
+        height: 100vh !important;
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 1038;
+      }
+
+      .sidebar-wrapper {
+        height: calc(100vh - 57px) !important;
+        overflow-y: auto !important;
+        -ms-overflow-style: none !important; /* IE and Edge */
+        scrollbar-width: none !important; /* Firefox */
+      }
+
+      .sidebar-wrapper::-webkit-scrollbar {
+        display: none !important; /* Chrome, Safari, Opera */
+        width: 0 !important;
+        height: 0 !important;
+      }
     </style>
 
     <!-- Flutter Manifest -->
