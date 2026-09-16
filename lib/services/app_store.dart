@@ -282,6 +282,7 @@ class AppStore {
         sku: 'RJT-TAS-SRT-25',
         category: 'Tas Rajut',
         price: 165000,
+        hpp: 85000,
         stock: 25,
         image: 'images/abelz_tas_rajut.png',
         status: 'Aktif',
@@ -293,6 +294,7 @@ class AppStore {
         sku: 'RJT-CUP-ECO-02',
         category: 'Cup Holder & Sleeve',
         price: 35000,
+        hpp: 18000,
         stock: 40,
         image: 'images/abelz_cup_holder.png',
         status: 'Aktif',
@@ -304,6 +306,7 @@ class AppStore {
         sku: 'RJT-KEY-MIFFY',
         category: 'Gantungan Kunci',
         price: 45000,
+        hpp: 22000,
         stock: 50,
         image: 'images/abelz_ganci_miffy.png',
         status: 'Aktif',
@@ -315,6 +318,7 @@ class AppStore {
         sku: 'RJT-KEY-TURTLE',
         category: 'Gantungan Kunci',
         price: 28000,
+        hpp: 14000,
         stock: 35,
         image: 'images/abelz_ganci_miffy.png',
         status: 'Aktif',
@@ -326,6 +330,7 @@ class AppStore {
         sku: 'RJT-TOTE-PSTL-23',
         category: 'Tas Rajut',
         price: 150000,
+        hpp: 78000,
         stock: 15,
         image: 'images/abelz_tas_rajut.png',
         status: 'Aktif',
@@ -337,6 +342,7 @@ class AppStore {
         sku: 'RJT-POUCH-MULT',
         category: 'Tas Rajut',
         price: 65000,
+        hpp: 32000,
         stock: 20,
         image: 'images/abelz_hero_cover.png',
         status: 'Aktif',
@@ -696,9 +702,37 @@ class AppStore {
     }
   }
 
+  void addReview(ReviewItem r) {
+    reviews.insert(0, r);
+    saveAll();
+  }
+
+  void updateReviewApproval(String id, String approvalStatus) {
+    final idx = reviews.indexWhere((element) => element.id == id);
+    if (idx != -1) {
+      reviews[idx].approvalStatus = approvalStatus;
+      saveAll();
+    }
+  }
+
   void deleteReview(String id) {
     reviews.removeWhere((element) => element.id == id);
     saveAll();
+  }
+
+  OrderItem? findOrderByNumberOrPhone(String query) {
+    final cleanQuery = query.trim().toLowerCase();
+    if (cleanQuery.isEmpty) return null;
+    final cleanNumOnly = cleanQuery.replaceAll(RegExp(r'[^0-9]'), '');
+    
+    for (var o in orders) {
+      if (o.orderNo.toLowerCase().contains(cleanQuery) ||
+          o.id.toLowerCase().contains(cleanQuery) ||
+          (cleanNumOnly.isNotEmpty && o.customerPhone.replaceAll(RegExp(r'[^0-9]'), '').contains(cleanNumOnly))) {
+        return o;
+      }
+    }
+    return null;
   }
 
   void addChatMessage(ChatMessageItem msg) {

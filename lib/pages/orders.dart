@@ -368,7 +368,15 @@ class _OrdersPageState extends State<OrdersPage> {
                     tbody([
                       for (var item in activeOrderForDetail!.items)
                         tr([
-                          td(classes: 'fw-semibold text-dark', [Component.text(item.productName)]),
+                          td(classes: 'fw-semibold text-dark', [
+                            Component.text(item.productName),
+                            if (item.customColor.isNotEmpty || item.yarnType.isNotEmpty)
+                              span(classes: 'badge bg-danger-subtle text-danger ms-2 fs-8', [
+                                Component.text('${item.yarnType} • ${item.customColor}'),
+                              ]),
+                            if (item.customNotes.isNotEmpty)
+                              small(classes: 'text-muted d-block fs-8 fst-italic', [Component.text('Catatan: ${item.customNotes}')]),
+                          ]),
                           td(classes: 'text-center fw-bold', [Component.text('x${item.qty}')]),
                           td(classes: 'text-end text-muted', [Component.text('Rp ${item.price.toInt()}')]),
                           td(classes: 'text-end fw-bold text-dark', [Component.text('Rp ${(item.price * item.qty).toInt()}')]),
@@ -455,12 +463,9 @@ class _OrdersPageState extends State<OrdersPage> {
                 ),
                 button(
                   type: ButtonType.button,
-                  classes: 'btn btn-primary px-4 fw-semibold',
+                  classes: 'btn btn-primary px-4 fw-semibold shadow-sm',
                   events: {'click': (e) => _saveTrackingNo()},
-                  [
-                    i(classes: 'bi bi-check-circle me-1', []),
-                    Component.text('Simpan & Update Status Dikirim'),
-                  ],
+                  [Component.text('Simpan Nomor Resi')],
                 ),
               ]),
             ]),
@@ -528,16 +533,13 @@ class _OrdersPageState extends State<OrdersPage> {
           ]),
         ]),
 
-      // 6. Modal Thermal Shipping Label (10x15cm Printable Sticker)
+      // 5. Thermal Shipping Label View
       if (activeOrderForShippingLabel != null)
         div(classes: 'modal fade show d-block bg-dark bg-opacity-75', attributes: {'tabindex': '-1'}, [
-          div(classes: 'modal-dialog modal-dialog-centered modal-lg', [
+          div(classes: 'modal-dialog modal-dialog-centered', [
             div(classes: 'modal-content border-0 shadow-lg rounded-4 overflow-hidden', [
-              div(classes: 'modal-header bg-dark text-white py-3 d-print-none', [
-                h5(classes: 'modal-title fw-bold fs-6', [
-                  i(classes: 'bi bi-tag-fill me-2 text-warning', []),
-                  Component.text('Stiker Label Pengiriman Thermal (10x15 cm)'),
-                ]),
+              div(classes: 'modal-header bg-dark text-white py-2 d-print-none', [
+                h6(classes: 'modal-title fw-bold mb-0', [Component.text('Pratinjau Label Resi Thermal')]),
                 button(
                   type: ButtonType.button,
                   classes: 'btn-close btn-close-white',
@@ -545,8 +547,7 @@ class _OrdersPageState extends State<OrdersPage> {
                   [],
                 ),
               ]),
-              div(classes: 'modal-body p-4 bg-light d-flex justify-content-center', [
-                // Thermal Sticker Box (10x15 cm ratio)
+              div(classes: 'modal-body p-3 bg-light d-flex justify-content-center', [
                 div(
                   classes: 'bg-white p-4 border border-2 border-dark rounded-3 shadow text-dark font-sans-serif',
                   styles: Styles(width: 380.px, minHeight: 520.px),
@@ -583,7 +584,11 @@ class _OrdersPageState extends State<OrdersPage> {
                       ul(classes: 'list-unstyled mb-0 fs-8', [
                         for (var item in activeOrderForShippingLabel!.items)
                           li(classes: 'd-flex justify-content-between border-bottom py-1', [
-                            span(classes: 'fw-semibold', [Component.text(item.productName)]),
+                            div([
+                              span(classes: 'fw-semibold', [Component.text(item.productName)]),
+                              if (item.customColor.isNotEmpty || item.yarnType.isNotEmpty)
+                                small(classes: 'd-block text-muted fs-9', [Component.text('(${item.yarnType} - ${item.customColor})')]),
+                            ]),
                             span(classes: 'fw-bold ms-2', [Component.text('x${item.qty}')]),
                           ]),
                       ]),

@@ -422,6 +422,7 @@ class _AdminLayoutState extends State<AdminLayout> {
 
         // Sidebar Navigation Links
         div(classes: 'sidebar-wrapper px-2 py-3 overflow-y-auto', [
+          _buildUserRoleHeader(AuthService().currentUser),
           nav(classes: 'mt-2', [
             ul(
               classes: 'nav nav-pills nav-sidebar flex-column gap-1',
@@ -588,6 +589,25 @@ class _AdminLayoutState extends State<AdminLayout> {
           strong([Component.text('Versi ')]),
           Component.text('4.9.1 (Enterprise Production)'),
         ]),
+      ]),
+    ]);
+  }
+
+  Component _buildUserRoleHeader(UserSession? user) {
+    final role = user?.role ?? 'Super Admin';
+    final roleBadgeColor = role == 'Super Admin'
+        ? 'bg-danger text-white'
+        : role == 'Store Manager'
+            ? 'bg-success text-white'
+            : 'bg-info text-dark';
+
+    return div(classes: 'px-3 py-2 mb-2 border-bottom border-secondary d-flex align-items-center gap-2 bg-dark-subtle rounded-3 mx-1', [
+      div(classes: 'bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold fs-7 shadow-sm', styles: Styles(width: 32.px, height: 32.px), [
+        Component.text(user?.name.isNotEmpty == true ? user!.name[0].toUpperCase() : 'A'),
+      ]),
+      div(classes: 'flex-grow-1 overflow-hidden', [
+        div(classes: 'fw-bold text-white fs-7 text-truncate', [Component.text(user?.name ?? 'Admin Toko')]),
+        span(classes: 'badge $roleBadgeColor fs-8 fw-bold', [Component.text(role)]),
       ]),
     ]);
   }

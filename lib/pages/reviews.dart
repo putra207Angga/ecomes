@@ -17,6 +17,7 @@ class _ReviewsPageState extends State<ReviewsPage> {
   String replyInput = '';
   int starFilter = 0; // 0 = Semua
   String statusFilter = 'Semua'; // 'Semua', 'Perlu Balasan', 'Dibalas'
+  String approvalFilter = 'Semua'; // 'Semua', 'Disetujui', 'Menunggu Moderasi'
 
   bool showAddModal = false;
   String newCustomerName = '';
@@ -36,6 +37,7 @@ class _ReviewsPageState extends State<ReviewsPage> {
       date: '${DateTime.now().day} Sep ${DateTime.now().year}',
       replyText: 'Terima kasih banyak atas ulasan positif dan ketersediaan testimonialnya Kak!',
       status: 'Dibalas',
+      approvalStatus: 'Disetujui',
     );
     store.reviews.insert(0, newRev);
     store.saveAll();
@@ -62,6 +64,11 @@ class _ReviewsPageState extends State<ReviewsPage> {
     }
   }
 
+  void _toggleApproval(ReviewItem rev, String newApproval) {
+    AppStore().updateReviewApproval(rev.id, newApproval);
+    setState(() {});
+  }
+
   void _deleteReview(String id) {
     if (html.window.confirm('Sembunyikan / Hapus ulasan ini dari publik?')) {
       AppStore().deleteReview(id);
@@ -77,8 +84,11 @@ class _ReviewsPageState extends State<ReviewsPage> {
     final filteredReviews = allReviews.where((r) {
       final matchesStar = starFilter == 0 || r.rating == starFilter;
       final matchesStatus = statusFilter == 'Semua' || r.status == statusFilter;
-      return matchesStar && matchesStatus;
+      final matchesApproval = approvalFilter == 'Semua' || r.approvalStatus == approvalFilter;
+      return matchesStar && matchesStatus && matchesApproval;
     }).toList();
+
+    final pendingCount = allReviews.where((r) => r.approvalStatus == 'Menunggu Moderasi').length;
 
     return div(classes: 'app-content-wrapper p-3 p-md-4', [
       // 1. Header
@@ -86,13 +96,19 @@ class _ReviewsPageState extends State<ReviewsPage> {
         div(classes: 'container-fluid', [
           div(classes: 'row align-items-center', [
             div(classes: 'col-sm-6', [
-              h3(classes: 'mb-0 fw-bold text-dark', [Component.text('Moderasi Ulasan & Rating Pembeli')]),
-              p(classes: 'text-muted mb-0 fs-7', [Component.text('Respon testimoni pelanggan dan pantau kepuasan produk.')]),
+              h3(classes: 'mb-0 fw-bold text-dark d-flex align-items-center gap-2', [
+                Component.text('Moderasi Ulasan & Rating Pembeli'),
+                if (pendingCount > 0)
+                  span(classes: 'badge bg-danger rounded-pill fs-8', [
+                    Component.text('$pendingCount Baru'),
+                  ]),
+              ]),
+              p(classes: 'text-muted mb-0 fs-7', [Component.text('Setujui ulasan yang dikirim pembeli dari Landing Page dan berikan balasan resmi.')]),
             ]),
-            div(classes: 'col-sm-6 text-sm-end mt-2 mt-sm-0', [
+            div(classes: 'col-sm-6 text-sm-end mt-2 mt-sm-0 d-flex justify-content-sm-end align-items-center flex-wrap gap-2', [
               button(
                 type: ButtonType.button,
-                classes: 'btn btn-danger btn-sm rounded-pill px-3 py-1.5 fw-bold me-2 shadow-sm',
+                classes: 'btn btn-danger btn-sm rounded-pill px-3 py-1.5 fw-bold shadow-sm',
                 events: {'click': (e) => setState(() => showAddModal = true)},
                 [
                   i(classes: 'bi bi-plus-circle me-1', []),
@@ -100,7 +116,22 @@ class _ReviewsPageState extends State<ReviewsPage> {
                 ],
               ),
               select(
-                classes: 'form-select form-select-sm d-inline-block w-auto rounded-3 me-2',
+                classes: 'form-select form-select-sm w-auto rounded-3',
+                events: {
+                  'change': (e) {
+                    setState(() {
+                      approvalFilter = (e.target as html.SelectElement).value ?? '';
+                    });
+                  }
+                },
+                [
+                  option(value: 'Semua', selected: approvalFilter == 'Semua', [Component.text('Semua Moderasi')]),
+                  option(value: 'Menunggu Moderasi', selected: approvalFilter == 'Menunggu Moderasi', [Component.text('Menunggu Moderasi ($pendingCount)')]),
+                  option(value: 'Disetujui', selected: approvalFilter == 'Disetujui', [Component.text('Sudah Disetujui')]),
+                ],
+              ),
+              select(
+                classes: 'form-select form-select-sm w-auto rounded-3',
                 events: {
                   'change': (e) {
                     setState(() {
@@ -109,27 +140,9 @@ class _ReviewsPageState extends State<ReviewsPage> {
                   }
                 },
                 [
-                  option(value: 'Semua', selected: statusFilter == 'Semua', [Component.text('Semua Status Balasan')]),
-                  option(value: 'Perlu Balasan', selected: statusFilter == 'Perlu Balasan', [Component.text('Perlu Balasan Admin')]),
+                  option(value: 'Semua', selected: statusFilter == 'Semua', [Component.text('Semua Balasan')]),
+                  option(value: 'Perlu Balasan', selected: statusFilter == 'Perlu Balasan', [Component.text('Perlu Balasan')]),
                   option(value: 'Dibalas', selected: statusFilter == 'Dibalas', [Component.text('Sudah Dibalas')]),
-                ],
-              ),
-              select(
-                classes: 'form-select form-select-sm d-inline-block w-auto rounded-3',
-                events: {
-                  'change': (e) {
-                    setState(() {
-                      starFilter = int.tryParse((e.target as html.SelectElement).value ?? '') ?? 0;
-                    });
-                  }
-                },
-                [
-                  option(value: '0', selected: starFilter == 0, [Component.text('Semua Bintang')]),
-                  option(value: '5', selected: starFilter == 5, [Component.text('5 Bintang (Sangat Puas)')]),
-                  option(value: '4', selected: starFilter == 4, [Component.text('4 Bintang (Puas)')]),
-                  option(value: '3', selected: starFilter == 3, [Component.text('3 Bintang (Cukup)')]),
-                  option(value: '2', selected: starFilter == 2, [Component.text('2 Bintang (Kecewa)')]),
-                  option(value: '1', selected: starFilter == 1, [Component.text('1 Bintang (Buruk)')]),
                 ],
               ),
             ]),
@@ -139,11 +152,16 @@ class _ReviewsPageState extends State<ReviewsPage> {
 
       // 2. Reviews List Card
       div(classes: 'card shadow-sm border-0 rounded-3', [
-        div(classes: 'card-header bg-white py-3 border-bottom', [
+        div(classes: 'card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between', [
           h5(classes: 'card-title fw-bold mb-0 text-dark', [
             i(classes: 'bi bi-star-fill text-warning me-2', []),
             Component.text('Testimoni & Feedback Terbaru'),
           ]),
+          if (pendingCount > 0)
+            span(classes: 'badge bg-warning text-dark rounded-pill px-3 py-1 fw-bold fs-8', [
+              i(classes: 'bi bi-clock-history me-1', []),
+              Component.text('$pendingCount Ulasan Menunggu Moderasi'),
+            ]),
         ]),
         div(classes: 'card-body p-0', [
           div(classes: 'table-responsive', [
@@ -152,9 +170,9 @@ class _ReviewsPageState extends State<ReviewsPage> {
                 tr([
                   th(classes: 'ps-3', [Component.text('Pelanggan & Tanggal')]),
                   th([Component.text('Produk')]),
-                  th([Component.text('Rating Bintang')]),
+                  th([Component.text('Rating')]),
+                  th([Component.text('Status Moderasi')]),
                   th([Component.text('Komentar Ulasan')]),
-                  th([Component.text('Balasan Admin')]),
                   th(classes: 'text-end pe-3', [Component.text('Aksi Moderasi')]),
                 ]),
               ]),
@@ -181,21 +199,37 @@ class _ReviewsPageState extends State<ReviewsPage> {
                           span(classes: 'text-dark fw-bold ms-1', [Component.text('${rev.rating}.0')]),
                         ]),
                       ]),
-                      td(classes: 'fs-7 text-dark', styles: Styles(maxWidth: 250.px), [
-                        Component.text('"${rev.comment}"'),
-                      ]),
                       td(classes: 'fs-7', [
-                        if (rev.replyText.isNotEmpty)
-                          div(classes: 'p-2 bg-light rounded border text-muted fs-8', [
-                            strong(classes: 'text-dark d-block', [Component.text('Balasan Toko:')]),
-                            Component.text(rev.replyText),
+                        if (rev.approvalStatus == 'Menunggu Moderasi')
+                          span(classes: 'badge bg-warning text-dark rounded-pill fs-8 fw-bold', [
+                            i(classes: 'bi bi-hourglass-split me-1', []),
+                            Component.text('Menunggu Moderasi'),
                           ])
                         else
-                          span(classes: 'badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill fs-8', [
-                            Component.text('Belum Dibalas'),
+                          span(classes: 'badge bg-success-subtle text-success border border-success-subtle rounded-pill fs-8 fw-bold', [
+                            i(classes: 'bi bi-check-circle-fill me-1', []),
+                            Component.text('Disetujui Publik'),
+                          ]),
+                      ]),
+                      td(classes: 'fs-7 text-dark', styles: Styles(maxWidth: 240.px), [
+                        div([Component.text('"${rev.comment}"')]),
+                        if (rev.replyText.isNotEmpty)
+                          div(classes: 'mt-1 p-2 bg-light rounded border text-muted fs-8', [
+                            strong(classes: 'text-dark d-block', [Component.text('Balasan Admin:')]),
+                            Component.text(rev.replyText),
                           ]),
                       ]),
                       td(classes: 'text-end pe-3', [
+                        if (rev.approvalStatus == 'Menunggu Moderasi')
+                          button(
+                            type: ButtonType.button,
+                            classes: 'btn btn-sm btn-success fw-bold me-1 shadow-xs',
+                            events: {'click': (e) => _toggleApproval(rev, 'Disetujui')},
+                            [
+                              i(classes: 'bi bi-check-lg me-1', []),
+                              Component.text('Setujui'),
+                            ],
+                          ),
                         button(
                           type: ButtonType.button,
                           classes: 'btn btn-sm ${rev.replyText.isNotEmpty ? 'btn-outline-secondary' : 'btn-primary fw-semibold'} me-1',

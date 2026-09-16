@@ -4,6 +4,7 @@ class ProductItem {
   String sku;
   String category;
   double price;
+  double hpp;
   int stock;
   String image;
   String status; // 'Aktif', 'Menipis', 'Out of Stock'
@@ -15,6 +16,7 @@ class ProductItem {
     required this.sku,
     required this.category,
     required this.price,
+    this.hpp = 0.0,
     required this.stock,
     required this.image,
     required this.status,
@@ -27,6 +29,7 @@ class ProductItem {
         'sku': sku,
         'category': category,
         'price': price,
+        'hpp': hpp,
         'stock': stock,
         'image': image,
         'status': status,
@@ -39,6 +42,7 @@ class ProductItem {
         sku: json['sku'] as String,
         category: json['category'] as String,
         price: (json['price'] as num).toDouble(),
+        hpp: (json['hpp'] as num?)?.toDouble() ?? ((json['price'] as num).toDouble() * 0.55),
         stock: json['stock'] as int,
         image: json['image'] as String,
         status: json['status'] as String,
@@ -50,15 +54,35 @@ class OrderProductItem {
   final String productName;
   final int qty;
   final double price;
+  final String customColor;
+  final String yarnType;
+  final String customNotes;
 
-  OrderProductItem({required this.productName, required this.qty, required this.price});
+  OrderProductItem({
+    required this.productName,
+    required this.qty,
+    required this.price,
+    this.customColor = '',
+    this.yarnType = '',
+    this.customNotes = '',
+  });
 
-  Map<String, dynamic> toJson() => {'productName': productName, 'qty': qty, 'price': price};
+  Map<String, dynamic> toJson() => {
+        'productName': productName,
+        'qty': qty,
+        'price': price,
+        'customColor': customColor,
+        'yarnType': yarnType,
+        'customNotes': customNotes,
+      };
 
   factory OrderProductItem.fromJson(Map<String, dynamic> json) => OrderProductItem(
         productName: json['productName'] as String,
         qty: json['qty'] as int,
         price: (json['price'] as num).toDouble(),
+        customColor: (json['customColor'] ?? '') as String,
+        yarnType: (json['yarnType'] ?? '') as String,
+        customNotes: (json['customNotes'] ?? '') as String,
       );
 }
 
@@ -297,6 +321,7 @@ class ReviewItem {
   String date;
   String replyText;
   String status; // 'Perlu Balasan', 'Dibalas'
+  String approvalStatus; // 'Disetujui', 'Menunggu Moderasi', 'Ditolak'
 
   ReviewItem({
     required this.id,
@@ -307,6 +332,7 @@ class ReviewItem {
     required this.date,
     this.replyText = '',
     this.status = 'Perlu Balasan',
+    this.approvalStatus = 'Disetujui',
   });
 
   Map<String, dynamic> toJson() => {
@@ -318,6 +344,7 @@ class ReviewItem {
         'date': date,
         'replyText': replyText,
         'status': status,
+        'approvalStatus': approvalStatus,
       };
 
   factory ReviewItem.fromJson(Map<String, dynamic> json) => ReviewItem(
@@ -329,6 +356,7 @@ class ReviewItem {
         date: json['date'] as String,
         replyText: (json['replyText'] ?? '') as String,
         status: (json['status'] ?? 'Perlu Balasan') as String,
+        approvalStatus: (json['approvalStatus'] ?? 'Disetujui') as String,
       );
 }
 

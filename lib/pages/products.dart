@@ -25,6 +25,7 @@ class _ProductsPageState extends State<ProductsPage> {
   String skuInput = '';
   String categoryInput = 'Boneka Amigurumi';
   double priceInput = 0;
+  double hppInput = 0;
   int stockInput = 0;
   String imageInput = 'images/amigurumi_bear.png';
   String descriptionInput = '';
@@ -36,6 +37,7 @@ class _ProductsPageState extends State<ProductsPage> {
       skuInput = 'RJT-AMG-${DateTime.now().millisecondsSinceEpoch.toString().substring(8)}';
       categoryInput = 'Boneka Amigurumi';
       priceInput = 120000;
+      hppInput = 65000;
       stockInput = 15;
       imageInput = 'images/amigurumi_bear.png';
       descriptionInput = '';
@@ -50,6 +52,7 @@ class _ProductsPageState extends State<ProductsPage> {
       skuInput = item.sku;
       categoryInput = item.category;
       priceInput = item.price;
+      hppInput = item.hpp > 0 ? item.hpp : (item.price * 0.55);
       stockInput = item.stock;
       imageInput = item.image;
       descriptionInput = item.description;
@@ -85,6 +88,7 @@ class _ProductsPageState extends State<ProductsPage> {
         sku: skuInput.trim(),
         category: categoryInput,
         price: priceInput,
+        hpp: hppInput > 0 ? hppInput : (priceInput * 0.55),
         stock: stockInput,
         image: imageInput.trim(),
         status: status,
@@ -96,6 +100,7 @@ class _ProductsPageState extends State<ProductsPage> {
       editingProduct!.sku = skuInput.trim();
       editingProduct!.category = categoryInput;
       editingProduct!.price = priceInput;
+      editingProduct!.hpp = hppInput > 0 ? hppInput : (priceInput * 0.55);
       editingProduct!.stock = stockInput;
       editingProduct!.image = imageInput.trim();
       editingProduct!.status = status;
@@ -260,7 +265,8 @@ class _ProductsPageState extends State<ProductsPage> {
                   ]),
                   th(classes: 'text-start text-nowrap', [Component.text('Produk & SKU')]),
                   th(classes: 'text-start text-nowrap', [Component.text('Kategori')]),
-                  th(classes: 'text-start text-nowrap', [Component.text('Harga (Rp)')]),
+                  th(classes: 'text-start text-nowrap', [Component.text('Harga & HPP')]),
+                  th(classes: 'text-center text-nowrap', [Component.text('Margin Profit')]),
                   th(classes: 'text-center text-nowrap', [Component.text('Stok')]),
                   th(classes: 'text-center text-nowrap', [Component.text('Status')]),
                   th(classes: 'text-end pe-3 text-nowrap', [Component.text('Aksi')]),
@@ -269,13 +275,13 @@ class _ProductsPageState extends State<ProductsPage> {
               tbody([
                 if (filteredProducts.isEmpty)
                   tr([
-                    td(attributes: {'colspan': '7'}, classes: 'text-center py-5 text-muted', [
+                    td(attributes: {'colspan': '8'}, classes: 'text-center py-5 text-muted', [
                       i(classes: 'bi bi-inbox fs-1 d-block mb-2 text-secondary', []),
                       Component.text('Tidak ada produk yang cocok dengan pencarian.'),
                     ]),
                   ])
                 else
-                  for (var item in filteredProducts)
+                  for (var item in filteredProducts) ...[
                     tr([
                       td(classes: 'ps-3', [
                         input(
@@ -306,7 +312,15 @@ class _ProductsPageState extends State<ProductsPage> {
                         ]),
                       ]),
                       td(classes: 'fs-7 text-start text-nowrap', [Component.text(item.category)]),
-                      td(classes: 'fw-bold fs-7 text-primary text-start text-nowrap', [Component.text('Rp ${item.price.toInt()}')]),
+                      td(classes: 'fs-7 text-start text-nowrap', [
+                        div(classes: 'fw-bold text-primary', [Component.text('Rp ${item.price.toInt()}')]),
+                        div(classes: 'text-muted fs-8', [Component.text('HPP: Rp ${item.hpp.toInt()}')]),
+                      ]),
+                      td(classes: 'fs-7 text-center text-nowrap', [
+                        span(classes: 'badge bg-success-subtle text-success border border-success-subtle rounded-pill fs-8 fw-bold', [
+                          Component.text('+${item.price > 0 ? (((item.price - item.hpp) / item.price) * 100).toStringAsFixed(0) : '0'}% (Rp ${(item.price - item.hpp).toInt()})'),
+                        ]),
+                      ]),
                       td(classes: 'fs-7 text-center text-nowrap', [
                         span(classes: 'fw-bold ${item.stock < 5 ? 'text-danger' : 'text-dark'}', [
                           Component.text('${item.stock} unit'),
@@ -332,6 +346,7 @@ class _ProductsPageState extends State<ProductsPage> {
                         ),
                       ]),
                     ]),
+                  ],
               ]),
             ]),
           ]),
@@ -384,7 +399,7 @@ class _ProductsPageState extends State<ProductsPage> {
                         },
                       ),
                     ]),
-                    div(classes: 'col-md-6', [
+                    div(classes: 'col-md-5', [
                       label(classes: 'form-label fw-semibold fs-7', [Component.text('Kategori Barang')]),
                       select(
                         classes: 'form-select',
@@ -400,7 +415,7 @@ class _ProductsPageState extends State<ProductsPage> {
                       ),
                     ]),
                     div(classes: 'col-md-3', [
-                      label(classes: 'form-label fw-semibold fs-7', [Component.text('Harga (Rp)')]),
+                      label(classes: 'form-label fw-semibold fs-7', [Component.text('Harga Jual (Rp)')]),
                       input(
                         type: InputType.number,
                         classes: 'form-control',
@@ -412,7 +427,20 @@ class _ProductsPageState extends State<ProductsPage> {
                         },
                       ),
                     ]),
-                    div(classes: 'col-md-3', [
+                    div(classes: 'col-md-2', [
+                      label(classes: 'form-label fw-semibold fs-7 text-danger', [Component.text('Modal HPP (Rp)')]),
+                      input(
+                        type: InputType.number,
+                        classes: 'form-control border-danger-subtle',
+                        value: hppInput.toInt().toString(),
+                        events: {
+                          'input': (e) {
+                            hppInput = double.tryParse((e.target as html.InputElement).value ?? '') ?? 0;
+                          }
+                        },
+                      ),
+                    ]),
+                    div(classes: 'col-md-2', [
                       label(classes: 'form-label fw-semibold fs-7', [Component.text('Stok Awal')]),
                       input(
                         type: InputType.number,

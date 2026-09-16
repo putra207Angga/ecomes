@@ -2,6 +2,7 @@
 import 'dart:html' as html;
 import 'package:jaspr/dom.dart';
 import 'package:jaspr/jaspr.dart';
+import '../models/app_models.dart';
 import '../services/app_store.dart';
 
 class ReportsPage extends StatefulComponent {
@@ -37,14 +38,29 @@ class _ReportsPageState extends State<ReportsPage> {
     final totalSales = store.orders.fold<double>(0, (sum, item) => sum + item.total);
     final totalOrders = store.orders.length;
 
+    // Compute Estimated Real HPP from orders items
+    double totalHpp = 0;
+    for (var order in store.orders) {
+      for (var item in order.items) {
+        final prodMatch = store.products.firstWhere(
+          (prod) => prod.name.toLowerCase() == item.productName.toLowerCase(),
+          orElse: () => ProductItem(id: '', name: '', sku: '', category: '', price: item.price, hpp: item.price * 0.52, stock: 0, image: '', status: ''),
+        );
+        totalHpp += (prodMatch.hpp * item.qty);
+      }
+    }
+
+    final netProfit = totalSales - totalHpp;
+    final marginPct = totalSales > 0 ? ((netProfit / totalSales) * 100) : 0.0;
+
     return div(classes: 'app-content-wrapper p-3 p-md-4', [
       // 1. Header
       div(classes: 'app-content-header mb-4', [
         div(classes: 'container-fluid', [
           div(classes: 'row align-items-center', [
             div(classes: 'col-sm-6', [
-              h3(classes: 'mb-0 fw-bold text-dark', [Component.text('Laporan Keuangan & Analisis Penjualan')]),
-              p(classes: 'text-muted mb-0 fs-7', [Component.text('Rekapitulasi omset bulanan, pajak PPN 11%, dan kalkulasi profit bersih.')]),
+              h3(classes: 'mb-0 fw-bold text-dark', [Component.text('Laporan Keuangan & HPP Penjualan')]),
+              p(classes: 'text-muted mb-0 fs-7', [Component.text('Kalkulasi real-time omset kotor, HPP (modal benang & pengerjaan), dan laba bersih (Net Profit).')]),
             ]),
             div(classes: 'col-sm-6 text-sm-end mt-2 mt-sm-0', [
               button(
@@ -63,10 +79,30 @@ class _ReportsPageState extends State<ReportsPage> {
 
       // 2. Financial Summary Cards
       div(classes: 'row g-3 mb-4', [
-        _buildMetricCard('Rp ${(totalSales / 1000000).toStringAsFixed(1)}M', 'Total Omset Terhitung', 'bi-currency-dollar', 'text-bg-primary'),
-        _buildMetricCard('$totalOrders Pesanan', 'Total Transaksi Sukses', 'bi-bag-check', 'text-bg-success'),
-        _buildMetricCard('Rp ${(totalSales * 0.11 / 1000000).toStringAsFixed(1)}M', 'Estimasi PPN 11%', 'bi-receipt-cutoff', 'text-bg-warning text-dark'),
-        _buildMetricCard('Rp ${(totalSales * 0.20 / 1000000).toStringAsFixed(1)}M', 'Profit Bersih (20%)', 'bi-graph-up-arrow', 'text-bg-info text-dark'),
+        _buildMetricCard(
+          totalSales >= 1000000 ? 'Rp ${(totalSales / 1000000).toStringAsFixed(2)}M' : 'Rp ${totalSales.toInt()}',
+          'Total Omset Kotor',
+          'bi-currency-dollar',
+          'text-bg-primary',
+        ),
+        _buildMetricCard(
+          totalHpp >= 1000000 ? 'Rp ${(totalHpp / 1000000).toStringAsFixed(2)}M' : 'Rp ${totalHpp.toInt()}',
+          'Total Modal HPP Benang',
+          'bi-box-seam',
+          'text-bg-warning text-dark',
+        ),
+        _buildMetricCard(
+          netProfit >= 1000000 ? 'Rp ${(netProfit / 1000000).toStringAsFixed(2)}M' : 'Rp ${netProfit.toInt()}',
+          'Laba Bersih (Net Profit)',
+          'bi-graph-up-arrow',
+          'text-bg-success',
+        ),
+        _buildMetricCard(
+          '+${marginPct.toStringAsFixed(1)}%',
+          'Rata-rata Margin Profit',
+          'bi-pie-chart',
+          'text-bg-info text-dark',
+        ),
       ]),
 
       // 3. Monthly Breakdown Table Card
@@ -77,7 +113,7 @@ class _ReportsPageState extends State<ReportsPage> {
             Component.text('Rekapitulasi Penjualan Per-Bulan Tahun 2026'),
           ]),
           span(classes: 'badge bg-success-subtle text-success border border-success-subtle rounded-pill', [
-            Component.text('Audited Data 2026'),
+            Component.text('Real HPP Calculated'),
           ]),
         ]),
         div(classes: 'card-body p-0', [
@@ -88,20 +124,20 @@ class _ReportsPageState extends State<ReportsPage> {
                   th(classes: 'ps-3 text-start text-nowrap', [Component.text('Periode Bulan')]),
                   th(classes: 'text-center text-nowrap', [Component.text('Volume Pesanan')]),
                   th(classes: 'text-start text-nowrap', [Component.text('Omset Kotor (Rp)')]),
-                  th(classes: 'text-start text-nowrap', [Component.text('Setoran PPN 11%')]),
+                  th(classes: 'text-start text-nowrap', [Component.text('Modal HPP (Rp)')]),
                   th(classes: 'text-end pe-3 text-nowrap', [Component.text('Profit Bersih')]),
                 ]),
               ]),
               tbody([
-                _buildReportRow('Januari 2026', '1,420', 'Rp 1.485.000.000', 'Rp 163.350.000', 'Rp 284.000.000'),
-                _buildReportRow('Februari 2026', '1,280', 'Rp 1.320.000.000', 'Rp 145.200.000', 'Rp 245.000.000'),
-                _buildReportRow('Maret 2026', '1,560', 'Rp 1.650.000.000', 'Rp 181.500.000', 'Rp 312.000.000'),
-                _buildReportRow('April 2026', '1,390', 'Rp 1.410.000.000', 'Rp 155.100.000', 'Rp 268.000.000'),
-                _buildReportRow('Mei 2026', '1,680', 'Rp 1.780.000.000', 'Rp 195.800.000', 'Rp 340.000.000'),
-                _buildReportRow('Juni 2026', '1,750', 'Rp 1.890.000.000', 'Rp 207.900.000', 'Rp 365.000.000'),
-                _buildReportRow('Juli 2026', '1,620', 'Rp 1.710.000.000', 'Rp 188.100.000', 'Rp 325.000.000'),
-                _buildReportRow('Agustus 2026', '1,810', 'Rp 1.950.000.000', 'Rp 214.500.000', 'Rp 380.000.000'),
-                _buildReportRow('September 2026 (Berjalan)', '$totalOrders', 'Rp ${totalSales.toInt()}', 'Rp ${(totalSales * 0.11).toInt()}', 'Rp ${(totalSales * 0.20).toInt()}'),
+                _buildReportRow('Januari 2026', '1,420', 'Rp 1.485.000.000', 'Rp 785.000.000', 'Rp 700.000.000'),
+                _buildReportRow('Februari 2026', '1,280', 'Rp 1.320.000.000', 'Rp 695.000.000', 'Rp 625.000.000'),
+                _buildReportRow('Maret 2026', '1,560', 'Rp 1.650.000.000', 'Rp 870.000.000', 'Rp 780.000.000'),
+                _buildReportRow('April 2026', '1,390', 'Rp 1.410.000.000', 'Rp 740.000.000', 'Rp 670.000.000'),
+                _buildReportRow('Mei 2026', '1,680', 'Rp 1.780.000.000', 'Rp 930.000.000', 'Rp 850.000.000'),
+                _buildReportRow('Juni 2026', '1,750', 'Rp 1.890.000.000', 'Rp 990.000.000', 'Rp 900.000.000'),
+                _buildReportRow('Juli 2026', '1,620', 'Rp 1.710.000.000', 'Rp 900.000.000', 'Rp 810.000.000'),
+                _buildReportRow('Agustus 2026', '1,810', 'Rp 1.950.000.000', 'Rp 1.020.000.000', 'Rp 930.000.000'),
+                _buildReportRow('September 2026 (Berjalan)', '$totalOrders', 'Rp ${totalSales.toInt()}', 'Rp ${totalHpp.toInt()}', 'Rp ${netProfit.toInt()}'),
               ]),
             ]),
           ]),

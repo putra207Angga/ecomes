@@ -22,21 +22,45 @@ class _LandingPageState extends State<LandingPage> {
   bool showSuccessToast = false;
   bool isFullStoreMode = false; // Mode Storefront E-Commerce vs Landing Page
 
-  // Product Detail Modal State
+  // Product Detail & Customizer State
   Map<String, dynamic>? selectedProductDetail;
   bool showProductDetailModal = false;
+  String selectedYarn = 'Benang Poliindo';
+  String selectedColor = 'Pastel Pink';
+  String customNotes = '';
 
-  void _addToCart(Map<String, dynamic> item) {
+  // Order Tracker State
+  bool showOrderTrackerModal = false;
+  String orderTrackerQuery = '';
+  OrderItem? searchedOrderResult;
+  bool orderSearchAttempted = false;
+
+  // Write Review State
+  bool showWriteReviewModal = false;
+  String reviewNameInput = '';
+  String reviewProductInput = 'Tas Rajut Serut Drawstring Purse 25x25';
+  int reviewRatingInput = 5;
+  String reviewCommentInput = '';
+  String toastMessageText = 'Pesanan berhasil disimpan ke Sistem Admin Panel (Kelola Pesanan) & diteruskan ke WhatsApp!';
+
+  void _addToCart(Map<String, dynamic> item, {String yarn = '', String color = '', String notes = ''}) {
     setState(() {
-      final existingIndex = cartItems.indexWhere((element) => element['id'] == item['id']);
+      final y = yarn.isNotEmpty ? yarn : selectedYarn;
+      final c = color.isNotEmpty ? color : selectedColor;
+      final itemKey = '${item['id']}_${y}_$c';
+      final existingIndex = cartItems.indexWhere((element) => element['cartKey'] == itemKey);
       if (existingIndex >= 0) {
         cartItems[existingIndex]['qty'] += 1;
       } else {
         cartItems.add({
+          'cartKey': itemKey,
           'id': item['id'],
           'name': item['name'],
           'price': item['price'],
           'image': item['image'],
+          'yarn': y,
+          'color': c,
+          'notes': notes.isNotEmpty ? notes : customNotes,
           'qty': 1,
         });
       }
@@ -56,7 +80,42 @@ class _LandingPageState extends State<LandingPage> {
   void _openProductDetail(Map<String, dynamic> item) {
     setState(() {
       selectedProductDetail = item;
+      selectedYarn = 'Benang Poliindo';
+      selectedColor = 'Pastel Pink';
+      customNotes = '';
       showProductDetailModal = true;
+    });
+  }
+
+  void _searchOrderTracker() {
+    setState(() {
+      orderSearchAttempted = true;
+      searchedOrderResult = AppStore().findOrderByNumberOrPhone(orderTrackerQuery);
+    });
+  }
+
+  void _submitBuyerReview() {
+    if (reviewNameInput.trim().isEmpty || reviewCommentInput.trim().isEmpty) return;
+    final now = DateTime.now();
+    final newReview = ReviewItem(
+      id: now.millisecondsSinceEpoch.toString(),
+      customerName: reviewNameInput.trim(),
+      productTitle: reviewProductInput.trim(),
+      rating: reviewRatingInput,
+      comment: reviewCommentInput.trim(),
+      date: '${now.day} Sep ${now.year}',
+      status: 'Perlu Balasan',
+      approvalStatus: 'Menunggu Moderasi',
+    );
+
+    AppStore().addReview(newReview);
+
+    setState(() {
+      showWriteReviewModal = false;
+      toastMessageText = 'Terima kasih! Ulasan Anda berhasil dikirim dan menunggu moderasi admin.';
+      showSuccessToast = true;
+      reviewNameInput = '';
+      reviewCommentInput = '';
     });
   }
 
@@ -69,12 +128,18 @@ class _LandingPageState extends State<LandingPage> {
     for (var item in cartItems) {
       final itemTotal = (item['price'] as int) * (item['qty'] as int);
       total += itemTotal;
-      itemSummary += '- ${item['name']} x${item['qty']} (Rp ${itemTotal.toInt()})\n';
+      final cColor = (item['color'] ?? '').toString();
+      final cYarn = (item['yarn'] ?? '').toString();
+      final customStr = (cColor.isNotEmpty || cYarn.isNotEmpty) ? ' [Warna: $cColor, Benang: $cYarn]' : '';
+      itemSummary += '- ${item['name']}$customStr x${item['qty']} (Rp ${itemTotal.toInt()})\n';
 
       orderItemsList.add(OrderProductItem(
         productName: item['name'].toString(),
         qty: item['qty'] as int,
         price: (item['price'] as int).toDouble(),
+        customColor: cColor,
+        yarnType: cYarn,
+        customNotes: (item['notes'] ?? '').toString(),
       ));
     }
 
@@ -227,6 +292,12 @@ class _LandingPageState extends State<LandingPage> {
 
       // Product Detail Quick View Modal
       if (showProductDetailModal && selectedProductDetail != null) _buildProductDetailModal(),
+
+      // Public Order Tracker Modal
+      if (showOrderTrackerModal) _buildOrderTrackerModal(),
+
+      // Write Review Modal
+      if (showWriteReviewModal) _buildWriteReviewModal(),
     ]);
   }
 
@@ -272,6 +343,15 @@ class _LandingPageState extends State<LandingPage> {
 
         // Quick Actions
         div(classes: 'd-flex align-items-center gap-2 flex-nowrap text-nowrap flex-shrink-0', [
+          button(
+            type: ButtonType.button,
+            classes: 'btn btn-outline-dark rounded-pill px-3 py-1 fs-7 fw-semibold shadow-xs text-nowrap d-flex align-items-center gap-1',
+            events: {'click': (e) => setState(() => showOrderTrackerModal = true)},
+            [
+              i(classes: 'bi bi-geo-alt me-1 text-danger', []),
+              Component.text('Lacak Pesanan'),
+            ],
+          ),
           button(
             type: ButtonType.button,
             classes: 'btn btn-outline-danger position-relative rounded-pill px-3 py-1 fs-7 fw-semibold shadow-sm text-nowrap d-flex align-items-center gap-1',
@@ -793,7 +873,16 @@ class _LandingPageState extends State<LandingPage> {
         div(classes: 'text-center mb-5', [
           span(classes: 'badge bg-danger text-white rounded-pill px-3 py-1 fs-7 mb-2', [Component.text('⭐ 100% Real Testimoni')]),
           h2(classes: 'fw-bold text-dark mb-1', [Component.text('Apa Kata Mereka Tentang Kami?')]),
-          p(classes: 'text-muted fs-7', [Component.text('Ribuan pelanggan telah merasakan kehangatan rajutan toko kami')]),
+          p(classes: 'text-muted fs-7 mb-3', [Component.text('Ribuan pelanggan telah merasakan kehangatan rajutan toko kami')]),
+          button(
+            type: ButtonType.button,
+            classes: 'btn btn-outline-danger btn-sm rounded-pill px-3 py-1.5 fw-bold shadow-xs',
+            events: {'click': (e) => setState(() => showWriteReviewModal = true)},
+            [
+              i(classes: 'bi bi-pencil-square me-1', []),
+              Component.text('Tulis Ulasan Anda ✍️'),
+            ],
+          ),
         ]),
         div(classes: 'row g-4', [
           for (var rev in reviews)
@@ -973,6 +1062,15 @@ class _LandingPageState extends State<LandingPage> {
 
   Component _buildProductDetailModal() {
     final item = selectedProductDetail!;
+    final colors = [
+      {'name': 'Pastel Pink 🌸', 'code': 'Pastel Pink'},
+      {'name': 'Cream Estetik 🍦', 'code': 'Cream Estetik'},
+      {'name': 'Sage Green 🌿', 'code': 'Sage Green'},
+      {'name': 'Navy Blue ⚓', 'code': 'Navy Blue'},
+      {'name': 'Butter Yellow 💛', 'code': 'Butter Yellow'},
+      {'name': 'Lilac Soft 🪻', 'code': 'Lilac Soft'},
+    ];
+
     return div(classes: 'modal fade show d-block bg-dark bg-opacity-75', attributes: {'tabindex': '-1'}, [
       div(classes: 'modal-dialog modal-dialog-centered modal-lg', [
         div(classes: 'modal-content border-0 shadow-lg rounded-4 overflow-hidden', [
@@ -988,50 +1086,110 @@ class _LandingPageState extends State<LandingPage> {
             ),
           ]),
           div(classes: 'modal-body p-4 bg-white', [
-            div(classes: 'row g-4 align-items-center', [
-              div(classes: 'col-md-6 text-center', [
+            div(classes: 'row g-4', [
+              div(classes: 'col-md-5 text-center', [
                 img(
                   src: item['image'].toString(),
-                  classes: 'img-fluid rounded-4 border shadow-sm object-fit-cover w-100',
-                  styles: Styles(maxHeight: 280.px),
+                  classes: 'img-fluid rounded-4 border shadow-sm object-fit-cover w-100 mb-3',
+                  styles: Styles(maxHeight: 260.px),
                   attributes: {'alt': item['name'].toString()},
                 ),
-              ]),
-              div(classes: 'col-md-6', [
-                h4(classes: 'fw-extrabold text-dark mb-2', [Component.text(item['name'].toString())]),
-                div(classes: 'd-flex align-items-center gap-2 mb-3', [
-                  div(classes: 'text-warning fs-7 fw-bold', [Component.text('★★★★★ 5.0')]),
-                  span(classes: 'text-muted fs-8', [Component.text('(120+ Terjual)')]),
-                ]),
-                h3(classes: 'fw-extrabold text-danger mb-3', [
-                  Component.text('Rp ${(item['price'] as int).toString()}'),
-                ]),
-                p(classes: 'text-muted fs-7 mb-4', [
-                  Component.text(item['description'].toString().isEmpty ? 'Produk rajutan kualitas tinggi buatan tangan dengan benang Milk Cotton super lembut.' : item['description'].toString()),
-                ]),
-                div(classes: 'p-3 bg-light rounded-3 border mb-4 fs-8 text-secondary', [
+                div(classes: 'p-3 bg-light rounded-3 border fs-8 text-secondary text-start', [
                   div(classes: 'd-flex align-items-center gap-2 mb-1', [
                     i(classes: 'bi bi-check-circle-fill text-success', []),
-                    Component.text('100% Original Handmade Milk Cotton'),
+                    Component.text('100% Handcrafted by Abel\'z Handmade'),
                   ]),
                   div(classes: 'd-flex align-items-center gap-2', [
                     i(classes: 'bi bi-box-seam-fill text-primary', []),
                     Component.text('Free Gift Box & Greeting Card'),
                   ]),
                 ]),
+              ]),
+              div(classes: 'col-md-7', [
+                h4(classes: 'fw-extrabold text-dark mb-1', [Component.text(item['name'].toString())]),
+                div(classes: 'd-flex align-items-center gap-2 mb-2', [
+                  div(classes: 'text-warning fs-7 fw-bold', [Component.text('★★★★★ 5.0')]),
+                  span(classes: 'text-muted fs-8', [Component.text('(120+ Terjual)')]),
+                ]),
+                h3(classes: 'fw-extrabold text-danger mb-3', [
+                  Component.text('Rp ${(item['price'] as int).toString()}'),
+                ]),
+                p(classes: 'text-muted fs-7 mb-3', [
+                  Component.text(item['description'].toString().isEmpty ? 'Produk rajutan kualitas tinggi buatan tangan dengan pilihan benang terbaik.' : item['description'].toString()),
+                ]),
+
+                // Custom Crochet Options Selector
+                div(classes: 'card border-danger border-opacity-25 bg-danger-subtle bg-opacity-10 p-3 rounded-3 mb-3', [
+                  h6(classes: 'fw-bold text-dark fs-7 mb-2 d-flex align-items-center gap-1', [
+                    i(classes: 'bi bi-palette-fill text-danger me-1', []),
+                    Component.text('Kustomisasi Warna & Bahan Rajutan:'),
+                  ]),
+
+                  // 1. Yarn Choice
+                  div(classes: 'mb-2', [
+                    small(classes: 'fw-bold text-muted fs-8 d-block mb-1', [Component.text('Pilih Jenis Benang:')]),
+                    div(classes: 'd-flex gap-2', [
+                      button(
+                        type: ButtonType.button,
+                        classes: 'btn btn-sm rounded-pill ${selectedYarn == 'Benang Poliindo' ? 'btn-danger text-white fw-bold' : 'btn-outline-secondary'} fs-8',
+                        events: {'click': (e) => setState(() => selectedYarn = 'Benang Poliindo')},
+                        [Component.text('Benang Poliindo (Kuat & Awet)')],
+                      ),
+                      button(
+                        type: ButtonType.button,
+                        classes: 'btn btn-sm rounded-pill ${selectedYarn == 'Milk Cotton Yarn' ? 'btn-danger text-white fw-bold' : 'btn-outline-secondary'} fs-8',
+                        events: {'click': (e) => setState(() => selectedYarn = 'Milk Cotton Yarn')},
+                        [Component.text('Milk Cotton (Super Soft)')],
+                      ),
+                    ]),
+                  ]),
+
+                  // 2. Color Chips
+                  div(classes: 'mb-2', [
+                    small(classes: 'fw-bold text-muted fs-8 d-block mb-1', [Component.text('Pilih Warna Main Custom:')]),
+                    div(classes: 'd-flex flex-wrap gap-1', [
+                      for (var c in colors)
+                        button(
+                          type: ButtonType.button,
+                          classes: 'btn btn-sm rounded-pill ${selectedColor == c['code'] ? 'btn-dark text-white fw-bold' : 'btn-light text-dark border'} fs-8',
+                          events: {'click': (e) => setState(() => selectedColor = c['code']!)},
+                          [Component.text(c['name']!)],
+                        ),
+                    ]),
+                  ]),
+
+                  // 3. Custom Notes Input
+                  div([
+                    small(classes: 'fw-bold text-muted fs-8 d-block mb-1', [Component.text('Catatan / Inisial Custom (Opsional):')]),
+                    input(
+                      type: InputType.text,
+                      classes: 'form-control form-control-sm fs-8 bg-white',
+                      value: customNotes,
+                      attributes: {'placeholder': 'Contoh: Tambah inisial nama "Y" pada gantungan'},
+                      events: {
+                        'input': (e) {
+                          setState(() {
+                            customNotes = (e.target as html.InputElement).value ?? '';
+                          });
+                        }
+                      },
+                    ),
+                  ]),
+                ]),
+
                 div(classes: 'd-flex gap-2', [
                   button(
                     type: ButtonType.button,
                     classes: 'btn btn-outline-danger rounded-pill px-3 py-2 fw-bold flex-grow-1 fs-7',
                     events: {
                       'click': (e) {
-                        _addToCart(item);
+                        _addToCart(item, yarn: selectedYarn, color: selectedColor, notes: customNotes);
                         setState(() => showProductDetailModal = false);
                       }
                     },
                     [
                       i(classes: 'bi bi-cart-plus me-1', []),
-                      Component.text('+ Keranjang'),
+                      Component.text('+ Keranjang Custom'),
                     ],
                   ),
                   button(
@@ -1051,6 +1209,247 @@ class _LandingPageState extends State<LandingPage> {
                 ]),
               ]),
             ]),
+          ]),
+        ]),
+      ]),
+    ]);
+  }
+
+  Component _buildOrderTrackerModal() {
+    final result = searchedOrderResult;
+    return div(classes: 'modal fade show d-block bg-dark bg-opacity-75', attributes: {'tabindex': '-1'}, [
+      div(classes: 'modal-dialog modal-dialog-centered modal-lg', [
+        div(classes: 'modal-content border-0 shadow-lg rounded-4 overflow-hidden', [
+          div(classes: 'modal-header bg-dark text-white py-3', [
+            h5(classes: 'modal-title fw-bold fs-6 d-flex align-items-center gap-2', [
+              i(classes: 'bi bi-geo-alt-fill text-danger fs-5', []),
+              Component.text('Lacak Status Pesanan (Public Order Tracker)'),
+            ]),
+            button(
+              type: ButtonType.button,
+              classes: 'btn-close btn-close-white',
+              events: {'click': (e) => setState(() => showOrderTrackerModal = false)},
+              [],
+            ),
+          ]),
+          div(classes: 'modal-body p-4 bg-light', [
+            div(classes: 'card border-0 shadow-sm rounded-3 p-3 bg-white mb-4', [
+              label(classes: 'form-label fw-bold text-dark fs-7', [Component.text('Masukkan Nomor Invoice / Referensi Order / No HP:'),]),
+              div(classes: 'input-group input-group-lg', [
+                span(classes: 'input-group-text bg-light', [i(classes: 'bi bi-search text-danger', []),]),
+                input(
+                  type: InputType.text,
+                  classes: 'form-control fs-6',
+                  value: orderTrackerQuery,
+                  attributes: {'placeholder': 'Contoh: INV/20260915/RJT/001 atau 081234567890'},
+                  events: {
+                    'input': (e) {
+                      setState(() {
+                        orderTrackerQuery = (e.target as html.InputElement).value ?? '';
+                      });
+                    },
+                    'keyup': (e) {
+                      if ((e as html.KeyboardEvent).keyCode == 13) {
+                        _searchOrderTracker();
+                      }
+                    }
+                  },
+                ),
+                button(
+                  type: ButtonType.button,
+                  classes: 'btn btn-danger px-4 fw-bold fs-7',
+                  events: {'click': (e) => _searchOrderTracker()},
+                  [Component.text('Cari Status')],
+                ),
+              ]),
+              small(classes: 'text-muted mt-2 fs-8', [
+                Component.text('Tips: Nomor Invoice tertera pada rincian pesan WhatsApp saat Anda melakukan checkout.'),
+              ]),
+            ]),
+
+            if (orderSearchAttempted) ...[
+              if (result == null)
+                div(classes: 'alert alert-warning rounded-3 border-warning shadow-sm p-4 text-center', [
+                  i(classes: 'bi bi-exclamation-circle-fill fs-2 text-warning mb-2 d-block', []),
+                  h6(classes: 'fw-bold text-dark mb-1', [Component.text('Pesanan Tidak Ditemukan')]),
+                  p(classes: 'text-muted fs-7 mb-0', [
+                    Component.text('Pastikan Nomor Invoice atau Nomor HP yang dimasukkan sudah benar dan sesuai dengan data transaksi Anda.'),
+                  ]),
+                ])
+              else ...[
+                div(classes: 'card border-0 shadow-sm rounded-4 bg-white p-4', [
+                  div(classes: 'd-flex align-items-center justify-content-between border-bottom pb-3 mb-3 flex-wrap gap-2', [
+                    div([
+                      span(classes: 'badge bg-secondary-subtle text-dark me-2 fs-8 fw-bold', [Component.text(result.orderNo)]),
+                      h5(classes: 'fw-extrabold text-dark mb-0 d-inline', [Component.text(result.customerName)]),
+                    ]),
+                    span(classes: 'badge ${result.status == 'Selesai' ? 'bg-success' : result.status == 'Dikirim' ? 'bg-primary' : result.status == 'Diproses' ? 'bg-info text-dark' : result.status == 'Dibatalkan' ? 'bg-danger' : 'bg-warning text-dark'} rounded-pill px-3 py-2 fs-7 fw-bold', [
+                      Component.text('Status: ${result.status}'),
+                    ]),
+                  ]),
+
+                  // Timeline Tracker
+                  div(classes: 'mb-4', [
+                    h6(classes: 'fw-bold text-muted fs-8 text-uppercase mb-3', [Component.text('Timeline Progress Pengemasan & Pengiriman')]),
+                    div(classes: 'd-flex justify-content-between align-items-center position-relative px-2', [
+                      _buildTimelineStep('Pending', 'Pesanan Masuk', result.status),
+                      _buildTimelineStep('Diproses', 'Dalam Rajutan', result.status),
+                      _buildTimelineStep('Dikirim', 'Ekspedisi Kirim', result.status),
+                      _buildTimelineStep('Selesai', 'Diterima', result.status),
+                    ]),
+                  ]),
+
+                  if (result.trackingNo.isNotEmpty)
+                    div(classes: 'alert alert-info rounded-3 p-3 d-flex align-items-center justify-content-between mb-3', [
+                      div([
+                        small(classes: 'text-muted d-block fs-8', [Component.text('Nomor Resi / No. Tracking Kurir (${result.courier}):')]),
+                        span(classes: 'fw-bold fs-6 text-primary', [Component.text(result.trackingNo)]),
+                      ]),
+                      span(classes: 'badge bg-info text-dark rounded-pill', [Component.text('Resi Aktif')]),
+                    ]),
+
+                  h6(classes: 'fw-bold text-dark fs-7 mb-2', [Component.text('Rincian Item Pesanan:')]),
+                  ul(classes: 'list-group list-group-flush mb-3 border rounded-3', [
+                    for (var item in result.items)
+                      li(classes: 'list-group-item d-flex justify-content-between align-items-center fs-7', [
+                        div([
+                          span(classes: 'fw-semibold text-dark', [Component.text(item.productName)]),
+                          if (item.customColor.isNotEmpty || item.yarnType.isNotEmpty)
+                            span(classes: 'badge bg-danger-subtle text-danger ms-2 fs-8', [
+                              Component.text('${item.yarnType} • ${item.customColor}'),
+                            ]),
+                          if (item.customNotes.isNotEmpty)
+                            small(classes: 'text-muted d-block fs-8 fst-italic', [Component.text('Notes: ${item.customNotes}')]),
+                        ]),
+                        span(classes: 'fw-bold text-dark', [Component.text('${item.qty}x Rp ${item.price.toInt()}')]),
+                      ]),
+                  ]),
+
+                  div(classes: 'd-flex justify-content-between align-items-center pt-2 border-top fw-bold', [
+                    span(classes: 'text-dark fs-6', [Component.text('Total Tagihan:')]),
+                    span(classes: 'text-danger fs-5 fw-extrabold', [Component.text('Rp ${result.total.toInt()}')]),
+                  ]),
+                ]),
+              ],
+            ],
+          ]),
+          div(classes: 'modal-footer bg-white py-3', [
+            button(
+              type: ButtonType.button,
+              classes: 'btn btn-secondary rounded-pill px-4 fw-semibold',
+              events: {'click': (e) => setState(() => showOrderTrackerModal = false)},
+              [Component.text('Tutup')],
+            ),
+          ]),
+        ]),
+      ]),
+    ]);
+  }
+
+  Component _buildTimelineStep(String stepKey, String label, String currentStatus) {
+    final statusOrder = ['Pending', 'Diproses', 'Dikirim', 'Selesai'];
+    final currentIdx = statusOrder.indexOf(currentStatus);
+    final stepIdx = statusOrder.indexOf(stepKey);
+    final isDone = currentIdx >= stepIdx;
+
+    return div(classes: 'text-center z-1', [
+      div(classes: 'rounded-circle d-flex align-items-center justify-content-center mx-auto mb-1 ${isDone ? 'bg-danger text-white shadow-sm' : 'bg-secondary-subtle text-muted'}', styles: Styles(width: 36.px, height: 36.px), [
+        i(classes: 'bi ${isDone ? 'bi-check-lg' : 'bi-circle'} fs-6', []),
+      ]),
+      small(classes: 'd-block fw-bold fs-8 ${isDone ? 'text-dark' : 'text-muted'}', [Component.text(label)]),
+    ]);
+  }
+
+  Component _buildWriteReviewModal() {
+    return div(classes: 'modal fade show d-block bg-dark bg-opacity-75', attributes: {'tabindex': '-1'}, [
+      div(classes: 'modal-dialog modal-dialog-centered', [
+        div(classes: 'modal-content border-0 shadow-lg rounded-4 overflow-hidden', [
+          div(classes: 'modal-header bg-danger text-white py-3', [
+            h5(classes: 'modal-title fw-bold fs-6 d-flex align-items-center gap-2', [
+              i(classes: 'bi bi-pencil-square fs-5', []),
+              Component.text('Tulis Ulasan & Rating Pembeli'),
+            ]),
+            button(
+              type: ButtonType.button,
+              classes: 'btn-close btn-close-white',
+              events: {'click': (e) => setState(() => showWriteReviewModal = false)},
+              [],
+            ),
+          ]),
+          div(classes: 'modal-body p-4 bg-white', [
+            div(classes: 'mb-3', [
+              label(classes: 'form-label fw-bold text-dark fs-7', [Component.text('Nama Lengkap Anda:'),]),
+              input(
+                type: InputType.text,
+                classes: 'form-control fs-7',
+                value: reviewNameInput,
+                attributes: {'placeholder': 'Contoh: Siti Rahmawati'},
+                events: {
+                  'input': (e) {
+                    setState(() {
+                      reviewNameInput = (e.target as html.InputElement).value ?? '';
+                    });
+                  }
+                },
+              ),
+            ]),
+            div(classes: 'mb-3', [
+              label(classes: 'form-label fw-bold text-dark fs-7', [Component.text('Produk Yang Dibeli:'),]),
+              select(
+                classes: 'form-select fs-7',
+                events: {
+                  'change': (e) {
+                    setState(() {
+                      reviewProductInput = (e.target as html.SelectElement).value ?? '';
+                    });
+                  }
+                },
+                [
+                  for (var p in AppStore().products)
+                    option(value: p.name, selected: reviewProductInput == p.name, [Component.text(p.name)]),
+                ],
+              ),
+            ]),
+            div(classes: 'mb-3', [
+              label(classes: 'form-label fw-bold text-dark fs-7', [Component.text('Beri Rating Bintang (1-5):'),]),
+              div(classes: 'd-flex gap-2 text-warning fs-4 cursor-pointer', [
+                for (var star = 1; star <= 5; star++)
+                  i(
+                    classes: 'bi ${star <= reviewRatingInput ? 'bi-star-fill text-warning' : 'bi-star text-muted'}',
+                    events: {'click': (e) => setState(() => reviewRatingInput = star)},
+                    [],
+                  ),
+              ]),
+            ]),
+            div(classes: 'mb-3', [
+              label(classes: 'form-label fw-bold text-dark fs-7', [Component.text('Ulasan / Pengalaman Pembelian:'),]),
+              textarea(
+                classes: 'form-control fs-7',
+                attributes: {'rows': '3', 'placeholder': 'Tulis ulasan Anda mengenai kehalusan rajutan, kerapian, dan kepuasan pelayanan...'},
+                events: {
+                  'input': (e) {
+                    setState(() {
+                      reviewCommentInput = (e.target as html.TextAreaElement).value ?? '';
+                    });
+                  }
+                },
+                [Component.text(reviewCommentInput)],
+              ),
+            ]),
+          ]),
+          div(classes: 'modal-footer bg-light py-3', [
+            button(
+              type: ButtonType.button,
+              classes: 'btn btn-secondary rounded-pill px-4 fw-semibold',
+              events: {'click': (e) => setState(() => showWriteReviewModal = false)},
+              [Component.text('Batal')],
+            ),
+            button(
+              type: ButtonType.button,
+              classes: 'btn btn-danger rounded-pill px-4 fw-bold shadow-sm',
+              events: {'click': (e) => _submitBuyerReview()},
+              [Component.text('Kirim Ulasan')],
+            ),
           ]),
         ]),
       ]),
