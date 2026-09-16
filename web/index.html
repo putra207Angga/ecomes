@@ -6,6 +6,7 @@
     <meta name="scaffolded-by" content="https://github.com/schultek/jaspr">
 
     <title>Abel'z Handmade - Toko Rajutan & Kerajinan Estetik | Admin Panel</title>
+    <base href="/ecomes/">
 
     <!-- Google Fonts: Source Sans 3 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css" crossorigin="anonymous">
@@ -178,6 +179,33 @@
     <script defer src="main.client.dart.js"></script>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    <!-- Splash Screen Loading Animation -->
+    <div id="splash-screen" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #FFF5F5; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Source Sans 3', sans-serif; transition: opacity 0.5s ease, visibility 0.5s ease;">
+      <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #C87D74 0%, #E8A598 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(200, 125, 116, 0.3); margin-bottom: 20px; animation: pulseSubtle 1.8s infinite ease-in-out;">
+        <span style="font-size: 38px;">🧶</span>
+      </div>
+      <h2 style="color: #2D2424; font-size: 22px; font-weight: 700; margin: 0 0 8px 0; tracking: 0.5px;">Abel'z Handmade</h2>
+      <p style="color: #6C5F5B; font-size: 14px; margin: 0 0 24px 0;">Memuat Produk & Kerajinan Rajutan Estetik...</p>
+      <div style="width: 160px; height: 5px; background: #F0D9D5; border-radius: 10px; overflow: hidden; position: relative;">
+        <div style="width: 45%; height: 100%; background: #C87D74; border-radius: 10px; animation: pulseSubtle 1.2s infinite ease-in-out;"></div>
+      </div>
+    </div>
+    <script>
+      function hideSplashScreen() {
+        var splash = document.getElementById('splash-screen');
+        if (splash) {
+          splash.style.opacity = '0';
+          splash.style.visibility = 'hidden';
+          setTimeout(function() { if (splash && splash.parentNode) splash.parentNode.removeChild(splash); }, 500);
+        }
+      }
+      window.addEventListener('load', function() {
+        setTimeout(hideSplashScreen, 800);
+      });
+      if (document.readyState === 'complete') {
+        setTimeout(hideSplashScreen, 500);
+      }
+    </script>
     <!-- Jaspr root application component will be mounted here -->
 
     <!-- Third Party Scripts -->

@@ -21,15 +21,7 @@ class AuthService {
       if (sessionStr != null && sessionStr.isNotEmpty) {
         _currentUser = UserSession.fromJson(jsonDecode(sessionStr));
       } else {
-        // Default login as Super Admin for smooth demo experience
-        _currentUser = UserSession(
-          name: 'Angga Wijaya',
-          email: 'admin@ecomes.com',
-          role: 'Super Admin',
-          avatar: 'https://picsum.photos/seed/admin/100/100',
-          token: 'demo-jwt-token-super-admin-2026',
-        );
-        _saveSession();
+        _currentUser = null;
       }
     } catch (e) {
       _currentUser = null;

@@ -22,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
     final auth = AuthService();
     final success = auth.login(targetEmail, password);
     if (success) {
-      Router.of(context).push('/');
+      Router.of(context).push('/admin');
     } else {
       setState(() {
         errorMessage = 'Email atau password salah. Silakan coba lagi.';
