@@ -250,10 +250,10 @@ class _AdminLayoutState extends State<AdminLayout> {
           ]),
 
           // Direct Chat Customer Support Sidebar Trigger
-          li(classes: 'nav-item me-1', [
+          li(classes: 'nav-item me-3', [
             button(
               type: ButtonType.button,
-              classes: 'nav-link btn btn-link text-body position-relative border-0 p-1',
+              classes: 'nav-link btn btn-link text-body position-relative border-0 p-1 me-1',
               attributes: {
                 'data-bs-toggle': 'offcanvas',
                 'data-bs-target': '#chatSidebar',
@@ -263,7 +263,7 @@ class _AdminLayoutState extends State<AdminLayout> {
               [
                 i(classes: 'bi bi-chat-dots-fill fs-5 text-primary', []),
                 if (unreadChats > 0)
-                  span(classes: 'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger', [
+                  span(classes: 'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-light fs-8 px-1.5', [
                     Component.text(unreadChats.toString()),
                   ]),
               ],
@@ -271,10 +271,10 @@ class _AdminLayoutState extends State<AdminLayout> {
           ]),
 
           // System Notifications
-          li(classes: 'nav-item dropdown me-2', [
-            a(classes: 'nav-link position-relative', href: '#', attributes: {'data-bs-toggle': 'dropdown'}, [
+          li(classes: 'nav-item dropdown me-3', [
+            a(classes: 'nav-link position-relative p-1 me-1', href: '#', attributes: {'data-bs-toggle': 'dropdown'}, [
               i(classes: 'bi bi-bell fs-5', []),
-              span(classes: 'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark', [Component.text('5')]),
+              span(classes: 'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark border border-light fs-8 px-1.5', [Component.text('5')]),
             ]),
             ul(classes: 'dropdown-menu dropdown-menu-lg dropdown-menu-end shadow p-0', [
               li(classes: 'dropdown-header bg-light fw-bold text-dark py-2 px-3 border-bottom', [
