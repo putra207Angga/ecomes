@@ -4,6 +4,7 @@ import 'dart:html' as html;
 import 'package:jaspr/dom.dart';
 import 'package:jaspr/jaspr.dart';
 import '../services/app_store.dart';
+import '../services/database_service.dart';
 
 class SettingsPage extends StatefulComponent {
   const SettingsPage({super.key});
@@ -57,6 +58,31 @@ class _SettingsPageState extends State<SettingsPage> {
     Future.delayed(const Duration(milliseconds: 3000), () {
       if (mounted) setState(() => toastMessage = null);
     });
+  }
+
+  void _exportDatabase() {
+    DatabaseService().exportDatabaseBackupJson();
+    setState(() {
+      toastMessage = 'File backup database JSON berhasil di-download!';
+    });
+  }
+
+  void _handleImportDatabase(dynamic event) async {
+    final success = await DatabaseService().importDatabaseBackupJson(event);
+    if (success) {
+      final s = AppStore().settings;
+      setState(() {
+        storeName = s.storeName;
+        phone = s.phone;
+        email = s.email;
+        address = s.address;
+        couriers = s.couriers;
+        midtransKey = s.midtransKey;
+        xenditKey = s.xenditKey;
+        taxRate = s.taxRate;
+        toastMessage = 'Data database dari file backup JSON berhasil di-restore!';
+      });
+    }
   }
 
   void _resetDefaultData() {
@@ -273,7 +299,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 Component.text('Aplikasi E-Comes menyimpan seluruh data produk, pesanan, testimoni, dan konfigurasi secara mandiri (Zero-Server Dependency). Bebas demo tanpa MySQL atau server DB eksternal.'),
               ]),
             ]),
-            div(classes: 'row g-2 text-center fs-8 fw-bold', [
+            div(classes: 'row g-2 text-center fs-8 fw-bold mb-3', [
               div(classes: 'col-6', [
                 div(classes: 'p-2 border rounded-2 bg-light', [
                   div(classes: 'text-primary fs-6', [Component.text(AppStore().products.length.toString())]),
@@ -285,6 +311,27 @@ class _SettingsPageState extends State<SettingsPage> {
                   div(classes: 'text-success fs-6', [Component.text(AppStore().orders.length.toString())]),
                   span(classes: 'text-muted fw-normal', [Component.text('Pesanan Toko')]),
                 ]),
+              ]),
+            ]),
+            div(classes: 'd-flex flex-column gap-2', [
+              button(
+                type: ButtonType.button,
+                classes: 'btn btn-outline-primary btn-sm rounded-3 fw-semibold w-100 d-flex align-items-center justify-content-center gap-2',
+                events: {'click': (e) => _exportDatabase()},
+                [
+                  i(classes: 'bi bi-download', []),
+                  Component.text('Export Backup Database (JSON)'),
+                ],
+              ),
+              label(classes: 'btn btn-outline-secondary btn-sm rounded-3 fw-semibold w-100 mb-0 d-flex align-items-center justify-content-center gap-2 cursor-pointer', [
+                i(classes: 'bi bi-upload', []),
+                Component.text('Restore DB Dari File JSON'),
+                input(
+                  type: InputType.file,
+                  classes: 'd-none',
+                  attributes: {'accept': '.json'},
+                  events: {'change': (e) => _handleImportDatabase(e)},
+                ),
               ]),
             ]),
           ]),

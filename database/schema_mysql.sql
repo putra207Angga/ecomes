@@ -112,6 +112,26 @@ CREATE TABLE IF NOT EXISTS `order_items` (
     CONSTRAINT `fk_order_items_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- 8. Transactions Table (Tabel Transaksi Pembayaran / Payment Gateway Log)
+CREATE TABLE IF NOT EXISTS `transactions` (
+    `id` VARCHAR(36) NOT NULL,
+    `transaction_no` VARCHAR(100) NOT NULL UNIQUE,
+    `order_id` VARCHAR(36) NOT NULL,
+    `order_no` VARCHAR(50) NOT NULL,
+    `customer_name` VARCHAR(100) NOT NULL,
+    `payment_gateway` VARCHAR(50) NOT NULL, -- 'Midtrans', 'Xendit', 'Bank Transfer', 'COD'
+    `payment_type` VARCHAR(50) NOT NULL, -- 'QRIS', 'BCA VA', 'GoPay', 'Manual'
+    `gross_amount` DECIMAL(12, 2) NOT NULL DEFAULT 0.00,
+    `transaction_status` VARCHAR(30) DEFAULT 'settlement', -- 'settlement', 'pending', 'deny', 'expire', 'refund'
+    `gateway_transaction_id` VARCHAR(100) DEFAULT '',
+    `snap_token` VARCHAR(255) DEFAULT '',
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `idx_transactions_order` (`order_id`),
+    KEY `idx_transactions_no` (`transaction_no`),
+    CONSTRAINT `fk_transactions_order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- 8. Reviews Table (Moderasi Review & Ulasan)
 CREATE TABLE IF NOT EXISTS `reviews` (
     `id` VARCHAR(36) NOT NULL,

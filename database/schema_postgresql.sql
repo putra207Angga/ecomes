@@ -95,6 +95,22 @@ CREATE TABLE IF NOT EXISTS order_items (
     custom_notes TEXT DEFAULT ''
 );
 
+-- 8. Transactions Table (Tabel Transaksi Pembayaran / Payment Gateway Log)
+CREATE TABLE IF NOT EXISTS transactions (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    transaction_no VARCHAR(100) UNIQUE NOT NULL, -- Contoh: TRX-20260916-001
+    order_id UUID REFERENCES orders(id) ON DELETE CASCADE,
+    order_no VARCHAR(50) NOT NULL,
+    customer_name VARCHAR(100) NOT NULL,
+    payment_gateway VARCHAR(50) NOT NULL, -- 'Midtrans', 'Xendit', 'Bank Transfer', 'COD'
+    payment_type VARCHAR(50) NOT NULL, -- 'QRIS', 'BCA VA', 'GoPay', 'Manual'
+    gross_amount DECIMAL(12, 2) NOT NULL DEFAULT 0.00,
+    transaction_status VARCHAR(30) DEFAULT 'settlement', -- 'settlement', 'pending', 'deny', 'expire', 'refund'
+    gateway_transaction_id VARCHAR(100) DEFAULT '',
+    snap_token VARCHAR(255) DEFAULT '',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 -- 8. Reviews Table (Moderasi Review Pembeli & Balasan Admin)
 CREATE TABLE IF NOT EXISTS reviews (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),

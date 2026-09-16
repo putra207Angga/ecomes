@@ -12,6 +12,7 @@ class AppStore {
 
   List<ProductItem> products = [];
   List<OrderItem> orders = [];
+  List<TransactionItem> transactions = [];
   List<CustomerItem> customers = [];
   List<CategoryItem> categories = [];
   List<BrandItem> brands = [];
@@ -37,6 +38,14 @@ class AppStore {
         orders = list.map((e) => OrderItem.fromJson(e)).toList();
       } else {
         _seedOrders();
+      }
+
+      final tStr = html.window.localStorage['ecomes_transactions'];
+      if (tStr != null && tStr.isNotEmpty) {
+        final List list = jsonDecode(tStr);
+        transactions = list.map((e) => TransactionItem.fromJson(e)).toList();
+      } else {
+        _seedTransactions();
       }
 
       final cStr = html.window.localStorage['ecomes_customers'];
@@ -106,6 +115,7 @@ class AppStore {
   void saveAll() {
     html.window.localStorage['ecomes_products'] = jsonEncode(products.map((e) => e.toJson()).toList());
     html.window.localStorage['ecomes_orders'] = jsonEncode(orders.map((e) => e.toJson()).toList());
+    html.window.localStorage['ecomes_transactions'] = jsonEncode(transactions.map((e) => e.toJson()).toList());
     html.window.localStorage['ecomes_customers'] = jsonEncode(customers.map((e) => e.toJson()).toList());
     html.window.localStorage['ecomes_categories'] = jsonEncode(categories.map((e) => e.toJson()).toList());
     html.window.localStorage['ecomes_brands'] = jsonEncode(brands.map((e) => e.toJson()).toList());
@@ -124,6 +134,7 @@ class AppStore {
   void _seedAll() {
     _seedProducts();
     _seedOrders();
+    _seedTransactions();
     _seedCustomers();
     _seedCategories();
     _seedBrands();
@@ -132,6 +143,53 @@ class AppStore {
     _seedChats();
     settings = StoreSettings();
     _seedLandingConfig();
+  }
+
+  void _seedTransactions() {
+    transactions = [
+      TransactionItem(
+        id: 'trx-101',
+        transactionNo: 'TRX-20260915-001',
+        orderId: 'ord-101',
+        orderNo: 'ORD-20260915-001',
+        customerName: 'Siti Rahma',
+        paymentGateway: 'Midtrans',
+        paymentType: 'QRIS',
+        grossAmount: 185000,
+        transactionStatus: 'settlement',
+        gatewayTransactionId: 'mid-trx-884920',
+        snapToken: 'snap-token-884920',
+        date: '2026-09-15 14:20',
+      ),
+      TransactionItem(
+        id: 'trx-102',
+        transactionNo: 'TRX-20260915-002',
+        orderId: 'ord-102',
+        orderNo: 'ORD-20260915-002',
+        customerName: 'Budi Santoso',
+        paymentGateway: 'Bank Transfer',
+        paymentType: 'BCA VA',
+        grossAmount: 320000,
+        transactionStatus: 'settlement',
+        gatewayTransactionId: 'mid-trx-884921',
+        snapToken: 'snap-token-884921',
+        date: '2026-09-15 16:45',
+      ),
+      TransactionItem(
+        id: 'trx-103',
+        transactionNo: 'TRX-20260916-003',
+        orderId: 'ord-103',
+        orderNo: 'ORD-20260916-003',
+        customerName: 'Dewi Lestari',
+        paymentGateway: 'Xendit',
+        paymentType: 'GoPay',
+        grossAmount: 75000,
+        transactionStatus: 'pending',
+        gatewayTransactionId: 'xnd-trx-991203',
+        snapToken: 'snap-token-991203',
+        date: '2026-09-16 09:10',
+      ),
+    ];
   }
 
   void _seedLandingConfig() {

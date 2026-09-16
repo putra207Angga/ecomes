@@ -148,6 +148,67 @@ class OrderItem {
       );
 }
 
+class TransactionItem {
+  final String id;
+  final String transactionNo;
+  final String orderId;
+  final String orderNo;
+  final String customerName;
+  final String paymentGateway; // 'Midtrans', 'Xendit', 'Bank Transfer', 'COD'
+  final String paymentType; // 'QRIS', 'BCA VA', 'GoPay', 'Manual'
+  final double grossAmount;
+  String transactionStatus; // 'settlement', 'pending', 'deny', 'expire', 'refund'
+  final String gatewayTransactionId;
+  final String snapToken;
+  final String date;
+
+  TransactionItem({
+    required this.id,
+    required this.transactionNo,
+    required this.orderId,
+    required this.orderNo,
+    required this.customerName,
+    required this.paymentGateway,
+    required this.paymentType,
+    required this.grossAmount,
+    required this.transactionStatus,
+    this.gatewayTransactionId = '',
+    this.snapToken = '',
+    required this.date,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'transactionNo': transactionNo,
+        'orderId': orderId,
+        'orderNo': orderNo,
+        'customerName': customerName,
+        'paymentGateway': paymentGateway,
+        'paymentType': paymentType,
+        'grossAmount': grossAmount,
+        'transactionStatus': transactionStatus,
+        'gatewayTransactionId': gatewayTransactionId,
+        'snapToken': snapToken,
+        'date': date,
+      };
+
+  factory TransactionItem.fromJson(Map<String, dynamic> json) => TransactionItem(
+        id: json['id'] as String,
+        transactionNo: json['transactionNo'] as String,
+        orderId: json['orderId'] as String,
+        orderNo: json['orderNo'] as String,
+        customerName: (json['customerName'] ?? 'Pelanggan') as String,
+        paymentGateway: json['paymentGateway'] as String,
+        paymentType: json['paymentType'] as String,
+        grossAmount: (json['grossAmount'] as num).toDouble(),
+        transactionStatus: json['transactionStatus'] as String,
+        gatewayTransactionId: (json['gatewayTransactionId'] ?? '') as String,
+        snapToken: (json['snapToken'] ?? '') as String,
+        date: json['date'] as String,
+      );
+}
+
+
 class CustomerItem {
   final String id;
   String name;
