@@ -16,6 +16,7 @@ class _OrdersPageState extends State<OrdersPage> {
   String selectedStatus = 'Semua';
   String searchQuery = '';
 
+  OrderItem? activeOrderForDetail;
   OrderItem? activeOrderForTracking;
   String trackingInput = '';
 
@@ -206,44 +207,69 @@ class _OrdersPageState extends State<OrdersPage> {
                           small(classes: 'text-danger d-block fs-8', [Component.text('Alasan: ${o.cancelReason}')]),
                       ]),
                       td(classes: 'text-end pe-3', [
-                        div(classes: 'btn-group btn-group-sm', [
+                        div(classes: 'd-flex align-items-center justify-content-end gap-1', [
+                          // 1. Detail Button
+                          button(
+                            type: ButtonType.button,
+                            classes: 'btn btn-sm btn-light border text-primary rounded-circle shadow-sm px-2 py-1',
+                            attributes: {'title': 'Lihat Rincian & Detail Pesanan', 'data-bs-toggle': 'tooltip'},
+                            events: {'click': (e) => setState(() => activeOrderForDetail = o)},
+                            [i(classes: 'bi bi-eye-fill fs-7', [])],
+                          ),
+
+                          // 2. Status Action Button
                           if (o.status == 'Pending')
                             button(
                               type: ButtonType.button,
-                              classes: 'btn btn-outline-info',
+                              classes: 'btn btn-sm btn-info text-white rounded-circle shadow-sm px-2 py-1',
+                              attributes: {'title': 'Proses Pesanan (Mulai Packing)', 'data-bs-toggle': 'tooltip'},
                               events: {'click': (e) => _updateStatus(o, 'Diproses')},
-                              [Component.text('Proses')],
+                              [i(classes: 'bi bi-box-seam-fill fs-7', [])],
                             ),
                           if (o.status == 'Diproses')
                             button(
                               type: ButtonType.button,
-                              classes: 'btn btn-outline-primary',
+                              classes: 'btn btn-sm btn-primary text-white rounded-circle shadow-sm px-2 py-1',
+                              attributes: {'title': 'Kirim Paket & Input No Resi', 'data-bs-toggle': 'tooltip'},
                               events: {'click': (e) => _updateStatus(o, 'Dikirim')},
-                              [Component.text('Kirim & Resi')],
+                              [i(classes: 'bi bi-truck fs-7', [])],
                             ),
                           if (o.status == 'Dikirim')
                             button(
                               type: ButtonType.button,
-                              classes: 'btn btn-outline-success',
+                              classes: 'btn btn-sm btn-success text-white rounded-circle shadow-sm px-2 py-1',
+                              attributes: {'title': 'Tandai Pesanan Selesai / Diterima', 'data-bs-toggle': 'tooltip'},
                               events: {'click': (e) => _updateStatus(o, 'Selesai')},
-                              [Component.text('Selesaikan')],
+                              [i(classes: 'bi bi-check-circle-fill fs-7', [])],
                             ),
+
+                          // 3. Print Shipping Label Button
+                          button(
+                            type: ButtonType.button,
+                            classes: 'btn btn-sm btn-warning text-dark rounded-circle shadow-sm px-2 py-1',
+                            attributes: {'title': 'Cetak Stiker Resi Pengiriman (Thermal Label)', 'data-bs-toggle': 'tooltip'},
+                            events: {'click': (e) => setState(() => activeOrderForShippingLabel = o)},
+                            [i(classes: 'bi bi-printer-fill fs-7', [])],
+                          ),
+
+                          // 4. WhatsApp Contact Button
+                          button(
+                            type: ButtonType.button,
+                            classes: 'btn btn-sm btn-success text-white rounded-circle shadow-sm px-2 py-1',
+                            attributes: {'title': 'Chat WhatsApp Customer (${o.customerPhone})', 'data-bs-toggle': 'tooltip'},
+                            events: {'click': (e) => _openWhatsApp(o.customerPhone, o.orderNo)},
+                            [i(classes: 'bi bi-whatsapp fs-7', [])],
+                          ),
+
+                          // 5. Cancel Button
                           if (o.status != 'Selesai' && o.status != 'Dibatalkan')
                             button(
                               type: ButtonType.button,
-                              classes: 'btn btn-outline-danger',
+                              classes: 'btn btn-sm btn-outline-danger rounded-circle shadow-sm px-2 py-1',
+                              attributes: {'title': 'Batalkan Pesanan Ini', 'data-bs-toggle': 'tooltip'},
                               events: {'click': (e) => _updateStatus(o, 'Dibatalkan')},
-                              [Component.text('Batal')],
+                              [i(classes: 'bi bi-x-circle-fill fs-7', [])],
                             ),
-                          button(
-                            type: ButtonType.button,
-                            classes: 'btn btn-outline-dark',
-                            events: {'click': (e) => setState(() => activeOrderForShippingLabel = o)},
-                            [
-                              i(classes: 'bi bi-tag-fill me-1', []),
-                              Component.text('Label Resi'),
-                            ],
-                          ),
                         ]),
                       ]),
                     ]),
@@ -252,6 +278,137 @@ class _OrdersPageState extends State<OrdersPage> {
           ]),
         ]),
       ]),
+
+      // 3.5. Modal Detail Rincian Pesanan
+      if (activeOrderForDetail != null)
+        div(classes: 'modal fade show d-block bg-dark bg-opacity-75 d-print-none', attributes: {'tabindex': '-1'}, [
+          div(classes: 'modal-dialog modal-dialog-centered modal-lg', [
+            div(classes: 'modal-content border-0 shadow-lg rounded-4 overflow-hidden', [
+              div(classes: 'modal-header bg-primary text-white py-3', [
+                div(classes: 'd-flex align-items-center gap-2', [
+                  i(classes: 'bi bi-receipt fs-4', []),
+                  div([
+                    h5(classes: 'modal-title fw-bold fs-6 mb-0', [
+                      Component.text('Rincian Pesanan: ${activeOrderForDetail!.orderNo}'),
+                    ]),
+                    small(classes: 'opacity-75 fs-8', [
+                      Component.text('Tanggal: ${activeOrderForDetail!.date}'),
+                    ]),
+                  ]),
+                ]),
+                button(
+                  type: ButtonType.button,
+                  classes: 'btn-close btn-close-white',
+                  events: {'click': (e) => setState(() => activeOrderForDetail = null)},
+                  [],
+                ),
+              ]),
+              div(classes: 'modal-body p-4 bg-light', [
+                div(classes: 'row g-3 mb-4', [
+                  div(classes: 'col-md-6', [
+                    div(classes: 'p-3 bg-white rounded-3 border shadow-sm h-100', [
+                      h6(classes: 'fw-bold text-dark fs-7 mb-2 border-bottom pb-2', [
+                        i(classes: 'bi bi-person-fill text-primary me-2', []),
+                        Component.text('Informasi Pemesan'),
+                      ]),
+                      p(classes: 'mb-1 fs-7 text-dark fw-bold', [Component.text(activeOrderForDetail!.customerName)]),
+                      p(classes: 'mb-1 fs-7 text-muted', [
+                        i(classes: 'bi bi-telephone me-1', []),
+                        Component.text(activeOrderForDetail!.customerPhone),
+                      ]),
+                      button(
+                        type: ButtonType.button,
+                        classes: 'btn btn-sm btn-outline-success rounded-pill mt-2 px-3 fs-8 fw-bold',
+                        events: {'click': (e) => _openWhatsApp(activeOrderForDetail!.customerPhone, activeOrderForDetail!.orderNo)},
+                        [
+                          i(classes: 'bi bi-whatsapp me-1', []),
+                          Component.text('Chat Customer via WhatsApp'),
+                        ],
+                      ),
+                    ]),
+                  ]),
+                  div(classes: 'col-md-6', [
+                    div(classes: 'p-3 bg-white rounded-3 border shadow-sm h-100', [
+                      h6(classes: 'fw-bold text-dark fs-7 mb-2 border-bottom pb-2', [
+                        i(classes: 'bi bi-truck text-primary me-2', []),
+                        Component.text('Status & Pengiriman'),
+                      ]),
+                      div(classes: 'd-flex align-items-center justify-content-between mb-2', [
+                        span(classes: 'text-muted fs-7', [Component.text('Status Pesanan:')]),
+                        span(classes: 'badge ${_getStatusBadge(activeOrderForDetail!.status)} rounded-pill fs-8', [
+                          Component.text(activeOrderForDetail!.status),
+                        ]),
+                      ]),
+                      p(classes: 'mb-1 fs-7 text-dark fw-semibold', [
+                        Component.text('Ekspedisi: ${activeOrderForDetail!.courier}'),
+                      ]),
+                      if (activeOrderForDetail!.trackingNo.isNotEmpty)
+                        p(classes: 'mb-0 fs-7 text-primary fw-bold font-monospace', [
+                          Component.text('No Resi: ${activeOrderForDetail!.trackingNo}'),
+                        ])
+                      else
+                        p(classes: 'mb-0 fs-8 text-muted', [Component.text('No Resi belum diinput')]),
+                    ]),
+                  ]),
+                ]),
+                div(classes: 'bg-white rounded-3 border shadow-sm p-3 mb-3', [
+                  h6(classes: 'fw-bold text-dark fs-7 mb-3 border-bottom pb-2', [
+                    i(classes: 'bi bi-bag-fill text-primary me-2', []),
+                    Component.text('Daftar Produk Yang Dipesan'),
+                  ]),
+                  table(classes: 'table table-hover align-middle mb-0 fs-7', [
+                    thead(classes: 'table-light', [
+                      tr([
+                        th([Component.text('Nama Produk')]),
+                        th(classes: 'text-center', [Component.text('Jumlah')]),
+                        th(classes: 'text-end', [Component.text('Harga Satuan')]),
+                        th(classes: 'text-end', [Component.text('Subtotal')]),
+                      ]),
+                    ]),
+                    tbody([
+                      for (var item in activeOrderForDetail!.items)
+                        tr([
+                          td(classes: 'fw-semibold text-dark', [Component.text(item.productName)]),
+                          td(classes: 'text-center fw-bold', [Component.text('x${item.qty}')]),
+                          td(classes: 'text-end text-muted', [Component.text('Rp ${item.price.toInt()}')]),
+                          td(classes: 'text-end fw-bold text-dark', [Component.text('Rp ${(item.price * item.qty).toInt()}')]),
+                        ]),
+                    ]),
+                  ]),
+                  div(classes: 'd-flex justify-content-between align-items-center border-top pt-3 mt-3', [
+                    span(classes: 'fw-bold text-dark fs-6', [Component.text('Total Pembayaran:')]),
+                    span(classes: 'fw-extrabold text-danger fs-5', [Component.text('Rp ${activeOrderForDetail!.total.toInt()}')]),
+                  ]),
+                ]),
+              ]),
+              div(classes: 'modal-footer bg-white py-3', [
+                button(
+                  type: ButtonType.button,
+                  classes: 'btn btn-secondary px-3 rounded-pill fw-semibold',
+                  events: {'click': (e) => setState(() => activeOrderForDetail = null)},
+                  [Component.text('Tutup')],
+                ),
+                button(
+                  type: ButtonType.button,
+                  classes: 'btn btn-dark px-3 rounded-pill fw-semibold',
+                  events: {
+                    'click': (e) {
+                      final target = activeOrderForDetail!;
+                      setState(() {
+                        activeOrderForDetail = null;
+                        activeOrderForShippingLabel = target;
+                      });
+                    }
+                  },
+                  [
+                    i(classes: 'bi bi-printer me-1', []),
+                    Component.text('Cetak Label Thermal'),
+                  ],
+                ),
+              ]),
+            ]),
+          ]),
+        ]),
 
       // 4. Modal Input Resi
       if (activeOrderForTracking != null)
