@@ -175,8 +175,9 @@
     <!-- Flutter Manifest -->
     <link rel="manifest" href="manifest.json">
 
-    <!-- Jaspr Client Bundle -->
-    <script defer src="main.client.dart.js"></script>
+    <!-- Flutter / Jaspr Web Client Bundle -->
+    <script src="flutter_bootstrap.js" async></script>
+    <script defer src="main.dart.js"></script>
   </head>
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!-- Splash Screen Loading Animation -->
@@ -296,7 +297,7 @@
       });
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
-          navigator.serviceWorker.register('/sw.js');
+          navigator.serviceWorker.register('sw.js');
         });
       }
     </script>
