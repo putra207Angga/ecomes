@@ -359,15 +359,6 @@
         initIndonesiaMap();
       });
 
-      // Handle AdminLTE Sidebar Expand / Collapse Toggle
-      document.addEventListener('click', function(e) {
-        var sidebarBtn = e.target.closest('[data-lte-toggle="sidebar"], .bi-list');
-        if (sidebarBtn) {
-          e.preventDefault();
-          document.body.classList.toggle('sidebar-collapse');
-        }
-      });
-
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
           navigator.serviceWorker.register('sw.js');

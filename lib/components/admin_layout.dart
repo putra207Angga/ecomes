@@ -23,12 +23,23 @@ class _AdminLayoutState extends State<AdminLayout> {
   void _toggleSidebar() {
     final body = html.document.body;
     if (body != null) {
-      if (body.classes.contains('sidebar-collapse')) {
-        body.classes.remove('sidebar-collapse');
-        body.classes.add('sidebar-open');
+      final width = html.window.innerWidth ?? 1000;
+      if (width < 992) {
+        if (body.classes.contains('sidebar-open')) {
+          body.classes.remove('sidebar-open');
+          body.classes.add('sidebar-collapse');
+        } else {
+          body.classes.add('sidebar-open');
+          body.classes.remove('sidebar-collapse');
+        }
       } else {
-        body.classes.add('sidebar-collapse');
-        body.classes.remove('sidebar-open');
+        if (body.classes.contains('sidebar-collapse')) {
+          body.classes.remove('sidebar-collapse');
+          body.classes.add('sidebar-open');
+        } else {
+          body.classes.add('sidebar-collapse');
+          body.classes.remove('sidebar-open');
+        }
       }
     }
   }
@@ -123,6 +134,7 @@ class _AdminLayoutState extends State<AdminLayout> {
               events: {
                 'click': (e) {
                   e.preventDefault();
+                  e.stopPropagation();
                   _toggleSidebar();
                 }
               },
@@ -460,6 +472,14 @@ class _AdminLayoutState extends State<AdminLayout> {
         child: a(
           classes: 'nav-link d-flex align-items-center justify-content-between px-3 py-2 rounded-2 ${isActive ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-body-emphasis'}',
           href: path,
+          events: {
+            'click': (e) {
+              if ((html.window.innerWidth ?? 1000) < 992) {
+                html.document.body?.classes.remove('sidebar-open');
+                html.document.body?.classes.add('sidebar-collapse');
+              }
+            }
+          },
           [
             div(classes: 'd-flex align-items-center gap-2', [
               i(classes: 'bi $icon fs-6 ${isActive ? 'text-white' : 'text-primary'}', []),
