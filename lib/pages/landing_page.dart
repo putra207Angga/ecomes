@@ -298,6 +298,12 @@ class _LandingPageState extends State<LandingPage> {
 
       // Write Review Modal
       if (showWriteReviewModal) _buildWriteReviewModal(),
+
+      // Member Portal & E-Card Modal
+      if (showMemberModal) _buildMemberModal(),
+
+      // Wishlist Modal
+      if (showWishlistModal) _buildWishlistModal(),
     ]);
   }
 
@@ -354,13 +360,45 @@ class _LandingPageState extends State<LandingPage> {
           ),
           button(
             type: ButtonType.button,
-            classes: 'btn btn-outline-danger position-relative rounded-pill px-3 py-1 fs-7 fw-semibold shadow-sm text-nowrap d-flex align-items-center gap-1',
+            classes: 'btn btn-outline-danger rounded-pill px-3 py-1 fs-7 fw-semibold shadow-xs text-nowrap d-flex align-items-center gap-1 position-relative',
+            events: {'click': (e) => setState(() => showWishlistModal = true)},
+            [
+              i(classes: 'bi bi-heart-fill text-danger me-1', []),
+              Component.text('Wishlist'),
+              if (AppStore().wishlistProductIds.isNotEmpty)
+                span(classes: 'badge rounded-pill bg-danger text-white ms-1', [Component.text(AppStore().wishlistProductIds.length.toString())]),
+            ],
+          ),
+          if (AppStore().currentMember != null)
+            button(
+              type: ButtonType.button,
+              classes: 'btn btn-outline-primary rounded-pill px-3 py-1 fs-7 fw-bold shadow-xs text-nowrap d-flex align-items-center gap-1',
+              events: {'click': (e) => setState(() => showMemberModal = true)},
+              [
+                i(classes: 'bi bi-award-fill text-primary me-1', []),
+                span(classes: 'badge bg-primary text-white rounded-pill fs-8 me-1', [Component.text(AppStore().currentMember!.level)]),
+                span(classes: 'd-none d-md-inline', [Component.text(AppStore().currentMember!.name.split(' ')[0])]),
+              ],
+            )
+          else
+            button(
+              type: ButtonType.button,
+              classes: 'btn btn-outline-primary rounded-pill px-3 py-1 fs-7 fw-semibold shadow-xs text-nowrap d-flex align-items-center gap-1',
+              events: {'click': (e) => setState(() { showMemberModal = true; memberErrorMsg = ''; })},
+              [
+                i(classes: 'bi bi-person-circle me-1', []),
+                Component.text('Member 👤'),
+              ],
+            ),
+          button(
+            type: ButtonType.button,
+            classes: 'btn btn-danger position-relative rounded-pill px-3 py-1 fs-7 fw-bold shadow-sm text-nowrap d-flex align-items-center gap-1',
             events: {'click': (e) => setState(() => showCartModal = true)},
             [
               i(classes: 'bi bi-cart3 me-1', []),
               Component.text('Keranjang'),
               if (totalCartCount > 0)
-                span(classes: 'badge rounded-pill bg-danger shadow-sm ms-1', [
+                span(classes: 'badge rounded-pill bg-white text-danger shadow-sm ms-1', [
                   Component.text(totalCartCount.toString()),
                 ]),
             ],
@@ -1449,6 +1487,342 @@ class _LandingPageState extends State<LandingPage> {
               classes: 'btn btn-danger rounded-pill px-4 fw-bold shadow-sm',
               events: {'click': (e) => _submitBuyerReview()},
               [Component.text('Kirim Ulasan')],
+            ),
+          ]),
+        ]),
+      ]),
+    ]);
+  }
+
+  Component _buildWishlistModal() {
+    final store = AppStore();
+    final wishlistedProducts = store.products.where((p) => store.wishlistProductIds.contains(p.id)).toList();
+
+    return div(classes: 'modal fade show d-block bg-dark bg-opacity-75', attributes: {'tabindex': '-1'}, [
+      div(classes: 'modal-dialog modal-dialog-centered modal-lg', [
+        div(classes: 'modal-content border-0 shadow-lg rounded-4 overflow-hidden', [
+          div(classes: 'modal-header bg-danger text-white py-3', [
+            h5(classes: 'modal-title fw-bold fs-6 d-flex align-items-center gap-2', [
+              i(classes: 'bi bi-heart-fill fs-5', []),
+              Component.text('Wishlist & Favorit Saya'),
+            ]),
+            button(
+              type: ButtonType.button,
+              classes: 'btn-close btn-close-white',
+              events: {'click': (e) => setState(() => showWishlistModal = false)},
+              [],
+            ),
+          ]),
+          div(classes: 'modal-body p-4 bg-light', [
+            if (wishlistedProducts.isEmpty)
+              div(classes: 'text-center py-5 text-muted', [
+                i(classes: 'bi bi-heartbreak fs-1 text-secondary mb-2 d-block', []),
+                p(classes: 'fs-6 fw-semibold mb-1', [Component.text('Belum ada produk favorit di wishlist Anda.')]),
+                small([Component.text('Klik ikon hati pada produk di katalog untuk menyimpannya di sini.')]),
+              ])
+            else
+              div(classes: 'row g-3', [
+                for (var item in wishlistedProducts)
+                  div(classes: 'col-md-6', [
+                    div(classes: 'card border-0 shadow-sm rounded-3 p-3 bg-white d-flex flex-row align-items-center gap-3', [
+                      img(
+                        src: item.image,
+                        classes: 'rounded-3 border object-fit-cover',
+                        attributes: {'width': '70', 'height': '70', 'alt': item.name},
+                      ),
+                      div(classes: 'flex-grow-1', [
+                        h6(classes: 'fw-bold text-dark fs-7 mb-1 text-truncate max-w-180px', [Component.text(item.name)]),
+                        div(classes: 'text-danger fw-extrabold fs-7 mb-2', [Component.text('Rp ${item.price.toInt()}')]),
+                        div(classes: 'd-flex gap-2', [
+                          button(
+                            type: ButtonType.button,
+                            classes: 'btn btn-danger btn-sm rounded-pill fs-8 fw-semibold px-2',
+                            events: {
+                              'click': (e) {
+                                _addToCart({'id': item.id, 'name': item.name, 'price': item.price.toInt(), 'image': item.image});
+                              }
+                            },
+                            [
+                              i(classes: 'bi bi-cart-plus me-1', []),
+                              Component.text('+ Keranjang'),
+                            ],
+                          ),
+                          button(
+                            type: ButtonType.button,
+                            classes: 'btn btn-outline-secondary btn-sm rounded-circle p-1 me-1',
+                            events: {
+                              'click': (e) {
+                                setState(() {
+                                  store.toggleWishlist(item.id);
+                                });
+                              }
+                            },
+                            [i(classes: 'bi bi-trash text-danger fs-7', [])],
+                          ),
+                        ]),
+                      ]),
+                    ]),
+                  ]),
+              ]),
+          ]),
+          div(classes: 'modal-footer bg-white py-3', [
+            button(
+              type: ButtonType.button,
+              classes: 'btn btn-secondary rounded-pill px-4 fw-semibold',
+              events: {'click': (e) => setState(() => showWishlistModal = false)},
+              [Component.text('Tutup Wishlist')],
+            ),
+          ]),
+        ]),
+      ]),
+    ]);
+  }
+
+  Component _buildMemberModal() {
+    final store = AppStore();
+    final member = store.currentMember;
+
+    return div(classes: 'modal fade show d-block bg-dark bg-opacity-75', attributes: {'tabindex': '-1'}, [
+      div(classes: 'modal-dialog modal-dialog-centered modal-lg', [
+        div(classes: 'modal-content border-0 shadow-lg rounded-4 overflow-hidden', [
+          div(classes: 'modal-header bg-primary text-white py-3', [
+            h5(classes: 'modal-title fw-bold fs-6 d-flex align-items-center gap-2', [
+              i(classes: 'bi bi-person-badge-fill fs-5', []),
+              Component.text('Portal Member & E-Card Digital Abel\'z Handmade'),
+            ]),
+            button(
+              type: ButtonType.button,
+              classes: 'btn-close btn-close-white',
+              events: {'click': (e) => setState(() => showMemberModal = false)},
+              [],
+            ),
+          ]),
+          div(classes: 'modal-body p-4 bg-light', [
+            if (member != null) ...[
+              // Digital E-Card Member Card
+              div(
+                classes: 'card border-0 shadow-lg rounded-4 p-4 text-white mb-4 position-relative overflow-hidden',
+                styles: Styles(
+                  background: 'linear-gradient(135deg, #2D2424 0%, #C87D74 60%, #8B9B88 100%)',
+                ),
+                [
+                  div(classes: 'd-flex justify-content-between align-items-start mb-3', [
+                    div([
+                      span(classes: 'badge bg-white text-dark rounded-pill px-3 py-1 fs-8 fw-extrabold mb-1 shadow-xs', [
+                        Component.text('🧶 MEMBER E-CARD OFFICIAL'),
+                      ]),
+                      h4(classes: 'fw-extrabold mb-0 text-white tracking-wide', [Component.text(member.name)]),
+                      small(classes: 'text-white-50 fs-8', [Component.text('ID: ${member.id} • Terdaftar sejak ${member.registeredDate}')]),
+                    ]),
+                    span(classes: 'badge bg-warning text-dark border border-warning rounded-pill px-3 py-2 fs-7 fw-extrabold shadow-sm', [
+                      i(classes: 'bi bi-star-fill me-1', []),
+                      Component.text(member.level),
+                    ]),
+                  ]),
+                  div(classes: 'row g-3 align-items-center border-top border-white border-opacity-25 pt-3 mt-1', [
+                    div(classes: 'col-6', [
+                      small(classes: 'text-white-50 d-block fs-8 text-uppercase fw-bold', [Component.text('Saldo Poin Belanja:')]),
+                      span(classes: 'fs-3 fw-extrabold text-warning', [Component.text('${member.points} Poin ⭐')]),
+                    ]),
+                    div(classes: 'col-6 text-end', [
+                      small(classes: 'text-white-50 d-block fs-8 text-uppercase fw-bold', [Component.text('Benefit Diskon Member:')]),
+                      span(classes: 'fs-4 fw-bold text-white', [Component.text('${member.discountPercent.toInt()}% Off All Products')]),
+                    ]),
+                  ]),
+                ],
+              ),
+
+              // Benefits Summary Card
+              div(classes: 'card border-0 shadow-sm rounded-3 p-3 bg-white mb-4', [
+                h6(classes: 'fw-bold text-dark fs-7 mb-2', [Component.text('Keuntungan Eksklusif Keanggotaan Anda:')]),
+                div(classes: 'row g-2 fs-7', [
+                  div(classes: 'col-md-6 d-flex align-items-center gap-2', [
+                    i(classes: 'bi bi-patch-check-fill text-success', []),
+                    span([Component.text('Diskon Otomatis ${member.discountPercent.toInt()}% di setiap keranjang')]),
+                  ]),
+                  div(classes: 'col-md-6 d-flex align-items-center gap-2', [
+                    i(classes: 'bi bi-star-fill text-warning', []),
+                    span([Component.text('Kumpul Poin: Rp 10.000 = 1 Poin Belanja')]),
+                  ]),
+                  div(classes: 'col-md-6 d-flex align-items-center gap-2 mt-2', [
+                    i(classes: 'bi bi-lightning-charge-fill text-danger', []),
+                    span([Component.text('Prioritas Antrean PO Rajutan Custom')]),
+                  ]),
+                  div(classes: 'col-md-6 d-flex align-items-center gap-2 mt-2', [
+                    i(classes: 'bi bi-gift-fill text-primary', []),
+                    span([Component.text('Bonus Poin Ulang Tahun & Flash Sale')]),
+                  ]),
+                ]),
+              ]),
+
+              // Logout Button
+              div(classes: 'text-end', [
+                button(
+                  type: ButtonType.button,
+                  classes: 'btn btn-outline-danger rounded-pill px-4 fw-semibold fs-7',
+                  events: {
+                    'click': (e) {
+                      setState(() {
+                        store.logoutMember();
+                      });
+                    }
+                  },
+                  [
+                    i(classes: 'bi bi-box-arrow-right me-1', []),
+                    Component.text('Keluar dari Akun Member'),
+                  ],
+                ),
+              ]),
+            ] else ...[
+              // LOGIN / REGISTER FORM FOR GUEST
+              div(classes: 'nav nav-pills nav-fill mb-3 bg-white p-1 rounded-pill border shadow-xs', [
+                button(
+                  type: ButtonType.button,
+                  classes: 'nav-link rounded-pill ${!isRegisteringMember ? 'active bg-primary text-white fw-bold' : 'text-dark'} fs-7',
+                  events: {'click': (e) => setState(() => isRegisteringMember = false)},
+                  [Component.text('Login Member')],
+                ),
+                button(
+                  type: ButtonType.button,
+                  classes: 'nav-link rounded-pill ${isRegisteringMember ? 'active bg-primary text-white fw-bold' : 'text-dark'} fs-7',
+                  events: {'click': (e) => setState(() => isRegisteringMember = true)},
+                  [Component.text('Daftar Member Baru (+100 Poin)')],
+                ),
+              ]),
+
+              if (memberErrorMsg.isNotEmpty)
+                div(classes: 'alert alert-danger rounded-3 py-2 px-3 fs-7 mb-3', [
+                  i(classes: 'bi bi-exclamation-triangle-fill me-1', []),
+                  Component.text(memberErrorMsg),
+                ]),
+
+              if (!isRegisteringMember) ...[
+                // LOGIN FORM
+                div(classes: 'card border-0 shadow-sm rounded-4 p-4 bg-white', [
+                  div(classes: 'mb-3', [
+                    label(classes: 'form-label fw-bold text-dark fs-7', [Component.text('Email atau No. Telepon Member:')]),
+                    input(
+                      type: InputType.text,
+                      classes: 'form-control fs-7',
+                      value: memberEmailInput,
+                      attributes: {'placeholder': 'Contoh: siti@gmail.com / 081234567890'},
+                      events: {'input': (e) => memberEmailInput = (e.target as html.InputElement).value ?? ''},
+                    ),
+                  ]),
+                  div(classes: 'mb-3', [
+                    label(classes: 'form-label fw-bold text-dark fs-7', [Component.text('Password Member:')]),
+                    input(
+                      type: InputType.password,
+                      classes: 'form-control fs-7',
+                      value: memberPasswordInput,
+                      attributes: {'placeholder': 'Masukkan password (default: 123456)'},
+                      events: {'input': (e) => memberPasswordInput = (e.target as html.InputElement).value ?? ''},
+                    ),
+                  ]),
+                  button(
+                    type: ButtonType.button,
+                    classes: 'btn btn-primary rounded-pill w-100 py-2 fw-bold fs-6 shadow-sm',
+                    events: {
+                      'click': (e) {
+                        final success = store.loginMember(emailOrPhone: memberEmailInput, password: memberPasswordInput);
+                        setState(() {
+                          if (success) {
+                            memberErrorMsg = '';
+                          } else {
+                            memberErrorMsg = 'Email/No HP atau password salah. Coba: siti@gmail.com / 123456';
+                          }
+                        });
+                      }
+                    },
+                    [
+                      i(classes: 'bi bi-box-arrow-in-right me-1', []),
+                      Component.text('Masuk ke Dashboard Member'),
+                    ],
+                  ),
+                  small(classes: 'text-muted text-center d-block mt-3 fs-8', [
+                    Component.text('Demo Akun Member: Email siti@gmail.com / Password: 123456'),
+                  ]),
+                ]),
+              ] else ...[
+                // REGISTER FORM
+                div(classes: 'card border-0 shadow-sm rounded-4 p-4 bg-white', [
+                  div(classes: 'mb-3', [
+                    label(classes: 'form-label fw-bold text-dark fs-7', [Component.text('Nama Lengkap:')]),
+                    input(
+                      type: InputType.text,
+                      classes: 'form-control fs-7',
+                      value: memberNameInput,
+                      attributes: {'placeholder': 'Nama Lengkap Pembeli'},
+                      events: {'input': (e) => memberNameInput = (e.target as html.InputElement).value ?? ''},
+                    ),
+                  ]),
+                  div(classes: 'mb-3', [
+                    label(classes: 'form-label fw-bold text-dark fs-7', [Component.text('Email:')]),
+                    input(
+                      type: InputType.email,
+                      classes: 'form-control fs-7',
+                      value: memberEmailInput,
+                      attributes: {'placeholder': 'email@example.com'},
+                      events: {'input': (e) => memberEmailInput = (e.target as html.InputElement).value ?? ''},
+                    ),
+                  ]),
+                  div(classes: 'mb-3', [
+                    label(classes: 'form-label fw-bold text-dark fs-7', [Component.text('No. WhatsApp / Telepon:')]),
+                    input(
+                      type: InputType.text,
+                      classes: 'form-control fs-7',
+                      value: memberPhoneInput,
+                      attributes: {'placeholder': '081234567890'},
+                      events: {'input': (e) => memberPhoneInput = (e.target as html.InputElement).value ?? ''},
+                    ),
+                  ]),
+                  div(classes: 'mb-3', [
+                    label(classes: 'form-label fw-bold text-dark fs-7', [Component.text('Password:')]),
+                    input(
+                      type: InputType.password,
+                      classes: 'form-control fs-7',
+                      value: memberPasswordInput,
+                      attributes: {'placeholder': 'Buat password'},
+                      events: {'input': (e) => memberPasswordInput = (e.target as html.InputElement).value ?? ''},
+                    ),
+                  ]),
+                  button(
+                    type: ButtonType.button,
+                    classes: 'btn btn-success rounded-pill w-100 py-2 fw-bold fs-6 shadow-sm',
+                    events: {
+                      'click': (e) {
+                        if (memberNameInput.trim().isEmpty || memberEmailInput.trim().isEmpty || memberPhoneInput.trim().isEmpty) {
+                          setState(() => memberErrorMsg = 'Mohon lengkapi semua data pendaftaran.');
+                          return;
+                        }
+                        store.registerMember(
+                          name: memberNameInput,
+                          email: memberEmailInput,
+                          phone: memberPhoneInput,
+                          password: memberPasswordInput.isEmpty ? '123456' : memberPasswordInput,
+                        );
+                        setState(() {
+                          memberErrorMsg = '';
+                          toastMessageText = 'Selamat! Pendaftaran Member berhasil. Anda mendapatkan 100 Poin Bonus & Diskon Member!';
+                          showSuccessToast = true;
+                        });
+                      }
+                    },
+                    [
+                      i(classes: 'bi bi-gift-fill me-1', []),
+                      Component.text('Daftar Member & Klaim 100 Poin'),
+                    ],
+                  ),
+                ]),
+              ],
+            ],
+          ]),
+          div(classes: 'modal-footer bg-white py-3', [
+            button(
+              type: ButtonType.button,
+              classes: 'btn btn-secondary rounded-pill px-4 fw-semibold',
+              events: {'click': (e) => setState(() => showMemberModal = false)},
+              [Component.text('Tutup')],
             ),
           ]),
         ]),

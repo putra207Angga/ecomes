@@ -259,6 +259,28 @@ class _AdminLayoutState extends State<AdminLayout> {
         // Right Navbar Icons
         ul(classes: 'navbar-nav ms-auto align-items-center gap-1', [
 
+          // Sound Alert Notification Toggle Button
+          li(classes: 'nav-item me-1', [
+            button(
+              type: ButtonType.button,
+              classes: 'nav-link btn btn-link border-0 p-1 me-1 ${store.soundAlertEnabled ? 'text-primary' : 'text-muted'}',
+              attributes: {
+                'title': store.soundAlertEnabled ? 'Notifikasi Suara Pesanan: AKTIF' : 'Notifikasi Suara Pesanan: MATI'
+              },
+              events: {
+                'click': (e) {
+                  setState(() {
+                    store.soundAlertEnabled = !store.soundAlertEnabled;
+                    if (store.soundAlertEnabled) store.playNotificationChime();
+                  });
+                }
+              },
+              [
+                i(classes: 'bi ${store.soundAlertEnabled ? 'bi-volume-up-fill fs-5' : 'bi-volume-mute-fill fs-5'}', []),
+              ],
+            ),
+          ]),
+
           // Theme Toggle Switcher
           li(classes: 'nav-item dropdown me-1', [
             a(classes: 'nav-link dropdown-toggle d-flex align-items-center gap-1', href: '#', id: 'bd-theme', attributes: {'data-bs-toggle': 'dropdown'}, [

@@ -214,12 +214,15 @@ class CustomerItem {
   String name;
   String email;
   String phone;
-  String level; // 'VIP Member', 'Regular'
+  String level; // 'VIP Member', 'Gold Member', 'Silver Member', 'Bronze Member', 'Regular'
   int totalOrders;
   double totalSpent;
   String avatar;
   String address;
   bool isBlocked;
+  int points;
+  String password;
+  String registeredDate;
 
   CustomerItem({
     required this.id,
@@ -232,7 +235,19 @@ class CustomerItem {
     required this.avatar,
     this.address = 'Jl. Raya Kebon Jeruk No. 45, Jakarta Barat',
     this.isBlocked = false,
+    this.points = 100,
+    this.password = '123456',
+    this.registeredDate = '2026-01-15',
   });
+
+  double get discountPercent {
+    final lvl = level.toLowerCase();
+    if (lvl.contains('vip')) return 15.0;
+    if (lvl.contains('gold')) return 10.0;
+    if (lvl.contains('silver')) return 5.0;
+    if (lvl.contains('bronze')) return 3.0;
+    return 0.0;
+  }
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -245,6 +260,9 @@ class CustomerItem {
         'avatar': avatar,
         'address': address,
         'isBlocked': isBlocked,
+        'points': points,
+        'password': password,
+        'registeredDate': registeredDate,
       };
 
   factory CustomerItem.fromJson(Map<String, dynamic> json) => CustomerItem(
@@ -258,6 +276,9 @@ class CustomerItem {
         avatar: json['avatar'] as String,
         address: (json['address'] ?? 'Jl. Raya Kebon Jeruk No. 45, Jakarta Barat') as String,
         isBlocked: (json['isBlocked'] ?? false) as bool,
+        points: (json['points'] ?? 100) as int,
+        password: (json['password'] ?? '123456') as String,
+        registeredDate: (json['registeredDate'] ?? '2026-01-15') as String,
       );
 }
 

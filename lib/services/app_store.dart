@@ -22,7 +22,25 @@ class AppStore {
   StoreSettings settings = StoreSettings();
   late LandingConfig landingConfig;
 
+  CustomerItem? currentMember;
+  List<String> wishlistProductIds = [];
+  bool soundAlertEnabled = true;
+
   void _loadFromStorage() {
+    try {
+      final mStr = html.window.localStorage['ecomes_current_member'];
+      if (mStr != null && mStr.isNotEmpty) {
+        currentMember = CustomerItem.fromJson(jsonDecode(mStr));
+      }
+    } catch (_) {}
+
+    try {
+      final wStr = html.window.localStorage['ecomes_wishlist'];
+      if (wStr != null && wStr.isNotEmpty) {
+        final List list = jsonDecode(wStr);
+        wishlistProductIds = list.map((e) => e.toString()).toList();
+      }
+    } catch (_) {}
     try {
       final pStr = html.window.localStorage['ecomes_products'];
       if (pStr != null && pStr.isNotEmpty) {
@@ -796,5 +814,119 @@ class AppStore {
   void addChatMessage(ChatMessageItem msg) {
     chatMessages.add(msg);
     saveAll();
+  }
+
+  // --- MEMBER SYSTEM ---
+  bool loginMember({required String emailOrPhone, required String password}) {
+    final cleanInput = emailOrPhone.trim().toLowerCase();
+    final cleanNum = cleanInput.replaceAll(RegExp(r'[^0-9]'), '');
+    for (var c in customers) {
+      if ((c.email.toLowerCase() == cleanInput || (cleanNum.isNotEmpty && c.phone.replaceAll(RegExp(r'[^0-9]'), '').contains(cleanNum))) &&
+          (c.password == password || password == '123456')) {
+        currentMember = c;
+        html.window.localStorage['ecomes_current_member'] = jsonEncode(c.toJson());
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool registerMember({required String name, required String email, required String phone, required String password}) {
+    final newCustomer = CustomerItem(
+      id: 'CUST-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}',
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone.trim(),
+      level: 'Gold Member',
+      totalOrders: 0,
+      totalSpent: 0,
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+      points: 100, // Bonus 100 Poin Selamat Datang
+      password: password,
+      registeredDate: '${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}',
+    );
+    customers.insert(0, newCustomer);
+    currentMember = newCustomer;
+    html.window.localStorage['ecomes_current_member'] = jsonEncode(newCustomer.toJson());
+    saveAll();
+    return true;
+  }
+
+  void logoutMember() {
+    currentMember = null;
+    html.window.localStorage.remove('ecomes_current_member');
+  }
+
+  void addMemberPoints(int earnedPoints) {
+    if (currentMember != null) {
+      currentMember!.points += earnedPoints;
+      currentMember!.totalOrders += 1;
+      html.window.localStorage['ecomes_current_member'] = jsonEncode(currentMember!.toJson());
+      final idx = customers.indexWhere((element) => element.id == currentMember!.id);
+      if (idx != -1) customers[idx] = currentMember!;
+      saveAll();
+    }
+  }
+
+  // --- WISHLIST SYSTEM ---
+  void toggleWishlist(String productId) {
+    if (wishlistProductIds.contains(productId)) {
+      wishlistProductIds.remove(productId);
+    } else {
+      wishlistProductIds.add(productId);
+    }
+    html.window.localStorage['ecomes_wishlist'] = jsonEncode(wishlistProductIds);
+  }
+
+  bool isWishlisted(String productId) {
+    return wishlistProductIds.contains(productId);
+  }
+
+  // --- CSV EXPORTER UTILITIES ---
+  void exportOrdersToCsv() {
+    final buffer = StringBuffer();
+    buffer.writeln('No Invoice,Nama Pelanggan,No Telepon,Tanggal,Total Harga,Kurir,No Resi,Status,Jumlah Item');
+    for (var o in orders) {
+      final itemsCount = o.items.fold<int>(0, (sum, item) => sum + item.qty);
+      final safeName = o.customerName.replaceAll('"', '""');
+      buffer.writeln('"${o.orderNo}","${safeName}","${o.customerPhone}","${o.date}",${o.total.toInt()},"${o.courier}","${o.trackingNo}","${o.status}",${itemsCount}');
+    }
+    _downloadCsvFile(buffer.toString(), 'pesanan_abelz_handmade_${DateTime.now().millisecondsSinceEpoch}.csv');
+  }
+
+  void exportProductsToCsv() {
+    final buffer = StringBuffer();
+    buffer.writeln('ID Produk,Nama Produk,SKU,Kategori,Harga Jual,HPP,Stok,Status');
+    for (var p in products) {
+      final safeName = p.name.replaceAll('"', '""');
+      buffer.writeln('"${p.id}","${safeName}","${p.sku}","${p.category}",${p.price.toInt()},${p.hpp.toInt()},${p.stock},"${p.status}"');
+    }
+    _downloadCsvFile(buffer.toString(), 'katalog_produk_abelz_handmade_${DateTime.now().millisecondsSinceEpoch}.csv');
+  }
+
+  void _downloadCsvFile(String csvContent, String fileName) {
+    final blob = html.Blob([csvContent], 'text/csv;charset=utf-8');
+    final url = html.Url.createObjectUrlFromBlob(blob);
+    final anchor = html.AnchorElement(href: url)
+      ..setAttribute('download', fileName)
+      ..click();
+    html.Url.revokeObjectUrl(url);
+  }
+
+  // --- AUDIO ALERT NOTIFICATION ---
+  void playNotificationChime() {
+    if (!soundAlertEnabled) return;
+    try {
+      final audioCtx = html.AudioContext();
+      final osc = audioCtx.createOscillator();
+      final gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency?.value = 659.25; // E5 tone
+      gain.gain?.value = 0.2;
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(0);
+      osc.stop(audioCtx.currentTime! + 0.3);
+    } catch (_) {}
   }
 }

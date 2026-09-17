@@ -180,6 +180,15 @@ class _ProductsPageState extends State<ProductsPage> {
                 ),
               button(
                 type: ButtonType.button,
+                classes: 'btn btn-outline-success btn-sm rounded-3 me-2',
+                events: {'click': (e) => AppStore().exportProductsToCsv()},
+                [
+                  i(classes: 'bi bi-file-earmark-spreadsheet me-1', []),
+                  Component.text('Export CSV / Excel'),
+                ],
+              ),
+              button(
+                type: ButtonType.button,
                 classes: 'btn btn-primary btn-sm shadow-sm rounded-3 px-3 fw-semibold',
                 events: {'click': (e) => _openAddModal()},
                 [

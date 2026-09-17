@@ -99,6 +99,15 @@ class _OrdersPageState extends State<OrdersPage> {
             div(classes: 'col-sm-6 text-sm-end mt-2 mt-sm-0', [
               button(
                 type: ButtonType.button,
+                classes: 'btn btn-outline-success btn-sm rounded-3 me-2',
+                events: {'click': (e) => AppStore().exportOrdersToCsv()},
+                [
+                  i(classes: 'bi bi-file-earmark-spreadsheet me-1', []),
+                  Component.text('Export CSV / Excel'),
+                ],
+              ),
+              button(
+                type: ButtonType.button,
                 classes: 'btn btn-outline-primary btn-sm rounded-3 me-2',
                 events: {'click': (e) => setState(() {})},
                 [
