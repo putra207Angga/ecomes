@@ -213,10 +213,11 @@ class AppStore {
   void _seedLandingConfig() {
     landingConfig = LandingConfig(
       storeName: "Abel'z handmade",
-      storeTagline: 'Kerajinan Rajut Estetik & Handcrafted with Love',
+      storeTagline: 'Kerajinan & Handcrafted with Love',
       heroHeadlinePrefix: 'Kehangatan Sentuhan Tangan: ',
       heroHeadlineHighlight: "Tas & Rajutan Custom Abel'z Handmade",
-      heroDescription: "Setiap karya Abel'z handmade dirajut penuh cinta dan ketelitian oleh Yayuk Wahyuni (@yayukwahyuni26). Temukan tas serut rajut, cup holder eco-friendly, gantungan kunci Miffy doll, dan kado unik buatan tangan.",
+      heroDescription:
+          "Setiap karya Abel'z handmade dirajut penuh cinta dan ketelitian oleh Yayuk Wahyuni (@yayukwahyuni26). Temukan tas serut rajut, cup holder eco-friendly, gantungan kunci Miffy doll, dan kado unik buatan tangan.",
       heroBadge: '100% Handcrafted • Benang Poliindo & Milk Cotton',
       heroImage: 'images/abelz_hero_cover.png',
       whatsappNumber: '6281234567890',
@@ -230,7 +231,8 @@ class AppStore {
           'rating': 5,
           'sold': 245,
           'image': 'images/abelz_tas_rajut.png',
-          'description': "Tas serut rajut handmade Abel'z handmade berbahan Benang Poliindo berkualitas tinggi. Ukuran 25x25 cm, kuat, awet, dan estetik. PO bebas request warna.",
+          'description':
+              "Tas serut rajut handmade Abel'z handmade berbahan Benang Poliindo berkualitas tinggi. Ukuran 25x25 cm, kuat, awet, dan estetik. PO bebas request warna.",
           'badge': 'Terlaris 🏆',
         },
         {
@@ -241,7 +243,8 @@ class AppStore {
           'rating': 5,
           'sold': 310,
           'image': 'images/abelz_cup_holder.png',
-          'description': 'Pelindung cangkir & gelas kopi rajut ramah lingkungan. Rajutannya lucu, bumi pun happy! Minum tetap cozy tanpa kantong plastik sekali pakai.',
+          'description':
+              'Pelindung cangkir & gelas kopi rajut ramah lingkungan. Rajutannya lucu, bumi pun happy! Minum tetap cozy tanpa kantong plastik sekali pakai.',
           'badge': 'Eco Choice 🌱',
         },
         {
@@ -252,7 +255,8 @@ class AppStore {
           'rating': 5,
           'sold': 420,
           'image': 'images/abelz_ganci_miffy.png',
-          'description': 'Gantungan tas & kunci berbentuk boneka kelinci Miffy rajut. Menggunakan Benang Milk Cotton super lembut dan tidak bersabut.',
+          'description':
+              'Gantungan tas & kunci berbentuk boneka kelinci Miffy rajut. Menggunakan Benang Milk Cotton super lembut dan tidak bersabut.',
           'badge': 'Aesthetic ✨',
         },
         {
@@ -263,7 +267,8 @@ class AppStore {
           'rating': 5,
           'sold': 180,
           'image': 'images/abelz_ganci_miffy.png',
-          'description': 'Gantungan kunci kura-kura/penyu rajut imut berbahan Milk Cotton Yarn lembut. Sangat cocok untuk souvenir & kado unik.',
+          'description':
+              'Gantungan kunci kura-kura/penyu rajut imut berbahan Milk Cotton Yarn lembut. Sangat cocok untuk souvenir & kado unik.',
           'badge': 'Souvenir ⭐',
         },
         {
@@ -274,7 +279,8 @@ class AppStore {
           'rating': 5,
           'sold': 155,
           'image': 'images/abelz_tas_rajut.png',
-          'description': 'Tote bag rajut estetik ukuran 23x23 cm dari Benang Poliindo. Tangan dua tali nyaman di pundak, siap menemani aktivitas harian.',
+          'description':
+              'Tote bag rajut estetik ukuran 23x23 cm dari Benang Poliindo. Tangan dua tali nyaman di pundak, siap menemani aktivitas harian.',
           'badge': 'New Arrival 🔥',
         },
         {
@@ -285,7 +291,8 @@ class AppStore {
           'rating': 5,
           'sold': 280,
           'image': 'images/abelz_hero_cover.png',
-          'description': 'Pouch rajut serbaguna untuk kosmetik atau perlengkapan kecil. Dibuat rapi dengan sistem Pre-Order custom pilihan warna.',
+          'description':
+              'Pouch rajut serbaguna untuk kosmetik atau perlengkapan kecil. Dibuat rapi dengan sistem Pre-Order custom pilihan warna.',
           'badge': 'Custom PO 🎨',
         },
       ],
@@ -293,21 +300,24 @@ class AppStore {
         {
           'name': 'Rina Agustina',
           'role': 'Pembeli Tas Rajut PO',
-          'comment': "Tas rajut serut dari Abel'z handmade rapi banget rajutannya! Warnanya sesuai request custom saya. Benang Poliindo-nya kokoh dan tahan lama. Recommended banget kak!",
+          'comment':
+              "Tas rajut serut dari Abel'z handmade rapi banget rajutannya! Warnanya sesuai request custom saya. Benang Poliindo-nya kokoh dan tahan lama. Recommended banget kak!",
           'rating': 5,
           'avatar': 'RA',
         },
         {
           'name': 'Siti Nurhaliza',
           'role': 'Pelanggan Cup Holder',
-          'comment': 'Cup holder rajutnya lucu sekali! Sering saya pakai pas beli kopi kekinian. Bebas kantong plastik dan minuman tetap hangat/dingin di pegangan. Thx Mbak Yayuk!',
+          'comment':
+              'Cup holder rajutnya lucu sekali! Sering saya pakai pas beli kopi kekinian. Bebas kantong plastik dan minuman tetap hangat/dingin di pegangan. Thx Mbak Yayuk!',
           'rating': 5,
           'avatar': 'SN',
         },
         {
           'name': 'Maya Indah',
           'role': 'Kolektor Ganci Miffy',
-          'comment': 'Gantungan kunci Miffy doll-nya super duper lembut karena benang Milk Cotton. Langsung saya pasang di ransel. Bakal order varian penyu juga nanti!',
+          'comment':
+              'Gantungan kunci Miffy doll-nya super duper lembut karena benang Milk Cotton. Langsung saya pasang di ransel. Bakal order varian penyu juga nanti!',
           'rating': 5,
           'avatar': 'MI',
         },
@@ -362,7 +372,8 @@ class AppStore {
         stock: 25,
         image: 'images/abelz_tas_rajut.png',
         status: 'Aktif',
-        description: "Tas serut rajut handmade Abel'z handmade berbahan Benang Poliindo berkualitas tinggi. Ukuran 25x25 cm, kuat, awet, dan estetik. PO bebas request warna.",
+        description:
+            "Tas serut rajut handmade Abel'z handmade berbahan Benang Poliindo berkualitas tinggi. Ukuran 25x25 cm, kuat, awet, dan estetik. PO bebas request warna.",
       ),
       ProductItem(
         id: 'RJ-002',
@@ -374,7 +385,8 @@ class AppStore {
         stock: 40,
         image: 'images/abelz_cup_holder.png',
         status: 'Aktif',
-        description: 'Pelindung cangkir & gelas kopi rajut ramah lingkungan. Rajutannya lucu, bumi pun happy! Minum tetap cozy tanpa kantong plastik sekali pakai.',
+        description:
+            'Pelindung cangkir & gelas kopi rajut ramah lingkungan. Rajutannya lucu, bumi pun happy! Minum tetap cozy tanpa kantong plastik sekali pakai.',
       ),
       ProductItem(
         id: 'RJ-003',
@@ -386,7 +398,8 @@ class AppStore {
         stock: 50,
         image: 'images/abelz_ganci_miffy.png',
         status: 'Aktif',
-        description: 'Gantungan tas & kunci berbentuk boneka kelinci Miffy rajut. Menggunakan Benang Milk Cotton super lembut dan tidak bersabut.',
+        description:
+            'Gantungan tas & kunci berbentuk boneka kelinci Miffy rajut. Menggunakan Benang Milk Cotton super lembut dan tidak bersabut.',
       ),
       ProductItem(
         id: 'RJ-004',
@@ -398,7 +411,8 @@ class AppStore {
         stock: 35,
         image: 'images/abelz_ganci_miffy.png',
         status: 'Aktif',
-        description: 'Gantungan kunci kura-kura/penyu rajut imut berbahan Milk Cotton Yarn lembut. Sangat cocok untuk souvenir & kado unik.',
+        description:
+            'Gantungan kunci kura-kura/penyu rajut imut berbahan Milk Cotton Yarn lembut. Sangat cocok untuk souvenir & kado unik.',
       ),
       ProductItem(
         id: 'RJ-005',
@@ -410,7 +424,8 @@ class AppStore {
         stock: 15,
         image: 'images/abelz_tas_rajut.png',
         status: 'Aktif',
-        description: 'Tote bag rajut estetik ukuran 23x23 cm dari Benang Poliindo. Tangan dua tali nyaman di pundak, siap menemani aktivitas harian.',
+        description:
+            'Tote bag rajut estetik ukuran 23x23 cm dari Benang Poliindo. Tangan dua tali nyaman di pundak, siap menemani aktivitas harian.',
       ),
       ProductItem(
         id: 'RJ-006',
@@ -422,7 +437,8 @@ class AppStore {
         stock: 20,
         image: 'images/abelz_hero_cover.png',
         status: 'Aktif',
-        description: 'Pouch rajut serbaguna untuk kosmetik atau perlengkapan kecil. Dibuat rapi dengan sistem Pre-Order custom pilihan warna.',
+        description:
+            'Pouch rajut serbaguna untuk kosmetik atau perlengkapan kecil. Dibuat rapi dengan sistem Pre-Order custom pilihan warna.',
       ),
     ];
   }
@@ -554,9 +570,21 @@ class AppStore {
 
   void _seedBrands() {
     brands = [
-      BrandItem(id: 'BRD-01', name: "Abel'z Handmade Studio", logo: 'bi-heart-fill', country: 'Indonesia', productCount: 250),
+      BrandItem(
+        id: 'BRD-01',
+        name: "Abel'z Handmade Studio",
+        logo: 'bi-heart-fill',
+        country: 'Indonesia',
+        productCount: 250,
+      ),
       BrandItem(id: 'BRD-02', name: 'Poliindo Yarn Craft', logo: 'bi-flower1', country: 'Indonesia', productCount: 180),
-      BrandItem(id: 'BRD-03', name: 'Milk Cotton Premium', logo: 'bi-star-fill', country: 'Indonesia', productCount: 195),
+      BrandItem(
+        id: 'BRD-03',
+        name: 'Milk Cotton Premium',
+        logo: 'bi-star-fill',
+        country: 'Indonesia',
+        productCount: 195,
+      ),
       BrandItem(id: 'BRD-04', name: 'Yayuk Craft Collection', logo: 'bi-gift', country: 'Indonesia', productCount: 120),
     ];
   }
@@ -606,7 +634,8 @@ class AppStore {
         customerName: 'Rina Agustina',
         productTitle: 'Tas Rajut Serut Drawstring Purse 25x25 (Custom Color)',
         rating: 5,
-        comment: "Tas rajut serutnya bagus banget! Warnanya sesuai request custom saya. Benang Poliindo-nya kokoh dan tahan lama.",
+        comment:
+            "Tas rajut serutnya bagus banget! Warnanya sesuai request custom saya. Benang Poliindo-nya kokoh dan tahan lama.",
         date: '15 Sep 2026',
         replyText: 'Terima kasih Kak Rina! Semoga rajutan Abel\'z handmade selalu menemani hari-harinya 😊',
         status: 'Dibalas',
@@ -616,7 +645,8 @@ class AppStore {
         customerName: 'Siti Nurhaliza',
         productTitle: 'Cup Holder Rajut Eco-Friendly Drink Sleeve',
         rating: 5,
-        comment: 'Cup holder rajutnya lucu sekali! Sering saya pakai pas beli kopi kekinian. Bebas kantong plastik dan minuman tetap cozy.',
+        comment:
+            'Cup holder rajutnya lucu sekali! Sering saya pakai pas beli kopi kekinian. Bebas kantong plastik dan minuman tetap cozy.',
         date: '15 Sep 2026',
         replyText: '',
         status: 'Perlu Balasan',
@@ -626,7 +656,8 @@ class AppStore {
         customerName: 'Maya Indah',
         productTitle: 'Gantungan Kunci Boneka Rajut Miffy Doll Charm',
         rating: 5,
-        comment: 'Gantungan kunci Miffy doll-nya super duper lembut karena benang Milk Cotton. Langsung saya pasang di ransel!',
+        comment:
+            'Gantungan kunci Miffy doll-nya super duper lembut karena benang Milk Cotton. Langsung saya pasang di ransel!',
         date: '14 Sep 2026',
         replyText: '',
         status: 'Perlu Balasan',
@@ -800,7 +831,7 @@ class AppStore {
     final cleanQuery = query.trim().toLowerCase();
     if (cleanQuery.isEmpty) return null;
     final cleanNumOnly = cleanQuery.replaceAll(RegExp(r'[^0-9]'), '');
-    
+
     for (var o in orders) {
       if (o.orderNo.toLowerCase().contains(cleanQuery) ||
           o.id.toLowerCase().contains(cleanQuery) ||
@@ -821,7 +852,8 @@ class AppStore {
     final cleanInput = emailOrPhone.trim().toLowerCase();
     final cleanNum = cleanInput.replaceAll(RegExp(r'[^0-9]'), '');
     for (var c in customers) {
-      if ((c.email.toLowerCase() == cleanInput || (cleanNum.isNotEmpty && c.phone.replaceAll(RegExp(r'[^0-9]'), '').contains(cleanNum))) &&
+      if ((c.email.toLowerCase() == cleanInput ||
+              (cleanNum.isNotEmpty && c.phone.replaceAll(RegExp(r'[^0-9]'), '').contains(cleanNum))) &&
           (c.password == password || password == '123456')) {
         currentMember = c;
         html.window.localStorage['ecomes_current_member'] = jsonEncode(c.toJson());
@@ -843,7 +875,8 @@ class AppStore {
       avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
       points: 100, // Bonus 100 Poin Selamat Datang
       password: password,
-      registeredDate: '${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}',
+      registeredDate:
+          '${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}',
     );
     customers.insert(0, newCustomer);
     currentMember = newCustomer;
@@ -889,7 +922,9 @@ class AppStore {
     for (var o in orders) {
       final itemsCount = o.items.fold<int>(0, (sum, item) => sum + item.qty);
       final safeName = o.customerName.replaceAll('"', '""');
-      buffer.writeln('"${o.orderNo}","$safeName","${o.customerPhone}","${o.date}",${o.total.toInt()},"${o.courier}","${o.trackingNo}","${o.status}",$itemsCount');
+      buffer.writeln(
+        '"${o.orderNo}","$safeName","${o.customerPhone}","${o.date}",${o.total.toInt()},"${o.courier}","${o.trackingNo}","${o.status}",$itemsCount',
+      );
     }
     _downloadCsvFile(buffer.toString(), 'pesanan_abelz_handmade_${DateTime.now().millisecondsSinceEpoch}.csv');
   }
@@ -899,7 +934,9 @@ class AppStore {
     buffer.writeln('ID Produk,Nama Produk,SKU,Kategori,Harga Jual,HPP,Stok,Status');
     for (var p in products) {
       final safeName = p.name.replaceAll('"', '""');
-      buffer.writeln('"${p.id}","$safeName","${p.sku}","${p.category}",${p.price.toInt()},${p.hpp.toInt()},${p.stock},"${p.status}"');
+      buffer.writeln(
+        '"${p.id}","$safeName","${p.sku}","${p.category}",${p.price.toInt()},${p.hpp.toInt()},${p.stock},"${p.status}"',
+      );
     }
     _downloadCsvFile(buffer.toString(), 'katalog_produk_abelz_handmade_${DateTime.now().millisecondsSinceEpoch}.csv');
   }
