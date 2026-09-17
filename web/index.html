@@ -52,6 +52,27 @@
 
 
       /* Landing Page Smooth Micro-Animations & Aesthetic Utilities */
+      /* Hide topnavbar scrollbars completely across browsers */
+      .navbar-scroll-hide {
+        overflow-x: auto !important;
+        scrollbar-width: none !important; /* Firefox */
+        -ms-overflow-style: none !important; /* IE/Edge */
+      }
+      .navbar-scroll-hide::-webkit-scrollbar {
+        display: none !important; /* Chrome, Safari, Opera */
+        width: 0 !important;
+        height: 0 !important;
+      }
+      .navbar, .navbar * {
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+      }
+      .navbar::-webkit-scrollbar, .navbar *::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+      }
+
       @keyframes floatSlow {
         0%, 100% { transform: translateY(0px) rotate(0deg); }
         50% { transform: translateY(-14px) rotate(1deg); }

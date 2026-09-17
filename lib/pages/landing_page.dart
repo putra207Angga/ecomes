@@ -321,7 +321,7 @@ class _LandingPageState extends State<LandingPage> {
   Component _buildStorefrontNavbar(int totalCartCount) {
     final config = AppStore().landingConfig;
     return nav(classes: 'navbar navbar-light bg-white shadow-sm sticky-top py-2 border-bottom text-nowrap', [
-      div(classes: 'container-fluid px-lg-4 d-flex align-items-center justify-content-between flex-nowrap gap-2 overflow-x-auto', [
+      div(classes: 'container-fluid px-lg-4 d-flex align-items-center justify-content-between flex-nowrap gap-2 navbar-scroll-hide', [
         // Brand Logo
         Link(
           to: '/landing',
