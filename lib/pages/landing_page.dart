@@ -43,6 +43,17 @@ class _LandingPageState extends State<LandingPage> {
   String reviewCommentInput = '';
   String toastMessageText = 'Pesanan berhasil disimpan ke Sistem Admin Panel (Kelola Pesanan) & diteruskan ke WhatsApp!';
 
+  // Member Portal & Wishlist State
+  bool showMemberModal = false;
+  bool isRegisteringMember = false;
+  String memberEmailInput = '';
+  String memberPasswordInput = '';
+  String memberNameInput = '';
+  String memberPhoneInput = '';
+  String memberErrorMsg = '';
+  bool showWishlistModal = false;
+  bool useMemberPointsInCart = false;
+
   void _addToCart(Map<String, dynamic> item, {String yarn = '', String color = '', String notes = ''}) {
     setState(() {
       final y = yarn.isNotEmpty ? yarn : selectedYarn;
@@ -1602,9 +1613,7 @@ class _LandingPageState extends State<LandingPage> {
               // Digital E-Card Member Card
               div(
                 classes: 'card border-0 shadow-lg rounded-4 p-4 text-white mb-4 position-relative overflow-hidden',
-                styles: Styles(
-                  background: 'linear-gradient(135deg, #2D2424 0%, #C87D74 60%, #8B9B88 100%)',
-                ),
+                attributes: {'style': 'background: linear-gradient(135deg, #2D2424 0%, #C87D74 60%, #8B9B88 100%);'},
                 [
                   div(classes: 'd-flex justify-content-between align-items-start mb-3', [
                     div([

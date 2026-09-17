@@ -889,7 +889,7 @@ class AppStore {
     for (var o in orders) {
       final itemsCount = o.items.fold<int>(0, (sum, item) => sum + item.qty);
       final safeName = o.customerName.replaceAll('"', '""');
-      buffer.writeln('"${o.orderNo}","${safeName}","${o.customerPhone}","${o.date}",${o.total.toInt()},"${o.courier}","${o.trackingNo}","${o.status}",${itemsCount}');
+      buffer.writeln('"${o.orderNo}","$safeName","${o.customerPhone}","${o.date}",${o.total.toInt()},"${o.courier}","${o.trackingNo}","${o.status}",$itemsCount');
     }
     _downloadCsvFile(buffer.toString(), 'pesanan_abelz_handmade_${DateTime.now().millisecondsSinceEpoch}.csv');
   }
@@ -899,7 +899,7 @@ class AppStore {
     buffer.writeln('ID Produk,Nama Produk,SKU,Kategori,Harga Jual,HPP,Stok,Status');
     for (var p in products) {
       final safeName = p.name.replaceAll('"', '""');
-      buffer.writeln('"${p.id}","${safeName}","${p.sku}","${p.category}",${p.price.toInt()},${p.hpp.toInt()},${p.stock},"${p.status}"');
+      buffer.writeln('"${p.id}","$safeName","${p.sku}","${p.category}",${p.price.toInt()},${p.hpp.toInt()},${p.stock},"${p.status}"');
     }
     _downloadCsvFile(buffer.toString(), 'katalog_produk_abelz_handmade_${DateTime.now().millisecondsSinceEpoch}.csv');
   }
@@ -907,7 +907,7 @@ class AppStore {
   void _downloadCsvFile(String csvContent, String fileName) {
     final blob = html.Blob([csvContent], 'text/csv;charset=utf-8');
     final url = html.Url.createObjectUrlFromBlob(blob);
-    final anchor = html.AnchorElement(href: url)
+    html.AnchorElement(href: url)
       ..setAttribute('download', fileName)
       ..click();
     html.Url.revokeObjectUrl(url);
@@ -917,16 +917,8 @@ class AppStore {
   void playNotificationChime() {
     if (!soundAlertEnabled) return;
     try {
-      final audioCtx = html.AudioContext();
-      final osc = audioCtx.createOscillator();
-      final gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency?.value = 659.25; // E5 tone
-      gain.gain?.value = 0.2;
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start(0);
-      osc.stop(audioCtx.currentTime! + 0.3);
+      final audio = html.AudioElement('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU');
+      audio.play();
     } catch (_) {}
   }
 }
