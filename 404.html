@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="scaffolded-by" content="https://github.com/schultek/jaspr">
+
+    <title>Abel'z Handmade - Toko Rajutan & Kerajinan Estetik | Admin Panel</title>
+    <base href="/ecomes/">
+
+    <!-- Google Fonts: Source Sans 3 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css" crossorigin="anonymous">
+
+    <!-- Third Party Plugins -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/styles/overlayscrollbars.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" crossorigin="anonymous">
+
+    <!-- Leaflet.js Map CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- AdminLTE v4 CSS -->
+    <link rel="stylesheet" href="css/adminlte.min.css">
+
+    <!-- Custom CSS for Global Reset and Blue Vector Map Styling -->
+    <style>
+      a, 
+      a:hover, 
+      a:focus, 
+      a:active, 
+      a *, 
+      .nav-link, 
+      .dropdown-item, 
+      .dropdown-item *,
+      .btn, 
+      .breadcrumb-item a, 
+      .small-box-footer,
+      .brand-link, 
+      .sidebar-wrapper a, 
+      .dropdown-footer {
+        text-decoration: none !important;
+      }
+      /* Fix Offcanvas & Modal Backdrop Opacity (Prevent solid black background) */
+      .offcanvas-backdrop, .modal-backdrop {
+        background-color: rgba(0, 0, 0, 0.4) !important;
+        opacity: 0.4 !important;
+      }
+      .offcanvas-backdrop.show, .modal-backdrop.show {
+        opacity: 0.4 !important;
+      }
+
+
+
+      /* Landing Page Smooth Micro-Animations & Aesthetic Utilities */
+      /* Hide topnavbar scrollbars completely across browsers */
+      .navbar-scroll-hide {
+        overflow-x: auto !important;
+        scrollbar-width: none !important; /* Firefox */
+        -ms-overflow-style: none !important; /* IE/Edge */
+      }
+      .navbar-scroll-hide::-webkit-scrollbar {
+        display: none !important; /* Chrome, Safari, Opera */
+        width: 0 !important;
+        height: 0 !important;
+      }
+      .navbar, .navbar * {
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+      }
+      .navbar::-webkit-scrollbar, .navbar *::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+      }
+
+      @keyframes floatSlow {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-14px) rotate(1deg); }
+      }
+      @keyframes pulseSubtle {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.03); opacity: 0.95; }
+      }
+      @keyframes shimmerGradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+
+      .animate-float {
+        animation: floatSlow 5s ease-in-out infinite;
+      }
+      .animate-pulse-subtle {
+        animation: pulseSubtle 3s ease-in-out infinite;
+      }
+      .hero-gradient-bg {
+        background: linear-gradient(-45deg, #fff5f5, #fff0f3, #f8f9fa, #fff7ed) !important;
+        background-size: 400% 400% !important;
+        animation: shimmerGradient 12s ease infinite !important;
+      }
+      .product-card-hover {
+        transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+      }
+      .product-card-hover:hover {
+        transform: translateY(-8px) scale(1.015);
+        box-shadow: 0 16px 32px rgba(220, 53, 69, 0.16) !important;
+      }
+      .badge-glow {
+        box-shadow: 0 0 12px rgba(220, 53, 69, 0.35);
+      }
+      .text-gradient-danger {
+        background: linear-gradient(135deg, #dc3545 0%, #d63384 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* AdminLTE 4 Blue Vector Map Card Styling */
+      .blue-vector-card {
+        background: #0d6efd !important;
+        color: #ffffff !important;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+      }
+
+      .blue-vector-card .card-header {
+        background: transparent !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+      }
+
+      .blue-vector-card .card-footer {
+        background: rgba(0, 0, 0, 0.12) !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+      }
+
+      #indonesia-map {
+        background: #e5e9ec !important;
+      }
+
+      .leaflet-container {
+        background: #e5e9ec !important;
+      }
+
+      /* Custom Zoom Control (+ / -) matching user screenshot */
+      .leaflet-top.leaflet-left {
+        top: 10px;
+        left: 10px;
+      }
+
+      .leaflet-control-zoom {
+        border: none !important;
+        margin: 0 !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+      }
+
+      .leaflet-control-zoom-in,
+      .leaflet-control-zoom-out {
+        background-color: rgba(33, 37, 41, 0.85) !important;
+        color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.25) !important;
+        font-weight: bold !important;
+        width: 30px !important;
+        height: 30px !important;
+        line-height: 28px !important;
+        font-size: 16px !important;
+        text-align: center !important;
+        display: block !important;
+      }
+
+      .leaflet-control-zoom-in {
+        border-top-left-radius: 6px !important;
+        border-top-right-radius: 6px !important;
+        border-bottom: none !important;
+      }
+
+      .leaflet-control-zoom-out {
+        border-bottom-left-radius: 6px !important;
+        border-bottom-right-radius: 6px !important;
+      }
+
+      .leaflet-control-zoom-in:hover,
+      .leaflet-control-zoom-out:hover {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+      }
+
+      /* Fix Global Page Scrolling & Mobile Touch Scroll */
+      html, body {
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        height: auto !important;
+        min-height: 100% !important;
+        -webkit-overflow-scrolling: touch !important;
+        touch-action: auto !important;
+      }
+      body {
+        position: relative !important;
+      }
+
+      .landing-page-wrapper {
+        overflow-y: visible !important;
+        height: auto !important;
+        min-height: 100vh !important;
+        touch-action: auto !important;
+      }
+
+      /* Desktop Sidebar Expand & Collapse State Handling */
+      @media (min-width: 992px) {
+        body:not(.sidebar-collapse) .app-sidebar {
+          width: 250px !important;
+          position: fixed !important;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          z-index: 1038;
+          display: block !important;
+        }
+        body:not(.sidebar-collapse) .app-header,
+        body:not(.sidebar-collapse) .app-main,
+        body:not(.sidebar-collapse) .app-footer {
+          margin-left: 250px !important;
+          transition: margin-left 0.25s ease-in-out;
+        }
+
+        body.sidebar-collapse .app-sidebar {
+          display: none !important;
+        }
+        body.sidebar-collapse .app-header,
+        body.sidebar-collapse .app-main,
+        body.sidebar-collapse .app-footer {
+          margin-left: 0 !important;
+          transition: margin-left 0.25s ease-in-out;
+        }
+      }
+
+      /* Mobile Device Fixes */
+      @media (max-width: 991.98px) {
+        .app-header, .app-main, .app-footer {
+          margin-left: 0 !important;
+        }
+      }
+
+      /* Independent Sidebar Scroll with Hidden Scrollbar UI */
+      .sidebar-wrapper {
+        height: calc(100vh - 57px) !important;
+        overflow-y: auto !important;
+        -ms-overflow-style: none !important; /* IE and Edge */
+        scrollbar-width: none !important; /* Firefox */
+      }
+
+      .sidebar-wrapper::-webkit-scrollbar {
+        display: none !important; /* Chrome, Safari, Opera */
+        width: 0 !important;
+        height: 0 !important;
+      }
+    </style>
+
+    <!-- Flutter Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Flutter / Jaspr Web Client Bundle -->
+    <script src="flutter_bootstrap.js" async></script>
+    <script defer src="main.dart.js"></script>
+  </head>
+  <body class="sidebar-expand-lg bg-body-tertiary">
+    <!-- Splash Screen Loading Animation -->
+    <div id="splash-screen" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #FFF5F5; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Source Sans 3', sans-serif; transition: opacity 0.5s ease, visibility 0.5s ease;">
+      <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #C87D74 0%, #E8A598 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(200, 125, 116, 0.3); margin-bottom: 20px; animation: pulseSubtle 1.8s infinite ease-in-out;">
+        <span style="font-size: 38px;">🧶</span>
+      </div>
+      <h2 style="color: #2D2424; font-size: 22px; font-weight: 700; margin: 0 0 8px 0; tracking: 0.5px;">Abel'z Handmade</h2>
+      <p style="color: #6C5F5B; font-size: 14px; margin: 0 0 24px 0;">Memuat Produk & Kerajinan Rajutan Estetik...</p>
+      <div style="width: 160px; height: 5px; background: #F0D9D5; border-radius: 10px; overflow: hidden; position: relative;">
+        <div style="width: 45%; height: 100%; background: #C87D74; border-radius: 10px; animation: pulseSubtle 1.2s infinite ease-in-out;"></div>
+      </div>
+    </div>
+    <script>
+      function hideSplashScreen() {
+        var splash = document.getElementById('splash-screen');
+        if (splash) {
+          splash.style.opacity = '0';
+          splash.style.visibility = 'hidden';
+          splash.style.pointerEvents = 'none';
+          splash.style.display = 'none';
+          if (splash.parentNode) splash.parentNode.removeChild(splash);
+        }
+      }
+      window.addEventListener('load', function() {
+        setTimeout(hideSplashScreen, 800);
+      });
+      if (document.readyState === 'complete') {
+        setTimeout(hideSplashScreen, 500);
+      }
+    </script>
+    <!-- Jaspr root application component will be mounted here -->
+
+    <!-- Third Party Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/browser/overlayscrollbars.browser.es6.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+    <!-- AdminLTE v4 JS -->
+    <script src="js/adminlte.js"></script>
+
+    <!-- Leaflet Indonesia Map Initialization Script -->
+    <script>
+      function initIndonesiaMap() {
+        var container = document.getElementById('indonesia-map');
+        if (!container) return;
+        if (container._leaflet_id) return; // already initialized
+
+        var map = L.map('indonesia-map', {
+          center: [-2.5, 118.0],
+          zoom: 5,
+          maxZoom: 19,
+          minZoom: 4,
+          zoomControl: true
+        });
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        var zoomBadge = document.getElementById('map-zoom-level-badge');
+        var zoomName = document.getElementById('map-zoom-name');
+
+        function updateZoomInfo() {
+          var z = map.getZoom();
+          var label = '🇮🇩 Indonesia Overview (Nasional)';
+          if (z >= 16) {
+            label = '🏘️ Tingkat Kelurahan / Jalan Detail';
+          } else if (z >= 13) {
+            label = '🏡 Tingkat Kecamatan / Desa';
+          } else if (z >= 10) {
+            label = '🏙️ Tingkat Kabupaten / Kota';
+          } else if (z >= 7) {
+            label = '📍 Tingkat Provinsi';
+          }
+          if (zoomBadge) zoomBadge.textContent = 'Zoom: ' + z;
+          if (zoomName) zoomName.textContent = label;
+        }
+
+        map.on('zoomend', updateZoomInfo);
+        updateZoomInfo();
+
+        var hubs = [
+          { name: 'Hub Utama Jakarta Pusat', lat: -6.2088, lng: 106.8456, orders: '45,210 Pengiriman', status: 'Sangat Padat 🔴' },
+          { name: 'Hub Surabaya (Jawa Timur)', lat: -7.2575, lng: 112.7521, orders: '28,400 Pengiriman', status: 'Lancar 🟢' },
+          { name: 'Hub Bandung (Jawa Barat)', lat: -6.9175, lng: 107.6191, orders: '18,900 Pengiriman', status: 'Padat 🟡' },
+          { name: 'Hub Medan (Sumatra Utara)', lat: 3.5952, lng: 98.6722, orders: '14,200 Pengiriman', status: 'Lancar 🟢' },
+          { name: 'Hub Makassar (Sulawesi)', lat: -5.1477, lng: 119.4327, orders: '9,800 Pengiriman', status: 'Lancar 🟢' },
+          { name: 'Hub Denpasar (Bali)', lat: -8.6705, lng: 115.2126, orders: '12,500 Pengiriman', status: 'Lancar 🟢' },
+          { name: 'Hub Semarang (Jawa Tengah)', lat: -6.9667, lng: 110.4167, orders: '16,300 Pengiriman', status: 'Lancar 🟢' },
+          { name: 'Hub Palembang (Sumatra Selatan)', lat: -2.9761, lng: 104.7754, orders: '8,700 Pengiriman', status: 'Lancar 🟢' }
+        ];
+
+        hubs.forEach(function(h) {
+          var marker = L.marker([h.lat, h.lng]).addTo(map);
+          marker.bindPopup(
+            '<div style="padding: 4px;">' +
+            '<strong style="color: #0d6efd; font-size: 14px;">📦 ' + h.name + '</strong><br>' +
+            '<span style="font-size: 12px; color: #555;">Total: <b>' + h.orders + '</b></span><br>' +
+            '<span style="font-size: 11px; color: #777;">Status Hub: ' + h.status + '</span><br>' +
+            '<button onclick="window.zoomToHub(' + h.lat + ',' + h.lng + ', 15)" style="margin-top:6px; background:#0d6efd; color:#fff; border:none; padding:4px 10px; border-radius:4px; font-size:11px; cursor:pointer;">Zoom ke Kelurahan / Kecamatan</button>' +
+            '</div>'
+          );
+        });
+
+        window.mapInstance = map;
+        window.zoomToHub = function(lat, lng, zoom) {
+          map.flyTo([lat, lng], zoom || 15, { duration: 1.5 });
+        };
+
+        window.flyToRegion = function(lat, lng, zoom) {
+          map.flyTo([lat, lng], zoom, { duration: 1.5 });
+        };
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        initIndonesiaMap();
+      });
+
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('sw.js');
+        });
+      }
+    </script>
+  </body>
+</html>
