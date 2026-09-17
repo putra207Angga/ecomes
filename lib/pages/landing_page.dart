@@ -330,7 +330,6 @@ class _LandingPageState extends State<LandingPage> {
               Component.text('🧶'),
             ]),
             span(classes: 'text-primary fw-extrabold fs-6 text-nowrap', [Component.text(config.storeName)]),
-            span(classes: 'badge bg-danger-subtle text-danger fs-8 fw-semibold text-nowrap d-none d-sm-inline-block', [Component.text(config.storeTagline)]),
           ]),
         ),
 
