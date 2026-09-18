@@ -1506,7 +1506,7 @@ class _LandingPageState extends State<LandingPage> {
 
   Component _buildWishlistModal() {
     final store = AppStore();
-    final wishlistedProducts = store.products.where((p) => store.wishlistProductIds.contains(p.id)).toList();
+    final wishlistedProducts = store.products.where((item) => store.wishlistProductIds.contains(item.id)).toList();
 
     return div(classes: 'modal fade show d-block bg-dark bg-opacity-75', attributes: {'tabindex': '-1'}, [
       div(classes: 'modal-dialog modal-dialog-centered modal-lg', [
