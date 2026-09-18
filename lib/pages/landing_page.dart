@@ -29,6 +29,9 @@ class _LandingPageState extends State<LandingPage> {
   String selectedColor = 'Pastel Pink';
   String customNotes = '';
 
+  // Member Dashboard Tab State
+  String activeMemberTab = 'history'; // 'history', 'products', 'ecard'
+
   // Order Tracker State
   bool showOrderTrackerModal = false;
   String orderTrackerQuery = '';
@@ -361,58 +364,66 @@ class _LandingPageState extends State<LandingPage> {
           li(classes: 'nav-item', [a(classes: 'nav-link text-espresso py-1 px-2', href: '#testimoni', [Component.text('AKSESORIS')]),]),
         ]),
 
-        // Quick Actions
+        // Quick Actions Icon Buttons with Tooltips
         div(classes: 'd-flex align-items-center gap-2 flex-nowrap text-nowrap flex-shrink-0', [
+          // 1. Icon Button Lacak Pesanan
           button(
             type: ButtonType.button,
-            classes: 'btn btn-outline-dark rounded-pill px-3 py-1 fs-7 fw-semibold text-nowrap d-flex align-items-center gap-1 border-0 bg-transparent text-espresso',
+            classes: 'btn btn-light rounded-circle shadow-xs border border-light text-espresso position-relative d-flex align-items-center justify-content-center p-0 hover-scale',
+            styles: Styles(width: 40.px, height: 40.px),
+            attributes: {'title': 'Lacak Pesanan Pembeli', 'data-bs-toggle': 'tooltip'},
             events: {'click': (e) => setState(() => showOrderTrackerModal = true)},
             [
-              i(classes: 'bi bi-geo-alt me-1 text-rose-pink', []),
-              Component.text('Lacak'),
+              i(classes: 'bi bi-truck fs-5 text-terracotta', []),
             ],
           ),
+
+          // 2. Icon Button Wishlist
           button(
             type: ButtonType.button,
-            classes: 'btn btn-blush-pink rounded-pill px-3 py-1 fs-7 fw-semibold text-nowrap d-flex align-items-center gap-1 position-relative',
+            classes: 'btn btn-clay-pill rounded-circle shadow-xs border-0 position-relative d-flex align-items-center justify-content-center p-0 hover-scale',
+            styles: Styles(width: 40.px, height: 40.px),
+            attributes: {'title': 'Wishlist & Produk Favorit Saya', 'data-bs-toggle': 'tooltip'},
             events: {'click': (e) => setState(() => showWishlistModal = true)},
             [
-              i(classes: 'bi bi-heart-fill me-1', []),
-              Component.text('Wishlist'),
+              i(classes: 'bi bi-heart-fill fs-5 text-terracotta', []),
               if (AppStore().wishlistProductIds.isNotEmpty)
-                span(classes: 'badge rounded-pill bg-rose-pink text-white ms-1', [Component.text(AppStore().wishlistProductIds.length.toString())]),
+                span(classes: 'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-terracotta text-white fs-8 shadow-xs', [
+                  Component.text(AppStore().wishlistProductIds.length.toString()),
+                ]),
             ],
           ),
-          if (AppStore().currentMember != null)
-            button(
-              type: ButtonType.button,
-              classes: 'btn btn-blush-pink rounded-pill px-3 py-1 fs-7 fw-bold text-nowrap d-flex align-items-center gap-1',
-              events: {'click': (e) => setState(() => showMemberModal = true)},
-              [
-                i(classes: 'bi bi-award-fill me-1', []),
-                span(classes: 'badge bg-rose-pink text-white rounded-pill fs-8 me-1', [Component.text(AppStore().currentMember!.level)]),
-                span(classes: 'd-none d-md-inline', [Component.text(AppStore().currentMember!.name.split(' ')[0])]),
-              ],
-            )
-          else
-            button(
-              type: ButtonType.button,
-              classes: 'btn btn-blush-pink rounded-pill px-3 py-1 fs-7 fw-semibold text-nowrap d-flex align-items-center gap-1',
-              events: {'click': (e) => setState(() { showMemberModal = true; memberErrorMsg = ''; })},
-              [
-                i(classes: 'bi bi-person-circle me-1', []),
-                Component.text('Member'),
-              ],
-            ),
+
+          // 3. Icon Button Member Portal
           button(
             type: ButtonType.button,
-            classes: 'btn btn-rose-pink position-relative rounded-pill px-4 py-1 fs-7 fw-bold shadow-xs text-nowrap d-flex align-items-center gap-1',
+            classes: 'btn btn-clay-pill rounded-circle shadow-xs border-0 position-relative d-flex align-items-center justify-content-center p-0 hover-scale',
+            styles: Styles(width: 40.px, height: 40.px),
+            attributes: {
+              'title': AppStore().currentMember != null ? 'Portal Member (${AppStore().currentMember!.name})' : 'Login / Daftar Member',
+              'data-bs-toggle': 'tooltip'
+            },
+            events: {'click': (e) => setState(() { showMemberModal = true; memberErrorMsg = ''; })},
+            [
+              i(classes: 'bi ${AppStore().currentMember != null ? 'bi-award-fill text-terracotta' : 'bi-person-circle text-terracotta'} fs-5', []),
+              if (AppStore().currentMember != null)
+                span(classes: 'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-terracotta text-white fs-8 shadow-xs', [
+                  Component.text('VIP'),
+                ]),
+            ],
+          ),
+
+          // 4. Icon Button Keranjang Belanja
+          button(
+            type: ButtonType.button,
+            classes: 'btn btn-terracotta rounded-circle shadow-xs border-0 text-white position-relative d-flex align-items-center justify-content-center p-0 hover-scale ms-1',
+            styles: Styles(width: 42.px, height: 42.px),
+            attributes: {'title': 'Keranjang Belanja Saya', 'data-bs-toggle': 'tooltip'},
             events: {'click': (e) => setState(() => showCartModal = true)},
             [
-              i(classes: 'bi bi-cart3 me-1', []),
-              Component.text('Keranjang'),
+              i(classes: 'bi bi-bag-heart-fill fs-5', []),
               if (totalCartCount > 0)
-                span(classes: 'badge rounded-pill bg-white text-rose-pink shadow-xs ms-1', [
+                span(classes: 'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-white text-terracotta fw-bold shadow-xs fs-8', [
                   Component.text(totalCartCount.toString()),
                 ]),
             ],
@@ -1583,80 +1594,222 @@ class _LandingPageState extends State<LandingPage> {
               [],
             ),
           ]),
-          div(classes: 'modal-body p-4 bg-light', [
+          div(classes: 'modal-body p-4 bg-pink-cream', [
             if (member != null) ...[
-              // Digital E-Card Member Card
-              div(
-                classes: 'card border-0 shadow-lg rounded-4 p-4 text-white mb-4 position-relative overflow-hidden',
-                attributes: {'style': 'background: linear-gradient(135deg, #2D2424 0%, #C87D74 60%, #8B9B88 100%);'},
-                [
-                  div(classes: 'd-flex justify-content-between align-items-start mb-3', [
-                    div([
-                      span(classes: 'badge bg-white text-dark rounded-pill px-3 py-1 fs-8 fw-extrabold mb-1 shadow-xs', [
-                        Component.text('🧶 MEMBER E-CARD OFFICIAL'),
-                      ]),
-                      h4(classes: 'fw-extrabold mb-0 text-white tracking-wide', [Component.text(member.name)]),
-                      small(classes: 'text-white-50 fs-8', [Component.text('ID: ${member.id} • Terdaftar sejak ${member.registeredDate}')]),
-                    ]),
-                    span(classes: 'badge bg-warning text-dark border border-warning rounded-pill px-3 py-2 fs-7 fw-extrabold shadow-sm', [
-                      i(classes: 'bi bi-star-fill me-1', []),
-                      Component.text(member.level),
-                    ]),
-                  ]),
-                  div(classes: 'row g-3 align-items-center border-top border-white border-opacity-25 pt-3 mt-1', [
-                    div(classes: 'col-6', [
-                      small(classes: 'text-white-50 d-block fs-8 text-uppercase fw-bold', [Component.text('Saldo Poin Belanja:')]),
-                      span(classes: 'fs-3 fw-extrabold text-warning', [Component.text('${member.points} Poin ⭐')]),
-                    ]),
-                    div(classes: 'col-6 text-end', [
-                      small(classes: 'text-white-50 d-block fs-8 text-uppercase fw-bold', [Component.text('Benefit Diskon Member:')]),
-                      span(classes: 'fs-4 fw-bold text-white', [Component.text('${member.discountPercent.toInt()}% Off All Products')]),
-                    ]),
-                  ]),
-                ],
-              ),
-
-              // Benefits Summary Card
-              div(classes: 'card border-0 shadow-sm rounded-3 p-3 bg-white mb-4', [
-                h6(classes: 'fw-bold text-dark fs-7 mb-2', [Component.text('Keuntungan Eksklusif Keanggotaan Anda:')]),
-                div(classes: 'row g-2 fs-7', [
-                  div(classes: 'col-md-6 d-flex align-items-center gap-2', [
-                    i(classes: 'bi bi-patch-check-fill text-success', []),
-                    span([Component.text('Diskon Otomatis ${member.discountPercent.toInt()}% di setiap keranjang')]),
-                  ]),
-                  div(classes: 'col-md-6 d-flex align-items-center gap-2', [
-                    i(classes: 'bi bi-star-fill text-warning', []),
-                    span([Component.text('Kumpul Poin: Rp 10.000 = 1 Poin Belanja')]),
-                  ]),
-                  div(classes: 'col-md-6 d-flex align-items-center gap-2 mt-2', [
-                    i(classes: 'bi bi-lightning-charge-fill text-danger', []),
-                    span([Component.text('Prioritas Antrean PO Rajutan Custom')]),
-                  ]),
-                  div(classes: 'col-md-6 d-flex align-items-center gap-2 mt-2', [
-                    i(classes: 'bi bi-gift-fill text-primary', []),
-                    span([Component.text('Bonus Poin Ulang Tahun & Flash Sale')]),
-                  ]),
-                ]),
-              ]),
-
-              // Logout Button
-              div(classes: 'text-end', [
+              // Member Dashboard Tabs Header
+              div(classes: 'nav nav-pills nav-fill mb-4 bg-white p-1.5 rounded-pill border border-light-subtle shadow-xs', [
                 button(
                   type: ButtonType.button,
-                  classes: 'btn btn-outline-danger rounded-pill px-4 fw-semibold fs-7',
-                  events: {
-                    'click': (e) {
-                      setState(() {
-                        store.logoutMember();
-                      });
-                    }
-                  },
+                  classes: 'nav-link rounded-pill ${activeMemberTab == 'history' ? 'active bg-terracotta text-white fw-bold' : 'text-espresso'} fs-7',
+                  events: {'click': (e) => setState(() => activeMemberTab = 'history')},
                   [
-                    i(classes: 'bi bi-box-arrow-right me-1', []),
-                    Component.text('Keluar dari Akun Member'),
+                    i(classes: 'bi bi-clock-history me-1', []),
+                    Component.text('Histori Transaksi & Lacak'),
+                  ],
+                ),
+                button(
+                  type: ButtonType.button,
+                  classes: 'nav-link rounded-pill ${activeMemberTab == 'products' ? 'active bg-terracotta text-white fw-bold' : 'text-espresso'} fs-7',
+                  events: {'click': (e) => setState(() => activeMemberTab = 'products')},
+                  [
+                    i(classes: 'bi bi-bag-heart-fill me-1', []),
+                    Component.text('Produk Saya'),
+                  ],
+                ),
+                button(
+                  type: ButtonType.button,
+                  classes: 'nav-link rounded-pill ${activeMemberTab == 'ecard' ? 'active bg-terracotta text-white fw-bold' : 'text-espresso'} fs-7',
+                  events: {'click': (e) => setState(() => activeMemberTab = 'ecard')},
+                  [
+                    i(classes: 'bi bi-person-vcard-fill me-1', []),
+                    Component.text('E-Card Member'),
                   ],
                 ),
               ]),
+
+              // TAB 1: HISTORI TRANSAKSI & LACAK PRODUK
+              if (activeMemberTab == 'history') ...[
+                div(classes: 'card-genz border-0 p-3 bg-white mb-3', [
+                  h6(classes: 'font-serif-heading fw-bold text-espresso fs-6 mb-3 d-flex align-items-center justify-content-between', [
+                    span([
+                      i(classes: 'bi bi-receipt me-2 text-terracotta', []),
+                      Component.text('Daftar Transaksi & Riwayat Pesanan Saya'),
+                    ]),
+                    span(classes: 'badge bg-terracotta text-white rounded-pill fs-8', [Component.text('${store.orders.length} Transaksi')]),
+                  ]),
+                  if (store.orders.isEmpty)
+                    div(classes: 'text-center py-4 text-espresso-muted', [
+                      i(classes: 'bi bi-inbox fs-1 text-muted mb-2 d-block', []),
+                      p(classes: 'fs-7 mb-0', [Component.text('Belum ada riwayat transaksi.')]),
+                    ])
+                  else
+                    div(classes: 'd-flex flex-column gap-3', [
+                      for (var order in store.orders)
+                        div(classes: 'card border border-light-subtle rounded-3 p-3 bg-soft-card shadow-xs', [
+                          div(classes: 'd-flex flex-wrap justify-content-between align-items-center border-bottom pb-2 mb-2', [
+                            div([
+                              span(classes: 'fw-bold text-espresso fs-7 me-2', [Component.text(order.orderNo)]),
+                              small(classes: 'text-espresso-muted fs-8', [Component.text(order.date)]),
+                            ]),
+                            span(classes: 'badge ${order.status == 'Selesai' ? 'bg-success' : order.status == 'Dikirim' ? 'bg-info' : 'bg-warning text-dark'} rounded-pill px-3 py-1 fs-8', [
+                              Component.text(order.status),
+                            ]),
+                          ]),
+                          div(classes: 'row align-items-center g-2 fs-7', [
+                            div(classes: 'col-md-7', [
+                              div(classes: 'fw-semibold text-espresso', [
+                                Component.text('${order.items.length} Barang: ${order.items.map((e) => e.productName).join(', ')}'),
+                              ]),
+                              small(classes: 'text-espresso-muted', [
+                                Component.text('Kurir: ${order.courier} • Payment: ${order.paymentMethod}'),
+                              ]),
+                            ]),
+                            div(classes: 'col-md-5 text-md-end', [
+                              div(classes: 'fw-extrabold text-terracotta fs-6 mb-2', [
+                                Component.text('Rp ${order.total.toInt()}'),
+                              ]),
+                              button(
+                                type: ButtonType.button,
+                                classes: 'btn btn-terracotta btn-sm rounded-pill px-3 py-1 fs-8 fw-bold d-inline-flex align-items-center gap-1',
+                                events: {
+                                  'click': (e) {
+                                    setState(() {
+                                      showMemberModal = false;
+                                      orderTrackerQuery = order.orderNo;
+                                      _searchOrderTracker();
+                                      showOrderTrackerModal = true;
+                                    });
+                                  }
+                                },
+                                [
+                                  i(classes: 'bi bi-geo-alt-fill me-1', []),
+                                  Component.text('Lacak Produk 🚚'),
+                                ],
+                              ),
+                            ]),
+                          ]),
+                        ]),
+                    ]),
+                ]),
+              ]
+              // TAB 2: PRODUK SAYA & FAVORIT
+              else if (activeMemberTab == 'products') ...[
+                div(classes: 'card-genz border-0 p-3 bg-white mb-3', [
+                  h6(classes: 'font-serif-heading fw-bold text-espresso fs-6 mb-3 d-flex align-items-center justify-content-between', [
+                    span([
+                      i(classes: 'bi bi-heart-fill me-2 text-rose-pink', []),
+                      Component.text('Katalog & Wishlist Produk Favorit Saya'),
+                    ]),
+                    span(classes: 'badge bg-rose-pink text-white rounded-pill fs-8', [Component.text('${store.wishlistProductIds.length} Produk Saved')]),
+                  ]),
+                  if (store.wishlistProductIds.isEmpty)
+                    div(classes: 'text-center py-4 text-espresso-muted', [
+                      i(classes: 'bi bi-heartbreak fs-1 text-muted mb-2 d-block', []),
+                      p(classes: 'fs-7 mb-0', [Component.text('Belum ada produk favorit disukai.')]),
+                    ])
+                  else
+                    div(classes: 'row g-3', [
+                      for (var prod in store.products.where((p) => store.wishlistProductIds.contains(p.id)))
+                        div(classes: 'col-md-6', [
+                          div(classes: 'card border border-light-subtle rounded-3 p-2 bg-soft-card d-flex flex-row align-items-center gap-3', [
+                            img(src: prod.image, classes: 'rounded-3 object-fit-cover', attributes: {'width': '70', 'height': '70', 'alt': prod.name}),
+                            div(classes: 'flex-grow-1', [
+                              h6(classes: 'fw-bold text-espresso fs-7 mb-1 text-truncate', [Component.text(prod.name)]),
+                              div(classes: 'fw-bold text-terracotta fs-7 mb-2', [Component.text('Rp ${prod.price.toInt()}')]),
+                              button(
+                                type: ButtonType.button,
+                                classes: 'btn btn-sage btn-sm rounded-pill fs-8 fw-semibold px-3 py-1',
+                                events: {
+                                  'click': (e) {
+                                    _addToCart({'id': prod.id, 'name': prod.name, 'price': prod.price.toInt(), 'image': prod.image});
+                                  }
+                                },
+                                [
+                                  i(classes: 'bi bi-cart-plus me-1', []),
+                                  Component.text('+ Keranjang'),
+                                ],
+                              ),
+                            ]),
+                          ]),
+                        ]),
+                    ]),
+                ]),
+              ]
+              // TAB 3: DIGITAL E-CARD MEMBER & BENEFIT
+              else ...[
+                // Digital E-Card Member Card
+                div(
+                  classes: 'card border-0 shadow-lg rounded-4 p-4 text-white mb-4 position-relative overflow-hidden',
+                  attributes: {'style': 'background: linear-gradient(135deg, #2D2424 0%, #C87D55 60%, #94AFA0 100%);'},
+                  [
+                    div(classes: 'd-flex justify-content-between align-items-start mb-3', [
+                      div([
+                        span(classes: 'badge bg-white text-dark rounded-pill px-3 py-1 fs-8 fw-extrabold mb-1 shadow-xs', [
+                          Component.text('🧶 MEMBER E-CARD OFFICIAL'),
+                        ]),
+                        h4(classes: 'fw-extrabold mb-0 text-white tracking-wide font-serif-heading', [Component.text(member.name)]),
+                        small(classes: 'text-white-50 fs-8', [Component.text('ID: ${member.id} • Terdaftar sejak ${member.registeredDate}')]),
+                      ]),
+                      span(classes: 'badge bg-warning text-dark border border-warning rounded-pill px-3 py-2 fs-7 fw-extrabold shadow-sm', [
+                        i(classes: 'bi bi-star-fill me-1', []),
+                        Component.text(member.level),
+                      ]),
+                    ]),
+                    div(classes: 'row g-3 align-items-center border-top border-white border-opacity-25 pt-3 mt-1', [
+                      div(classes: 'col-6', [
+                        small(classes: 'text-white-50 d-block fs-8 text-uppercase fw-bold', [Component.text('Saldo Poin Belanja:')]),
+                        span(classes: 'fs-3 fw-extrabold text-warning', [Component.text('${member.points} Poin ⭐')]),
+                      ]),
+                      div(classes: 'col-6 text-end', [
+                        small(classes: 'text-white-50 d-block fs-8 text-uppercase fw-bold', [Component.text('Benefit Diskon Member:')]),
+                        span(classes: 'fs-4 fw-bold text-white', [Component.text('${member.discountPercent.toInt()}% Off All Products')]),
+                      ]),
+                    ]),
+                  ],
+                ),
+
+                // Benefits Summary Card
+                div(classes: 'card-genz border-0 p-3 bg-white mb-4', [
+                  h6(classes: 'fw-bold text-espresso fs-7 mb-2 font-serif-heading', [Component.text('Keuntungan Eksklusif Keanggotaan Anda:')]),
+                  div(classes: 'row g-2 fs-7 text-espresso-muted', [
+                    div(classes: 'col-md-6 d-flex align-items-center gap-2', [
+                      i(classes: 'bi bi-patch-check-fill text-success', []),
+                      span([Component.text('Diskon Otomatis ${member.discountPercent.toInt()}% di setiap keranjang')]),
+                    ]),
+                    div(classes: 'col-md-6 d-flex align-items-center gap-2', [
+                      i(classes: 'bi bi-star-fill text-warning', []),
+                      span([Component.text('Kumpul Poin: Rp 10.000 = 1 Poin Belanja')]),
+                    ]),
+                    div(classes: 'col-md-6 d-flex align-items-center gap-2 mt-2', [
+                      i(classes: 'bi bi-lightning-charge-fill text-danger', []),
+                      span([Component.text('Prioritas Antrean PO Rajutan Custom')]),
+                    ]),
+                    div(classes: 'col-md-6 d-flex align-items-center gap-2 mt-2', [
+                      i(classes: 'bi bi-gift-fill text-primary', []),
+                      span([Component.text('Bonus Poin Ulang Tahun & Flash Sale')]),
+                    ]),
+                  ]),
+                ]),
+
+                // Logout Button
+                div(classes: 'text-end', [
+                  button(
+                    type: ButtonType.button,
+                    classes: 'btn btn-outline-danger rounded-pill px-4 fw-semibold fs-7',
+                    events: {
+                      'click': (e) {
+                        setState(() {
+                          store.logoutMember();
+                        });
+                      }
+                    },
+                    [
+                      i(classes: 'bi bi-box-arrow-right me-1', []),
+                      Component.text('Keluar dari Akun Member'),
+                    ],
+                  ),
+                ]),
+              ],
             ] else ...[
               // LOGIN / REGISTER FORM FOR GUEST
               div(classes: 'nav nav-pills nav-fill mb-3 bg-white p-1 rounded-pill border shadow-xs', [
