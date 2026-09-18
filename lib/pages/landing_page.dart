@@ -483,7 +483,7 @@ class _LandingPageState extends State<LandingPage> {
                   img(
                     src: config.heroImage,
                     classes: 'img-fluid rounded-4 shadow-sm object-fit-cover w-100 animate-float',
-                    styles: Styles(maxHeight: 460.px, borderRadius: 24.px),
+                    styles: Styles(maxHeight: 460.px),
                     attributes: {'alt': 'Hero Showcase'},
                   ),
                   // Floating Tag Badge Anya Tote Bag
@@ -799,7 +799,7 @@ class _LandingPageState extends State<LandingPage> {
             img(
               src: 'images/abelz_craft_artisan.png',
               classes: 'img-fluid rounded-4 shadow-xs object-fit-cover w-100',
-              styles: Styles(maxHeight: 380.px, borderRadius: 20.px),
+              styles: Styles(maxHeight: 380.px),
               attributes: {'alt': 'Karya Artisan Kami'},
             ),
           ]),
