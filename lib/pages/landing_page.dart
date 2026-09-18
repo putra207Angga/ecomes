@@ -261,7 +261,10 @@ class _LandingPageState extends State<LandingPage> {
 
     int totalCartCount = cartItems.fold<int>(0, (sum, item) => sum + (item['qty'] as int));
 
-    return div(classes: 'landing-page-wrapper bg-light font-sans-serif min-vh-100', [
+    return div(
+      classes: 'landing-page-wrapper bg-pink-cream font-sans-body min-vh-100',
+      styles: Styles(raw: {'background-color': '#FAF7F2 !important'}),
+      [
       // 1. Storefront Top Navbar
       _buildStorefrontNavbar(totalCartCount),
 
@@ -442,7 +445,7 @@ class _LandingPageState extends State<LandingPage> {
                 div(classes: 'd-flex flex-wrap align-items-center gap-3 mb-4', [
                   button(
                     type: ButtonType.button,
-                    classes: 'btn btn-rose-pink btn-lg rounded-pill px-4 py-2.5 fs-6 fw-bold shadow-xs d-inline-flex align-items-center gap-2',
+                    classes: 'btn btn-terracotta btn-lg rounded-pill px-4 py-2.5 fs-6 fw-bold shadow-xs d-inline-flex align-items-center gap-2',
                     events: {'click': (e) => setState(() => isFullStoreMode = true)},
                     [
                       Component.text('Belanja Sekarang'),
@@ -451,7 +454,7 @@ class _LandingPageState extends State<LandingPage> {
                   ),
                   button(
                     type: ButtonType.button,
-                    classes: 'btn btn-blush-pink btn-lg rounded-pill px-4 py-2.5 fs-6 fw-bold shadow-xs d-inline-flex align-items-center gap-2',
+                    classes: 'btn btn-clay-pill btn-lg rounded-pill px-4 py-2.5 fs-6 fw-bold shadow-xs d-inline-flex align-items-center gap-2',
                     events: {
                       'click': (e) {
                         html.window.open('https://wa.me/${config.whatsappNumber}?text=Halo%20${config.storeName},%20saya%20mau%20konsultasi%20order%20custom%20rajutan', '_blank');
@@ -465,15 +468,15 @@ class _LandingPageState extends State<LandingPage> {
                 ]),
                 div(classes: 'row g-3 text-espresso pt-3 border-top border-light-subtle', [
                   div(classes: 'col-4', [
-                    h4(classes: 'fw-bold mb-0 text-rose-pink font-serif-heading', [Component.text('1.2k+')]),
+                    h4(classes: 'fw-bold mb-0 text-terracotta font-serif-heading', [Component.text('1.2k+')]),
                     small(classes: 'text-espresso-muted fs-8', [Component.text('Produk Terjual')]),
                   ]),
                   div(classes: 'col-4', [
-                    h4(classes: 'fw-bold mb-0 text-rose-pink font-serif-heading', [Component.text('5.0 ⭐')]),
+                    h4(classes: 'fw-bold mb-0 text-terracotta font-serif-heading', [Component.text('5.0 ⭐')]),
                     small(classes: 'text-espresso-muted fs-8', [Component.text('Rating Ulasan')]),
                   ]),
                   div(classes: 'col-4', [
-                    h4(classes: 'fw-bold mb-0 text-rose-pink font-serif-heading', [Component.text('Handmade')]),
+                    h4(classes: 'fw-bold mb-0 text-terracotta font-serif-heading', [Component.text('Handmade')]),
                     small(classes: 'text-espresso-muted fs-8', [Component.text('Benang Milk Cotton')]),
                   ]),
                 ]),
@@ -516,8 +519,8 @@ class _LandingPageState extends State<LandingPage> {
           div(classes: 'col-6 col-md-3', [
             div(classes: 'd-flex flex-column align-items-center cursor-pointer', events: {'click': (e) => setState(() => activeCategory = cat['name'] as String)}, [
               div(
-                classes: 'rounded-circle overflow-hidden mb-3 border border-3 border-white shadow-xs transition-all hover-scale position-relative',
-                styles: Styles(width: 130.px, height: 130.px),
+                classes: 'rounded-circle overflow-hidden mb-3 border border-4 border-white shadow-xs transition-all hover-scale position-relative',
+                styles: Styles(width: 140.px, height: 140.px),
                 [
                   img(
                     src: cat['image'] as String,
@@ -529,7 +532,7 @@ class _LandingPageState extends State<LandingPage> {
               h6(classes: 'font-serif-heading fw-bold text-espresso fs-6 mb-2', [Component.text(cat['label'] as String)]),
               button(
                 type: ButtonType.button,
-                classes: 'btn btn-blush-pink btn-sm rounded-pill px-3 py-1 fs-8 fw-semibold',
+                classes: 'btn btn-clay-pill rounded-pill px-3 py-1 fs-8 fw-semibold',
                 events: {'click': (e) => setState(() => activeCategory = cat['name'] as String)},
                 [Component.text('Lihat Semua')],
               ),
@@ -548,7 +551,7 @@ class _LandingPageState extends State<LandingPage> {
         h3(classes: 'font-serif-heading fw-bold text-espresso mb-0 fs-3', [Component.text('Produk Terbaru')]),
         button(
           type: ButtonType.button,
-          classes: 'btn btn-link text-rose-pink fw-bold text-decoration-none fs-7 p-0',
+          classes: 'btn btn-link text-terracotta fw-bold text-decoration-none fs-7 p-0',
           events: {'click': (e) => setState(() => isFullStoreMode = true)},
           [
             Component.text('Lihat Semua Katalog →'),
@@ -582,7 +585,7 @@ class _LandingPageState extends State<LandingPage> {
                       // Wishlist Heart Overlay Icon Button
                       button(
                         type: ButtonType.button,
-                        classes: 'position-absolute top-0 end-0 m-2 btn btn-light rounded-circle p-1.5 shadow-xs border-0 text-rose-pink d-flex align-items-center justify-content-center',
+                        classes: 'position-absolute top-0 end-0 m-2 btn btn-light rounded-circle p-1.5 shadow-xs border-0 text-terracotta d-flex align-items-center justify-content-center',
                         styles: Styles(width: 34.px, height: 34.px),
                         events: {
                           'click': (e) {
@@ -591,7 +594,7 @@ class _LandingPageState extends State<LandingPage> {
                           }
                         },
                         [
-                          i(classes: 'bi ${AppStore().isWishlisted(item['id'].toString()) ? 'bi-heart-fill text-rose-pink' : 'bi-heart'} fs-6', []),
+                          i(classes: 'bi ${AppStore().isWishlisted(item['id'].toString()) ? 'bi-heart-fill text-terracotta' : 'bi-heart'} fs-6', []),
                         ],
                       ),
                     ],
@@ -606,10 +609,10 @@ class _LandingPageState extends State<LandingPage> {
                     Component.text('Rp ${(item['price'] as int).toString()}'),
                   ]),
                 ]),
-                // Soft Blush Pink Pill Action Button
+                // Sage Green Pill Action Button
                 button(
                   type: ButtonType.button,
-                  classes: 'btn btn-blush-pink btn-sm w-100 rounded-pill py-2 fs-7 fw-bold shadow-xs',
+                  classes: 'btn btn-sage btn-sm w-100 rounded-pill py-2 fs-7 fw-bold shadow-xs',
                   events: {'click': (e) => _addToCart(item)},
                   [Component.text('Tambah ke Keranjang')],
                 ),
