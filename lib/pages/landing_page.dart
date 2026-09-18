@@ -1709,7 +1709,7 @@ class _LandingPageState extends State<LandingPage> {
                     ])
                   else
                     div(classes: 'row g-3', [
-                      for (var prod in store.products.where((p) => store.wishlistProductIds.contains(p.id)))
+                      for (var prod in store.products.where((item) => store.wishlistProductIds.contains(item.id)))
                         div(classes: 'col-md-6', [
                           div(classes: 'card border border-light-subtle rounded-3 p-2 bg-soft-card d-flex flex-row align-items-center gap-3', [
                             img(src: prod.image, classes: 'rounded-3 object-fit-cover', attributes: {'width': '70', 'height': '70', 'alt': prod.name}),
