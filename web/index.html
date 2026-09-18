@@ -8,7 +8,10 @@
     <title>Abel'z Handmade - Toko Rajutan & Kerajinan Estetik | Admin Panel</title>
     <base href="$FLUTTER_BASE_HREF">
 
-    <!-- Google Fonts: Source Sans 3 -->
+    <!-- Google Fonts: Playfair Display & Plus Jakarta Sans for Gen Z Aesthetic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css" crossorigin="anonymous">
 
     <!-- Third Party Plugins -->
@@ -22,7 +25,89 @@
     <!-- AdminLTE v4 CSS -->
     <link rel="stylesheet" href="css/adminlte.min.css">
 
-    <!-- Custom CSS for Global Reset and Blue Vector Map Styling -->
+    <!-- Custom CSS for Global Reset and Gen Z Soft Pink Aesthetic Theme -->
+    <style>
+      :root {
+        --bg-pink-cream: #FAF6F2;
+        --bg-soft-card: #FFF9F5;
+        --accent-rose-pink: #D883A7;
+        --accent-rose-dark: #C26B90;
+        --badge-blush-pink: #F5C6D6;
+        --badge-blush-text: #7A2E50;
+        --text-espresso: #2C221E;
+        --text-espresso-muted: #6E5F58;
+      }
+      
+      body {
+        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+        color: #2C221E;
+        background-color: #FAF6F2;
+      }
+
+      .font-serif-heading {
+        font-family: 'Playfair Display', Georgia, serif !important;
+      }
+      .font-sans-body {
+        font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+      }
+
+      /* Soft Pink Buttons & Badges */
+      .bg-pink-cream { background-color: #FAF6F2 !important; }
+      .bg-soft-card { background-color: #FFF9F5 !important; }
+      .bg-rose-pink { background-color: #D883A7 !important; }
+      .text-rose-pink { color: #D883A7 !important; }
+      .text-espresso { color: #2C221E !important; }
+      .text-espresso-muted { color: #6E5F58 !important; }
+
+      .btn-rose-pink {
+        background-color: #D883A7 !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        border-radius: 50rem !important;
+        font-weight: 600 !important;
+        transition: all 0.3s ease !important;
+      }
+      .btn-rose-pink:hover {
+        background-color: #C26B90 !important;
+        color: #FFFFFF !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(216, 131, 167, 0.35) !important;
+      }
+
+      .btn-blush-pink {
+        background-color: #F5C6D6 !important;
+        color: #7A2E50 !important;
+        border: none !important;
+        border-radius: 50rem !important;
+        font-weight: 600 !important;
+        transition: all 0.3s ease !important;
+      }
+      .btn-blush-pink:hover {
+        background-color: #EAA8BD !important;
+        color: #611D3C !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(245, 198, 214, 0.45) !important;
+      }
+
+      .badge-blush-pink {
+        background-color: #F5C6D6 !important;
+        color: #7A2E50 !important;
+        font-weight: 600;
+        border-radius: 50rem;
+      }
+
+      /* Card Gen Z Hover Smoothness */
+      .card-genz {
+        background: #FFFFFF !important;
+        border-radius: 20px !important;
+        border: 1px solid rgba(216, 131, 167, 0.12) !important;
+        box-shadow: 0 10px 30px rgba(216, 131, 167, 0.06) !important;
+        transition: transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.35s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+      }
+      .card-genz:hover {
+        transform: translateY(-6px) !important;
+        box-shadow: 0 18px 40px rgba(216, 131, 167, 0.16) !important;
+      }
     <style>
       a, 
       a:hover, 
