@@ -720,6 +720,21 @@ class AppStore {
 
   void addOrder(OrderItem order) {
     orders.insert(0, order);
+    final now = DateTime.now();
+    final newTrx = TransactionItem(
+      id: 'trx-${now.millisecondsSinceEpoch}',
+      transactionNo:
+          'TRX-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-${now.millisecondsSinceEpoch.toString().substring(now.millisecondsSinceEpoch.toString().length - 4)}',
+      orderId: order.id,
+      orderNo: order.orderNo,
+      customerName: order.customerName,
+      paymentGateway: 'Payment Gateway / WA',
+      paymentType: order.paymentMethod,
+      grossAmount: order.total,
+      transactionStatus: 'settlement',
+      date: order.date,
+    );
+    transactions.insert(0, newTrx);
     saveAll();
   }
 
