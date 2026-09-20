@@ -6,9 +6,12 @@
     <meta name="scaffolded-by" content="https://github.com/schultek/jaspr">
 
     <title>Abel'z Handmade - Toko Rajutan & Kerajinan Estetik | Admin Panel</title>
-    <base href="/ecomes/">
+    <base href="$FLUTTER_BASE_HREF">
 
-    <!-- Google Fonts: Source Sans 3 -->
+    <!-- Google Fonts: Playfair Display & Plus Jakarta Sans for Gen Z Aesthetic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css" crossorigin="anonymous">
 
     <!-- Third Party Plugins -->
@@ -22,8 +25,139 @@
     <!-- AdminLTE v4 CSS -->
     <link rel="stylesheet" href="css/adminlte.min.css">
 
-    <!-- Custom CSS for Global Reset and Blue Vector Map Styling -->
+    <!-- Custom CSS for Global Reset and Gen Z Soft Pink Aesthetic Theme -->
     <style>
+      :root {
+        --bg-pink-cream: #FAF6F2;
+        --bg-soft-card: #FFF9F5;
+        --accent-rose-pink: #D883A7;
+        --accent-rose-dark: #C26B90;
+        --badge-blush-pink: #F5C6D6;
+        --badge-blush-text: #7A2E50;
+        --text-espresso: #2C221E;
+        --text-espresso-muted: #6E5F58;
+      }
+      
+      body {
+        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+        color: #2C221E;
+        background-color: #FAF6F2;
+      }
+
+      .font-serif-heading {
+        font-family: 'Playfair Display', Georgia, serif !important;
+      }
+      .font-sans-body {
+        font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+      }
+
+      /* Soft Pink Buttons & Badges */
+      .bg-pink-cream { background-color: #FAF6F2 !important; }
+      .bg-soft-card { background-color: #FFF9F5 !important; }
+      .bg-rose-pink { background-color: #D883A7 !important; }
+      .text-rose-pink { color: #D883A7 !important; }
+      .text-espresso { color: #2C221E !important; }
+      .text-espresso-muted { color: #6E5F58 !important; }
+
+      .btn-rose-pink {
+        background-color: #D883A7 !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        border-radius: 50rem !important;
+        font-weight: 600 !important;
+        transition: all 0.3s ease !important;
+      }
+      .btn-rose-pink:hover {
+        background-color: #C26B90 !important;
+        color: #FFFFFF !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(216, 131, 167, 0.35) !important;
+      }
+
+      .btn-blush-pink {
+        background-color: #F5C6D6 !important;
+        color: #7A2E50 !important;
+        border: none !important;
+        border-radius: 50rem !important;
+        font-weight: 600 !important;
+        transition: all 0.3s ease !important;
+      }
+      .btn-blush-pink:hover {
+        background-color: #EAA8BD !important;
+        color: #611D3C !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(245, 198, 214, 0.45) !important;
+      }
+
+      .badge-blush-pink {
+        background-color: #F5C6D6 !important;
+        color: #7A2E50 !important;
+        font-weight: 600;
+        border-radius: 50rem;
+      }
+
+      /* Card Gen Z Hover Smoothness */
+      /* Terracotta & Sage Green Gen Z Boho Craft Color Palette */
+      .bg-terracotta { background-color: #C87D55 !important; }
+      .text-terracotta { color: #C87D55 !important; }
+      .bg-sage { background-color: #94AFA0 !important; }
+      .text-sage { color: #94AFA0 !important; }
+
+      .btn-terracotta {
+        background-color: #C87D55 !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        border-radius: 50rem !important;
+        font-weight: 600 !important;
+        padding: 0.5rem 1.5rem !important;
+        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+      }
+      .btn-terracotta:hover {
+        background-color: #B26B44 !important;
+        color: #FFFFFF !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 22px rgba(200, 125, 85, 0.35) !important;
+      }
+
+      .btn-sage {
+        background-color: #94AFA0 !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        border-radius: 50rem !important;
+        font-weight: 600 !important;
+        padding: 0.5rem 1rem !important;
+        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+      }
+      .btn-sage:hover {
+        background-color: #7E998A !important;
+        color: #FFFFFF !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(148, 175, 160, 0.4) !important;
+      }
+
+      .btn-clay-pill {
+        background-color: #E2AC8D !important;
+        color: #3C261B !important;
+        border: none !important;
+        border-radius: 50rem !important;
+        font-weight: 600 !important;
+        font-size: 0.8rem !important;
+        padding: 0.35rem 1rem !important;
+        transition: all 0.3s ease !important;
+      }
+      .btn-clay-pill:hover {
+        background-color: #D69774 !important;
+        color: #24140D !important;
+        transform: translateY(-2px);
+      }
+
+      .hover-scale {
+        transition: transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.35s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+      }
+      .hover-scale:hover {
+        transform: scale(1.05) !important;
+      }
+
       a, 
       a:hover, 
       a:focus, 
@@ -111,7 +245,122 @@
       .text-gradient-danger {
         background: linear-gradient(135deg, #dc3545 0%, #d63384 100%);
         -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
+      }
+
+      /* Gen Z Modern Multi-Platform UI System */
+      .glass-nav {
+        background: rgba(255, 255, 255, 0.88) !important;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid rgba(235, 220, 213, 0.8) !important;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.92) !important;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.9) !important;
+      }
+      .mobile-bottom-dock {
+        position: fixed;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(100% - 32px);
+        max-width: 460px;
+        background: rgba(255, 255, 255, 0.94);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 28px;
+        border: 1px solid rgba(255, 255, 255, 0.85);
+        box-shadow: 0 12px 36px rgba(44, 34, 30, 0.16), 0 2px 8px rgba(0, 0, 0, 0.04);
+        z-index: 1040;
+        padding: 6px 10px;
+      }
+      @media (min-width: 992px) {
+        .mobile-bottom-dock {
+          display: none !important;
+        }
+      }
+      @media (max-width: 991.98px) {
+        .landing-page-wrapper {
+          padding-bottom: 95px !important;
+        }
+      }
+      .story-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+        text-decoration: none !important;
+        flex-shrink: 0;
+        transition: transform 0.25s ease;
+      }
+      .story-item:hover {
+        transform: scale(1.06);
+      }
+      .story-ring {
+        padding: 3px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        display: inline-block;
+      }
+      .story-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: 2.5px solid #ffffff;
+        object-fit: cover;
+        display: block;
+      }
+      .swatch-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+        border: 1.5px solid #ffffff;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      }
+      .btn-pill-active {
+        background: #C87D55 !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 14px rgba(200, 125, 85, 0.35);
+      }
+      .btn-pill-inactive {
+        background: #ffffff !important;
+        color: #6E5F58 !important;
+        border: 1px solid #ebdcd5 !important;
+      }
+      .btn-pill-inactive:hover {
+        background: #FAF6F2 !important;
+        color: #2C221E !important;
+      }
+      .tap-bounce {
+        transition: transform 0.15s ease-in-out;
+      }
+      .tap-bounce:active {
+        transform: scale(0.93) !important;
+      }
+      .faq-card {
+        transition: all 0.3s ease;
+        border: 1px solid #ebdcd5;
+        border-radius: 16px;
+        background: #ffffff;
+      }
+      .faq-card:hover {
+        border-color: #C87D55;
+        box-shadow: 0 6px 20px rgba(200, 125, 85, 0.08);
+      }
+      @keyframes floatBadge {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-8px); }
+      }
+      .floating-badge-1 {
+        animation: floatBadge 4s ease-in-out infinite;
+      }
+      .floating-badge-2 {
+        animation: floatBadge 4s ease-in-out infinite 2s;
       }
 
       /* AdminLTE 4 Blue Vector Map Card Styling */
@@ -247,10 +496,168 @@
         scrollbar-width: none !important; /* Firefox */
       }
 
-      .sidebar-wrapper::-webkit-scrollbar {
-        display: none !important; /* Chrome, Safari, Opera */
-        width: 0 !important;
-        height: 0 !important;
+      /* Gen Z Aesthetic, Glassmorphism & Multi-Platform Utilities */
+      :root {
+        --glass-bg: rgba(255, 255, 255, 0.82);
+        --glass-border: rgba(255, 255, 255, 0.7);
+        --glass-shadow: 0 12px 36px rgba(200, 125, 85, 0.08);
+      }
+
+      .glass-nav {
+        background: rgba(250, 246, 242, 0.88) !important;
+        backdrop-filter: blur(18px) saturate(160%) !important;
+        -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
+        border-bottom: 1px solid rgba(216, 131, 167, 0.15) !important;
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.85) !important;
+        backdrop-filter: blur(16px) saturate(140%) !important;
+        -webkit-backdrop-filter: blur(16px) saturate(140%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.8) !important;
+        box-shadow: 0 10px 30px rgba(44, 34, 30, 0.05) !important;
+      }
+
+      /* Mobile Bottom Dock Bar */
+      .mobile-bottom-dock {
+        position: fixed;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(100% - 32px);
+        max-width: 480px;
+        z-index: 1045;
+        background: rgba(255, 255, 255, 0.94) !important;
+        backdrop-filter: blur(20px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.9) !important;
+        border-radius: 50rem !important;
+        box-shadow: 0 16px 40px rgba(44, 34, 30, 0.16), 0 0 0 1px rgba(200, 125, 85, 0.1) !important;
+        padding: 8px 16px;
+      }
+
+      @media (max-width: 991.98px) {
+        .landing-page-wrapper {
+          padding-bottom: 95px !important;
+        }
+      }
+
+      /* Story Highlight Reel */
+      .story-avatar {
+        background: linear-gradient(45deg, #C87D55, #D883A7, #E2AC8D, #94AFA0);
+        background-size: 300% 300%;
+        animation: shimmerGradient 6s ease infinite;
+        padding: 2.5px;
+        border-radius: 50%;
+        display: inline-block;
+        transition: transform 0.25s ease;
+      }
+      .story-avatar:hover {
+        transform: scale(1.06);
+      }
+      .story-avatar-img {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        border: 2px solid #FFFFFF;
+        object-fit: cover;
+      }
+      @media (max-width: 576px) {
+        .story-avatar-img {
+          width: 56px;
+          height: 56px;
+        }
+      }
+
+      /* Product Card Hover & Micro-Animations */
+      .card-genz {
+        border-radius: 1.25rem !important;
+        transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        background: #FFFFFF;
+      }
+      .card-genz:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 18px 36px rgba(200, 125, 85, 0.12) !important;
+      }
+
+      /* Color Swatches on Product Cards */
+      .swatch-dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        display: inline-block;
+        border: 1.5px solid #FFFFFF;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+      .swatch-dot:hover {
+        transform: scale(1.3);
+      }
+
+      /* Pill Button States */
+      .btn-pill-active {
+        background: linear-gradient(135deg, #C87D55 0%, #D69774 100%) !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        border-radius: 50rem !important;
+        font-weight: 700 !important;
+        box-shadow: 0 4px 15px rgba(200, 125, 85, 0.35) !important;
+      }
+      .btn-pill-inactive {
+        background-color: #FFFFFF !important;
+        color: #6E5F58 !important;
+        border: 1px solid rgba(200, 125, 85, 0.18) !important;
+        border-radius: 50rem !important;
+        font-weight: 600 !important;
+        transition: all 0.25s ease !important;
+      }
+      .btn-pill-inactive:hover {
+        background-color: #FFF4EE !important;
+        color: #C87D55 !important;
+        border-color: #C87D55 !important;
+        transform: translateY(-1px);
+      }
+
+      /* Interactive Tap Feedback */
+      .tap-bounce {
+        transition: transform 0.15s ease;
+      }
+      .tap-bounce:active {
+        transform: scale(0.95) !important;
+      }
+
+      /* Scarcity Banner Glow */
+      .scarcity-badge {
+        background: linear-gradient(135deg, #FF6B6B 0%, #EE5253 100%);
+        box-shadow: 0 4px 14px rgba(238, 82, 83, 0.35);
+        color: #FFFFFF;
+      }
+
+      /* FAQ Accordion Styling */
+      .faq-item {
+        border-radius: 1rem !important;
+        overflow: hidden;
+        border: 1px solid rgba(200, 125, 85, 0.15) !important;
+        background-color: #FFFFFF;
+        transition: all 0.25s ease;
+      }
+      .faq-item:hover {
+        border-color: #C87D55 !important;
+        box-shadow: 0 6px 18px rgba(200, 125, 85, 0.08);
+      }
+      .faq-header {
+        cursor: pointer;
+        padding: 1rem 1.25rem;
+        user-select: none;
+      }
+
+      /* Floating Tag on Hero */
+      .floating-tag {
+        animation: floatSlow 4.5s ease-in-out infinite;
+      }
+      .floating-tag-reverse {
+        animation: floatSlow 5.5s ease-in-out infinite reverse;
       }
     </style>
 
@@ -267,7 +674,7 @@
       <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #C87D74 0%, #E8A598 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(200, 125, 116, 0.3); margin-bottom: 20px; animation: pulseSubtle 1.8s infinite ease-in-out;">
         <span style="font-size: 38px;">🧶</span>
       </div>
-      <h2 style="color: #2D2424; font-size: 22px; font-weight: 700; margin: 0 0 8px 0; tracking: 0.5px;">Abel'z Handmade</h2>
+      <h2 style="color: #2D2424; font-size: 22px; font-weight: 700; margin: 0 0 8px 0; letter-spacing: 0.5px;">Abel'z Handmade</h2>
       <p style="color: #6C5F5B; font-size: 14px; margin: 0 0 24px 0;">Memuat Produk & Kerajinan Rajutan Estetik...</p>
       <div style="width: 160px; height: 5px; background: #F0D9D5; border-radius: 10px; overflow: hidden; position: relative;">
         <div style="width: 45%; height: 100%; background: #C87D74; border-radius: 10px; animation: pulseSubtle 1.2s infinite ease-in-out;"></div>
