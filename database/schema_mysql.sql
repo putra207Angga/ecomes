@@ -32,6 +32,9 @@ CREATE TABLE IF NOT EXISTS `customers` (
     `avatar` VARCHAR(255) DEFAULT NULL,
     `address` TEXT DEFAULT NULL,
     `is_blocked` TINYINT(1) DEFAULT 0,
+    `points` INT DEFAULT 100,
+    `password_hash` VARCHAR(255) DEFAULT '123456',
+    `registered_date` DATE DEFAULT NULL,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

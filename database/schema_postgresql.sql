@@ -31,6 +31,9 @@ CREATE TABLE IF NOT EXISTS customers (
     avatar VARCHAR(255),
     address TEXT,
     is_blocked BOOLEAN DEFAULT FALSE,
+    points INT DEFAULT 100,
+    password_hash VARCHAR(255) DEFAULT '123456',
+    registered_date DATE DEFAULT CURRENT_DATE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
