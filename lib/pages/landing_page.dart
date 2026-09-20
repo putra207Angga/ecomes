@@ -1654,7 +1654,7 @@ class _LandingPageState extends State<LandingPage> {
         div(classes: 'd-flex flex-wrap justify-content-between align-items-center text-secondary fs-8 py-2', [
           div([Component.text('© 2026 ${config.storeName} Handmade Studio. Handcrafted with love by Yayuk Wahyuni.')]),
           div(classes: 'd-flex gap-3', [
-            Link(to: '/', child: a(href: '/', classes: 'text-secondary text-decoration-none fw-bold', [Component.text('⚙️ Masuk Admin Panel')])),
+            Link(to: '/admin', child: a(href: '/admin', classes: 'text-secondary text-decoration-none fw-bold', [Component.text('⚙️ Masuk Admin Panel')])),
           ]),
         ]),
 
