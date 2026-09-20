@@ -1,0 +1,1 @@
+{"isEntrypoint":true,"deps":["jaspr|lib/dom.dart","jaspr|lib/jaspr.dart","ecomes|lib/constants/theme.dart","ecomes|lib/components/embedded_counter.dart"],"parts":[],"conditionalDeps":[],"sdkDeps":[],"hasMain":false}

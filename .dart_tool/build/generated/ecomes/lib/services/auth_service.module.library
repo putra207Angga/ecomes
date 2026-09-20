@@ -1,0 +1,1 @@
+{"isEntrypoint":true,"deps":["ecomes|lib/models/app_models.dart"],"parts":[],"conditionalDeps":[],"sdkDeps":["convert","html"],"hasMain":false}

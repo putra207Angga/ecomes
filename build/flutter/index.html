@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="scaffolded-by" content="https://github.com/schultek/jaspr">
+
+    <title>Abel'z Handmade - Toko Rajutan & Kerajinan Estetik</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <base href="/">
+
+    <!-- Google Fonts: Playfair Display & Plus Jakarta Sans for Gen Z Aesthetic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css" crossorigin="anonymous">
+
+    <!-- Third Party Plugins -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/styles/overlayscrollbars.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" crossorigin="anonymous">
+
+    <!-- Leaflet.js Map CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- AdminLTE v4 CSS -->
+    <link rel="stylesheet" href="css/adminlte.min.css">
+
+    <!-- Custom CSS for Global Reset and Gen Z Soft Pink Aesthetic Theme -->
+    <style>
+      :root {
+        --bg-pink-cream: #FAF6F2;
+        --bg-soft-card: #FFF9F5;
+        --accent-rose-pink: #D883A7;
+        --accent-rose-dark: #C26B90;
+        --badge-blush-pink: #F5C6D6;
+        --badge-blush-text: #7A2E50;
+        --text-espresso: #2C221E;
+        --text-espresso-muted: #6E5F58;
+      }
+      
+      body {
+        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+        color: #2C221E;
+        background-color: #FAF6F2;
+      }
+
+      .font-serif-heading {
+        font-family: 'Playfair Display', Georgia, serif !important;
+      }
+      .font-sans-body {
+        font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+      }
+
+      /* Soft Pink Buttons & Badges */
+      .bg-pink-cream { background-color: #FAF6F2 !important; }
+      .bg-soft-card { background-color: #FFF9F5 !important; }
+      .bg-rose-pink { background-color: #D883A7 !important; }
+      .text-rose-pink { color: #D883A7 !important; }
+      .text-espresso { color: #2C221E !important; }
+      .text-espresso-muted { color: #6E5F58 !important; }
+
+      .btn-rose-pink {
+        background-color: #D883A7 !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        border-radius: 50rem !important;
+        font-weight: 600 !important;
+        transition: all 0.3s ease !important;
+      }
+      .btn-rose-pink:hover {
+        background-color: #C26B90 !important;
+        color: #FFFFFF !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(216, 131, 167, 0.35) !important;
+      }
+
+      .btn-blush-pink {
+        background-color: #F5C6D6 !important;
+        color: #7A2E50 !important;
+        border: none !important;
+        border-radius: 50rem !important;
+        font-weight: 600 !important;
+        transition: all 0.3s ease !important;
+      }
+      .btn-blush-pink:hover {
+        background-color: #EAA8BD !important;
+        color: #611D3C !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(245, 198, 214, 0.45) !important;
+      }
+
+      .badge-blush-pink {
+        background-color: #F5C6D6 !important;
+        color: #7A2E50 !important;
+        font-weight: 600;
+        border-radius: 50rem;
+      }
+
+      /* Card Gen Z Hover Smoothness */
+      /* Terracotta & Sage Green Gen Z Boho Craft Color Palette */
+      .bg-terracotta { background-color: #C87D55 !important; }
+      .text-terracotta { color: #C87D55 !important; }
+      .bg-sage { background-color: #94AFA0 !important; }
+      .text-sage { color: #94AFA0 !important; }
+
+      .btn-terracotta {
+        background-color: #C87D55 !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        border-radius: 50rem !important;
+        font-weight: 600 !important;
+        padding: 0.5rem 1.5rem !important;
+        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+      }
+      .btn-terracotta:hover {
+        background-color: #B26B44 !important;
+        color: #FFFFFF !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 22px rgba(200, 125, 85, 0.35) !important;
+      }
+
+      .btn-sage {
+        background-color: #94AFA0 !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        border-radius: 50rem !important;
+        font-weight: 600 !important;
+        padding: 0.5rem 1rem !important;
+        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+      }
+      .btn-sage:hover {
+        background-color: #7E998A !important;
+        color: #FFFFFF !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(148, 175, 160, 0.4) !important;
+      }
+
+      .btn-clay-pill {
+        background-color: #E2AC8D !important;
+        color: #3C261B !important;
+        border: none !important;
+        border-radius: 50rem !important;
+        font-weight: 600 !important;
+        font-size: 0.8rem !important;
+        padding: 0.35rem 1rem !important;
+        transition: all 0.3s ease !important;
+      }
+      .btn-clay-pill:hover {
+        background-color: #D69774 !important;
+        color: #24140D !important;
+        transform: translateY(-2px);
+      }
+
+      .hover-scale {
+        transition: transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.35s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+      }
+      .hover-scale:hover {
+        transform: scale(1.05) !important;
+      }
+
+      a, 
+      a:hover, 
+      a:focus, 
+      a:active, 
+      a *, 
+      .nav-link, 
+      .dropdown-item, 
+      .dropdown-item *,
+      .btn, 
+      .breadcrumb-item a, 
+      .small-box-footer,
+      .brand-link, 
+      .sidebar-wrapper a, 
+      .dropdown-footer {
+        text-decoration: none !important;
+      }
+      /* Fix Offcanvas & Modal Backdrop Opacity (Prevent solid black background) */
+      .offcanvas-backdrop, .modal-backdrop {
+        background-color: rgba(0, 0, 0, 0.4) !important;
+        opacity: 0.4 !important;
+      }
+      .offcanvas-backdrop.show, .modal-backdrop.show {
+        opacity: 0.4 !important;
+      }
+
+
+
+      /* Landing Page Smooth Micro-Animations & Aesthetic Utilities */
+      /* Hide topnavbar scrollbars completely across browsers */
+      .navbar-scroll-hide {
+        overflow-x: auto !important;
+        scrollbar-width: none !important; /* Firefox */
+        -ms-overflow-style: none !important; /* IE/Edge */
+      }
+      .navbar-scroll-hide::-webkit-scrollbar {
+        display: none !important; /* Chrome, Safari, Opera */
+        width: 0 !important;
+        height: 0 !important;
+      }
+      .navbar, .navbar * {
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+      }
+      .navbar::-webkit-scrollbar, .navbar *::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+      }
+
+      @keyframes floatSlow {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-14px) rotate(1deg); }
+      }
+      @keyframes pulseSubtle {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.03); opacity: 0.95; }
+      }
+      @keyframes shimmerGradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+
+      .animate-float {
+        animation: floatSlow 5s ease-in-out infinite;
+      }
+      .animate-pulse-subtle {
+        animation: pulseSubtle 3s ease-in-out infinite;
+      }
+      .hero-gradient-bg {
+        background: linear-gradient(-45deg, #fff5f5, #fff0f3, #f8f9fa, #fff7ed) !important;
+        background-size: 400% 400% !important;
+        animation: shimmerGradient 12s ease infinite !important;
+      }
+      .product-card-hover {
+        transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+      }
+      .product-card-hover:hover {
+        transform: translateY(-8px) scale(1.015);
+        box-shadow: 0 16px 32px rgba(220, 53, 69, 0.16) !important;
+      }
+      .badge-glow {
+        box-shadow: 0 0 12px rgba(220, 53, 69, 0.35);
+      }
+      .text-gradient-danger {
+        background: linear-gradient(135deg, #dc3545 0%, #d63384 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* Gen Z Modern Multi-Platform UI System */
+      .glass-nav {
+        background: rgba(255, 255, 255, 0.88) !important;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid rgba(235, 220, 213, 0.8) !important;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.92) !important;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.9) !important;
+      }
+      .mobile-bottom-dock {
+        position: fixed;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(100% - 32px);
+        max-width: 460px;
+        background: rgba(255, 255, 255, 0.94);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 28px;
+        border: 1px solid rgba(255, 255, 255, 0.85);
+        box-shadow: 0 12px 36px rgba(44, 34, 30, 0.16), 0 2px 8px rgba(0, 0, 0, 0.04);
+        z-index: 1040;
+        padding: 6px 10px;
+      }
+      @media (min-width: 992px) {
+        .mobile-bottom-dock {
+          display: none !important;
+        }
+      }
+      @media (max-width: 991.98px) {
+        .landing-page-wrapper {
+          padding-bottom: 110px !important;
+        }
+      }
+      .story-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+        text-decoration: none !important;
+        flex-shrink: 0;
+        transition: transform 0.25s ease;
+      }
+      .story-item:hover {
+        transform: scale(1.06);
+      }
+      .story-ring {
+        padding: 3px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        display: inline-block;
+      }
+      .story-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: 2.5px solid #ffffff;
+        object-fit: cover;
+        display: block;
+      }
+      .swatch-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+        border: 1.5px solid #ffffff;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      }
+      .btn-pill-active {
+        background: #C87D55 !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 14px rgba(200, 125, 85, 0.35);
+      }
+      .btn-pill-inactive {
+        background: #ffffff !important;
+        color: #6E5F58 !important;
+        border: 1px solid #ebdcd5 !important;
+      }
+      .btn-pill-inactive:hover {
+        background: #FAF6F2 !important;
+        color: #2C221E !important;
+      }
+      .tap-bounce {
+        transition: transform 0.15s ease-in-out;
+      }
+      .tap-bounce:active {
+        transform: scale(0.93) !important;
+      }
+      .faq-card {
+        transition: all 0.3s ease;
+        border: 1px solid #ebdcd5;
+        border-radius: 16px;
+        background: #ffffff;
+      }
+      .faq-card:hover {
+        border-color: #C87D55;
+        box-shadow: 0 6px 20px rgba(200, 125, 85, 0.08);
+      }
+      @keyframes floatBadge {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-8px); }
+      }
+      .floating-badge-1 {
+        animation: floatBadge 4s ease-in-out infinite;
+      }
+      .floating-badge-2 {
+        animation: floatBadge 4s ease-in-out infinite 2s;
+      }
+
+      /* AdminLTE 4 Blue Vector Map Card Styling */
+      .blue-vector-card {
+        background: #0d6efd !important;
+        color: #ffffff !important;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+      }
+
+      .blue-vector-card .card-header {
+        background: transparent !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+      }
+
+      .blue-vector-card .card-footer {
+        background: rgba(0, 0, 0, 0.12) !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+      }
+
+      #indonesia-map {
+        background: #e5e9ec !important;
+      }
+
+      .leaflet-container {
+        background: #e5e9ec !important;
+      }
+
+      /* Custom Zoom Control (+ / -) matching user screenshot */
+      .leaflet-top.leaflet-left {
+        top: 10px;
+        left: 10px;
+      }
+
+      .leaflet-control-zoom {
+        border: none !important;
+        margin: 0 !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+      }
+
+      .leaflet-control-zoom-in,
+      .leaflet-control-zoom-out {
+        background-color: rgba(33, 37, 41, 0.85) !important;
+        color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.25) !important;
+        font-weight: bold !important;
+        width: 30px !important;
+        height: 30px !important;
+        line-height: 28px !important;
+        font-size: 16px !important;
+        text-align: center !important;
+        display: block !important;
+      }
+
+      .leaflet-control-zoom-in {
+        border-top-left-radius: 6px !important;
+        border-top-right-radius: 6px !important;
+        border-bottom: none !important;
+      }
+
+      .leaflet-control-zoom-out {
+        border-bottom-left-radius: 6px !important;
+        border-bottom-right-radius: 6px !important;
+      }
+
+      .leaflet-control-zoom-in:hover,
+      .leaflet-control-zoom-out:hover {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+      }
+
+      /* Fix Global Page Scrolling & Mobile Touch Scroll */
+      html, body {
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        height: auto !important;
+        min-height: 100% !important;
+        -webkit-overflow-scrolling: touch !important;
+        touch-action: auto !important;
+      }
+      body {
+        position: relative !important;
+      }
+
+      .landing-page-wrapper {
+        overflow-y: visible !important;
+        height: auto !important;
+        min-height: 100vh !important;
+        touch-action: auto !important;
+      }
+
+      /* Desktop Sidebar Expand & Collapse State Handling */
+      @media (min-width: 992px) {
+        body:not(.sidebar-collapse) .app-sidebar {
+          width: 250px !important;
+          position: fixed !important;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          z-index: 1038;
+          display: block !important;
+        }
+        body:not(.sidebar-collapse) .app-header,
+        body:not(.sidebar-collapse) .app-main,
+        body:not(.sidebar-collapse) .app-footer {
+          margin-left: 250px !important;
+          transition: margin-left 0.25s ease-in-out;
+        }
+
+        body.sidebar-collapse .app-sidebar {
+          display: none !important;
+        }
+        body.sidebar-collapse .app-header,
+        body.sidebar-collapse .app-main,
+        body.sidebar-collapse .app-footer {
+          margin-left: 0 !important;
+          transition: margin-left 0.25s ease-in-out;
+        }
+      }
+
+      /* Mobile Device Fixes */
+      @media (max-width: 991.98px) {
+        .app-header, .app-main, .app-footer {
+          margin-left: 0 !important;
+        }
+      }
+
+      /* Independent Sidebar Scroll with Hidden Scrollbar UI */
+      .sidebar-wrapper {
+        height: calc(100vh - 57px) !important;
+        overflow-y: auto !important;
+        -ms-overflow-style: none !important; /* IE and Edge */
+        scrollbar-width: none !important; /* Firefox */
+      }
+
+      /* Gen Z Aesthetic, Glassmorphism & Multi-Platform Utilities */
+      :root {
+        --glass-bg: rgba(255, 255, 255, 0.82);
+        --glass-border: rgba(255, 255, 255, 0.7);
+        --glass-shadow: 0 12px 36px rgba(200, 125, 85, 0.08);
+      }
+
+      .glass-nav {
+        background: rgba(250, 246, 242, 0.88) !important;
+        backdrop-filter: blur(18px) saturate(160%) !important;
+        -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
+        border-bottom: 1px solid rgba(216, 131, 167, 0.15) !important;
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.85) !important;
+        backdrop-filter: blur(16px) saturate(140%) !important;
+        -webkit-backdrop-filter: blur(16px) saturate(140%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.8) !important;
+        box-shadow: 0 10px 30px rgba(44, 34, 30, 0.05) !important;
+      }
+
+      /* Mobile Bottom Dock Bar */
+      .mobile-bottom-dock {
+        position: fixed;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(100% - 32px);
+        max-width: 480px;
+        z-index: 1045;
+        background: rgba(255, 255, 255, 0.94) !important;
+        backdrop-filter: blur(20px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.9) !important;
+        border-radius: 50rem !important;
+        box-shadow: 0 16px 40px rgba(44, 34, 30, 0.16), 0 0 0 1px rgba(200, 125, 85, 0.1) !important;
+        padding: 8px 16px;
+      }
+
+      @media (max-width: 991.98px) {
+        .landing-page-wrapper {
+          padding-bottom: 95px !important;
+        }
+      }
+
+      /* Story Highlight Reel */
+      .story-avatar {
+        background: linear-gradient(45deg, #C87D55, #D883A7, #E2AC8D, #94AFA0);
+        background-size: 300% 300%;
+        animation: shimmerGradient 6s ease infinite;
+        padding: 2.5px;
+        border-radius: 50%;
+        display: inline-block;
+        transition: transform 0.25s ease;
+      }
+      .story-avatar:hover {
+        transform: scale(1.06);
+      }
+      .story-avatar-img {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        border: 2px solid #FFFFFF;
+        object-fit: cover;
+      }
+      @media (max-width: 576px) {
+        .story-avatar-img {
+          width: 56px;
+          height: 56px;
+        }
+      }
+
+      /* Product Card Hover & Micro-Animations */
+      .card-genz {
+        border-radius: 1.25rem !important;
+        transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        background: #FFFFFF;
+      }
+      .card-genz:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 18px 36px rgba(200, 125, 85, 0.12) !important;
+      }
+
+      /* Color Swatches on Product Cards */
+      .swatch-dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        display: inline-block;
+        border: 1.5px solid #FFFFFF;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+      .swatch-dot:hover {
+        transform: scale(1.3);
+      }
+
+      /* Pill Button States */
+      .btn-pill-active {
+        background: linear-gradient(135deg, #C87D55 0%, #D69774 100%) !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        border-radius: 50rem !important;
+        font-weight: 700 !important;
+        box-shadow: 0 4px 15px rgba(200, 125, 85, 0.35) !important;
+      }
+      .btn-pill-inactive {
+        background-color: #FFFFFF !important;
+        color: #6E5F58 !important;
+        border: 1px solid rgba(200, 125, 85, 0.18) !important;
+        border-radius: 50rem !important;
+        font-weight: 600 !important;
+        transition: all 0.25s ease !important;
+      }
+      .btn-pill-inactive:hover {
+        background-color: #FFF4EE !important;
+        color: #C87D55 !important;
+        border-color: #C87D55 !important;
+        transform: translateY(-1px);
+      }
+
+      /* Interactive Tap Feedback */
+      .tap-bounce {
+        transition: transform 0.15s ease;
+      }
+      .tap-bounce:active {
+        transform: scale(0.95) !important;
+      }
+
+      /* Scarcity Banner Glow */
+      .scarcity-badge {
+        background: linear-gradient(135deg, #FF6B6B 0%, #EE5253 100%);
+        box-shadow: 0 4px 14px rgba(238, 82, 83, 0.35);
+        color: #FFFFFF;
+      }
+
+      /* FAQ Accordion Styling */
+      .faq-item {
+        border-radius: 1rem !important;
+        overflow: hidden;
+        border: 1px solid rgba(200, 125, 85, 0.15) !important;
+        background-color: #FFFFFF;
+        transition: all 0.25s ease;
+      }
+      .faq-item:hover {
+        border-color: #C87D55 !important;
+        box-shadow: 0 6px 18px rgba(200, 125, 85, 0.08);
+      }
+      .faq-header {
+        cursor: pointer;
+        padding: 1rem 1.25rem;
+        user-select: none;
+      }
+
+      /* Floating Tag on Hero */
+      .floating-tag {
+        animation: floatSlow 4.5s ease-in-out infinite;
+      }
+      .floating-tag-reverse {
+        animation: floatSlow 5.5s ease-in-out infinite reverse;
+      }
+    </style>
+
+    <!-- Flutter Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Flutter / Jaspr Web Client Bundle -->
+    <script src="flutter_bootstrap.js" async></script>
+    <script defer src="main.dart.js"></script>
+  </head>
+  <body class="bg-pink-cream">
+    <!-- Splash Screen Loading Animation -->
+    <div id="splash-screen" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #FFF5F5; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Source Sans 3', sans-serif; transition: opacity 0.5s ease, visibility 0.5s ease;">
+      <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #C87D74 0%, #E8A598 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(200, 125, 116, 0.3); margin-bottom: 20px; animation: pulseSubtle 1.8s infinite ease-in-out;">
+        <span style="font-size: 38px;">🧶</span>
+      </div>
+      <h2 style="color: #2D2424; font-size: 22px; font-weight: 700; margin: 0 0 8px 0; letter-spacing: 0.5px;">Abel'z Handmade</h2>
+      <p style="color: #6C5F5B; font-size: 14px; margin: 0 0 24px 0;">Memuat Produk & Kerajinan Rajutan Estetik...</p>
+      <div style="width: 160px; height: 5px; background: #F0D9D5; border-radius: 10px; overflow: hidden; position: relative;">
+        <div style="width: 45%; height: 100%; background: #C87D74; border-radius: 10px; animation: pulseSubtle 1.2s infinite ease-in-out;"></div>
+      </div>
+    </div>
+    <script>
+      function hideSplashScreen() {
+        var splash = document.getElementById('splash-screen');
+        if (splash) {
+          splash.style.opacity = '0';
+          splash.style.visibility = 'hidden';
+          splash.style.pointerEvents = 'none';
+          splash.style.display = 'none';
+          if (splash.parentNode) splash.parentNode.removeChild(splash);
+        }
+      }
+      window.addEventListener('load', function() {
+        setTimeout(hideSplashScreen, 800);
+      });
+      if (document.readyState === 'complete') {
+        setTimeout(hideSplashScreen, 500);
+      }
+    </script>
+    <!-- Jaspr root application component will be mounted here -->
+
+    <!-- Third Party Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/browser/overlayscrollbars.browser.es6.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+    <!-- AdminLTE v4 JS -->
+    <script src="js/adminlte.js"></script>
+
+    <!-- Leaflet Indonesia Map Initialization Script -->
+    <script>
+      function initIndonesiaMap() {
+        var container = document.getElementById('indonesia-map');
+        if (!container) return;
+        if (container._leaflet_id) return; // already initialized
+
+        var map = L.map('indonesia-map', {
+          center: [-2.5, 118.0],
+          zoom: 5,
+          maxZoom: 19,
+          minZoom: 4,
+          zoomControl: true
+        });
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        var zoomBadge = document.getElementById('map-zoom-level-badge');
+        var zoomName = document.getElementById('map-zoom-name');
+
+        function updateZoomInfo() {
+          var z = map.getZoom();
+          var label = '🇮🇩 Indonesia Overview (Nasional)';
+          if (z >= 16) {
+            label = '🏘️ Tingkat Kelurahan / Jalan Detail';
+          } else if (z >= 13) {
+            label = '🏡 Tingkat Kecamatan / Desa';
+          } else if (z >= 10) {
+            label = '🏙️ Tingkat Kabupaten / Kota';
+          } else if (z >= 7) {
+            label = '📍 Tingkat Provinsi';
+          }
+          if (zoomBadge) zoomBadge.textContent = 'Zoom: ' + z;
+          if (zoomName) zoomName.textContent = label;
+        }
+
+        map.on('zoomend', updateZoomInfo);
+        updateZoomInfo();
+
+        var hubs = [
+          { name: 'Hub Utama Jakarta Pusat', lat: -6.2088, lng: 106.8456, orders: '45,210 Pengiriman', status: 'Sangat Padat 🔴' },
+          { name: 'Hub Surabaya (Jawa Timur)', lat: -7.2575, lng: 112.7521, orders: '28,400 Pengiriman', status: 'Lancar 🟢' },
+          { name: 'Hub Bandung (Jawa Barat)', lat: -6.9175, lng: 107.6191, orders: '18,900 Pengiriman', status: 'Padat 🟡' },
+          { name: 'Hub Medan (Sumatra Utara)', lat: 3.5952, lng: 98.6722, orders: '14,200 Pengiriman', status: 'Lancar 🟢' },
+          { name: 'Hub Makassar (Sulawesi)', lat: -5.1477, lng: 119.4327, orders: '9,800 Pengiriman', status: 'Lancar 🟢' },
+          { name: 'Hub Denpasar (Bali)', lat: -8.6705, lng: 115.2126, orders: '12,500 Pengiriman', status: 'Lancar 🟢' },
+          { name: 'Hub Semarang (Jawa Tengah)', lat: -6.9667, lng: 110.4167, orders: '16,300 Pengiriman', status: 'Lancar 🟢' },
+          { name: 'Hub Palembang (Sumatra Selatan)', lat: -2.9761, lng: 104.7754, orders: '8,700 Pengiriman', status: 'Lancar 🟢' }
+        ];
+
+        hubs.forEach(function(h) {
+          var marker = L.marker([h.lat, h.lng]).addTo(map);
+          marker.bindPopup(
+            '<div style="padding: 4px;">' +
+            '<strong style="color: #0d6efd; font-size: 14px;">📦 ' + h.name + '</strong><br>' +
+            '<span style="font-size: 12px; color: #555;">Total: <b>' + h.orders + '</b></span><br>' +
+            '<span style="font-size: 11px; color: #777;">Status Hub: ' + h.status + '</span><br>' +
+            '<button onclick="window.zoomToHub(' + h.lat + ',' + h.lng + ', 15)" style="margin-top:6px; background:#0d6efd; color:#fff; border:none; padding:4px 10px; border-radius:4px; font-size:11px; cursor:pointer;">Zoom ke Kelurahan / Kecamatan</button>' +
+            '</div>'
+          );
+        });
+
+        window.mapInstance = map;
+        window.zoomToHub = function(lat, lng, zoom) {
+          map.flyTo([lat, lng], zoom || 15, { duration: 1.5 });
+        };
+
+        window.flyToRegion = function(lat, lng, zoom) {
+          map.flyTo([lat, lng], zoom, { duration: 1.5 });
+        };
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        initIndonesiaMap();
+      });
+
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('sw.js');
+        });
+      }
+    </script>
+  </body>
+</html>

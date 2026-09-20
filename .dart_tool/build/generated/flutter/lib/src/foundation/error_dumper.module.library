@@ -1,0 +1,1 @@
+{"isEntrypoint":false,"deps":[],"parts":[],"conditionalDeps":[{"$default":"flutter|lib/src/foundation/_error_dumper_io.dart","dart.library.js_interop":"flutter|lib/src/foundation/_error_dumper_web.dart"}],"sdkDeps":[],"hasMain":false}

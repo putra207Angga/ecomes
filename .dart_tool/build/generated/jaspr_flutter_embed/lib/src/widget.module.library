@@ -1,0 +1,1 @@
+{"isEntrypoint":false,"deps":[],"parts":[],"conditionalDeps":[{"$default":"flutter|lib/widgets.dart","dart.library.js_interop":"jaspr_flutter_embed|lib/src/widget/widget_web.dart","dart.library.io":"jaspr_flutter_embed|lib/src/widget/widget_io.dart"}],"sdkDeps":[],"hasMain":false}

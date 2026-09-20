@@ -1,0 +1,1 @@
+{"isEntrypoint":false,"deps":["jaspr|lib/dom.dart","jaspr|lib/jaspr.dart","jaspr_flutter_embed|lib/src/flutter_embed_view_fallback.dart","jaspr_flutter_embed|lib/src/flutter_embed_view_flutter.dart","jaspr_flutter_embed|lib/src/view_constraints.dart","jaspr_flutter_embed|lib/src/widget.dart"],"parts":[],"conditionalDeps":[],"sdkDeps":[],"hasMain":false}

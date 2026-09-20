@@ -1,0 +1,1 @@
+{"isEntrypoint":false,"deps":["flutter|lib/widgets.dart","web|lib/web.dart","jaspr_flutter_embed|lib/src/multi_view_app.dart","jaspr_flutter_embed|lib/src/view_constraints.dart"],"parts":[],"conditionalDeps":[],"sdkDeps":["async","js_interop","ui_web"],"hasMain":false}

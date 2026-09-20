@@ -1,0 +1,1 @@
+{"isEntrypoint":false,"deps":["flutter|lib/src/web.dart"],"parts":[],"conditionalDeps":[],"sdkDeps":["js_interop"],"hasMain":false}

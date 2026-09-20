@@ -1,0 +1,1 @@
+ D:\\Users\\Projek\\Freelance\\web\\ecomes\\build\\web\\assets\\AssetManifest.bin D:\\Users\\Projek\\Freelance\\web\\ecomes\\build\\web\\assets\\AssetManifest.bin.json:  D:\\Users\\Projek\\Freelance\\web\\ecomes\\pubspec.yaml
