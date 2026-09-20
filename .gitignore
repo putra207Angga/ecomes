@@ -5,6 +5,8 @@
 
 # Conventional directory for build output.
 /build/
+.build.manifest
+/packages/
 
 # Miscellaneous
 *.class
