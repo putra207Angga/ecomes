@@ -2,13 +2,17 @@
 import 'dart:convert';
 import 'dart:html' as html;
 import '../models/app_models.dart';
+import 'supabase_service.dart';
 
 class AppStore {
   static final AppStore _instance = AppStore._internal();
   factory AppStore() => _instance;
   AppStore._internal() {
     _loadFromStorage();
+    syncWithSupabase();
   }
+
+  final SupabaseService _supabase = SupabaseService();
 
   List<ProductItem> products = [];
   List<OrderItem> orders = [];
@@ -148,6 +152,128 @@ class AppStore {
     html.window.localStorage['ecomes_chats'] = jsonEncode(chatMessages.map((e) => e.toJson()).toList());
     html.window.localStorage['ecomes_settings'] = jsonEncode(settings.toJson());
     html.window.localStorage['ecomes_landing_config'] = jsonEncode(landingConfig.toJson());
+
+    // Asynchronously sync updates to Supabase in the background
+    _syncToSupabase();
+  }
+
+  Future<void> syncWithSupabase() async {
+    try {
+      // 1. Fetch Products from Supabase
+      final pList = await _supabase.get('products');
+      if (pList.isNotEmpty) {
+        products = pList.map((e) => ProductItem(
+          id: e['id']?.toString() ?? '',
+          name: e['name']?.toString() ?? '',
+          sku: e['sku']?.toString() ?? '',
+          category: e['category']?.toString() ?? 'Tas Rajut',
+          price: (e['price'] as num?)?.toDouble() ?? 0.0,
+          hpp: (e['hpp'] as num?)?.toDouble() ?? 0.0,
+          stock: (e['stock'] as num?)?.toInt() ?? 0,
+          image: e['image']?.toString() ?? 'images/abelz_tas_rajut.png',
+          status: e['status']?.toString() ?? 'Aktif',
+          description: e['description']?.toString() ?? '',
+        )).toList();
+        html.window.localStorage['ecomes_products'] = jsonEncode(products.map((e) => e.toJson()).toList());
+      } else if (products.isNotEmpty) {
+        _supabase.upsertBatch('products', products.map((e) => {
+          'id': e.id,
+          'name': e.name,
+          'sku': e.sku,
+          'category': e.category,
+          'price': e.price,
+          'hpp': e.hpp,
+          'stock': e.stock,
+          'image': e.image,
+          'status': e.status,
+          'description': e.description,
+        }).toList());
+      }
+
+      // 2. Fetch Customers from Supabase
+      final cList = await _supabase.get('customers');
+      if (cList.isNotEmpty) {
+        customers = cList.map((e) => CustomerItem(
+          id: e['id']?.toString() ?? '',
+          name: e['name']?.toString() ?? '',
+          email: e['email']?.toString() ?? '',
+          phone: e['phone']?.toString() ?? '',
+          level: e['level']?.toString() ?? 'Regular',
+          totalOrders: (e['total_orders'] as num?)?.toInt() ?? 0,
+          totalSpent: (e['total_spent'] as num?)?.toDouble() ?? 0.0,
+          points: (e['points'] as num?)?.toInt() ?? 100,
+          avatar: e['avatar']?.toString() ?? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+          address: e['address']?.toString() ?? '',
+          registeredDate: e['registered_date']?.toString() ?? '',
+        )).toList();
+        html.window.localStorage['ecomes_customers'] = jsonEncode(customers.map((e) => e.toJson()).toList());
+      }
+
+      // 3. Fetch Landing Config from Supabase
+      final lList = await _supabase.get('landing_config', query: 'id=eq.default');
+      if (lList.isNotEmpty) {
+        final map = lList.first;
+        if (map['brand_name'] != null) landingConfig.storeName = map['brand_name'];
+        if (map['hero_title'] != null) landingConfig.heroHeadlineHighlight = map['hero_title'];
+        if (map['hero_subtitle'] != null) landingConfig.heroDescription = map['hero_subtitle'];
+        if (map['banner_image'] != null) landingConfig.heroImage = map['banner_image'];
+        if (map['scarcity_title'] != null) landingConfig.scarcityTitle = map['scarcity_title'];
+        if (map['scarcity_subtitle'] != null) landingConfig.scarcitySubtitle = map['scarcity_subtitle'];
+        if (map['scarcity_remaining_slots'] != null) landingConfig.scarcityRemainingSlots = map['scarcity_remaining_slots'];
+        if (map['scarcity_total_slots'] != null) landingConfig.scarcityTotalSlots = map['scarcity_total_slots'];
+        if (map['stories'] is List && (map['stories'] as List).isNotEmpty) {
+          landingConfig.stories = (map['stories'] as List).map((e) => Map<String, dynamic>.from(e as Map)).toList();
+        }
+        if (map['faqs'] is List && (map['faqs'] as List).isNotEmpty) {
+          landingConfig.faqs = (map['faqs'] as List).map((e) => Map<String, dynamic>.from(e as Map)).toList();
+        }
+        html.window.localStorage['ecomes_landing_config'] = jsonEncode(landingConfig.toJson());
+      }
+    } catch (_) {}
+  }
+
+  void _syncToSupabase() {
+    try {
+      _supabase.upsertBatch('products', products.map((e) => {
+        'id': e.id,
+        'name': e.name,
+        'sku': e.sku,
+        'category': e.category,
+        'price': e.price,
+        'hpp': e.hpp,
+        'stock': e.stock,
+        'image': e.image,
+        'status': e.status,
+        'description': e.description,
+      }).toList());
+
+      _supabase.upsertBatch('customers', customers.map((e) => {
+        'id': e.id,
+        'name': e.name,
+        'email': e.email,
+        'phone': e.phone,
+        'level': e.level,
+        'total_orders': e.totalOrders,
+        'total_spent': e.totalSpent,
+        'points': e.points,
+        'avatar': e.avatar,
+        'address': e.address,
+      }).toList());
+
+      _supabase.upsert('landing_config', {
+        'id': 'default',
+        'brand_name': landingConfig.storeName,
+        'hero_title': landingConfig.heroHeadlineHighlight,
+        'hero_subtitle': landingConfig.heroDescription,
+        'banner_image': landingConfig.heroImage,
+        'scarcity_title': landingConfig.scarcityTitle,
+        'scarcity_subtitle': landingConfig.scarcitySubtitle,
+        'scarcity_remaining_slots': landingConfig.scarcityRemainingSlots,
+        'scarcity_total_slots': landingConfig.scarcityTotalSlots,
+        'stories': landingConfig.stories,
+        'faqs': landingConfig.faqs,
+      });
+    } catch (_) {}
   }
 
   void resetToDefault() {
