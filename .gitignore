@@ -8,6 +8,25 @@
 .build.manifest
 /packages/
 
+# Build artifacts yang tidak boleh ada di root main branch
+/404.html
+/flutter_bootstrap.js
+/flutter_service_worker.js
+/index.html
+/main.client.dart.js
+/main.css
+/main.dart.js
+/manifest.json
+/sw.js
+/version.json
+/favicon.ico
+/assets/
+/canvaskit/
+/css/
+/icons/
+/images/
+/js/
+
 # Miscellaneous
 *.class
 *.log
@@ -15,6 +34,8 @@
 *.swp
 .DS_Store
 .env
+.akun
+web/akun.json
 .atom/
 .buildlog/
 .history

@@ -36,34 +36,20 @@ class AuthService {
     }
   }
 
+  // Credentials diambil dari file .akun (lihat .akun di root project)
   bool login(String email, String password) {
-    if (email.contains('manager')) {
-      _currentUser = UserSession(
-        name: 'Budi Kurniawan',
-        email: email,
-        role: 'Store Manager',
-        avatar: 'https://picsum.photos/seed/manager/100/100',
-        token: 'demo-jwt-token-manager-2026',
-      );
-    } else if (email.contains('cs')) {
-      _currentUser = UserSession(
-        name: 'Siti Aminah',
-        email: email,
-        role: 'CS Support',
-        avatar: 'https://picsum.photos/seed/cs/100/100',
-        token: 'demo-jwt-token-cs-2026',
-      );
-    } else {
+    if (email.trim().toLowerCase() == 'admin@ecomes.com' && password == 'admin123') {
       _currentUser = UserSession(
         name: 'Angga Wijaya',
-        email: email.isEmpty ? 'admin@ecomes.com' : email,
+        email: 'admin@ecomes.com',
         role: 'Super Admin',
         avatar: 'https://picsum.photos/seed/admin/100/100',
-        token: 'demo-jwt-token-super-admin-2026',
+        token: 'session-${DateTime.now().millisecondsSinceEpoch}',
       );
+      _saveSession();
+      return true;
     }
-    _saveSession();
-    return true;
+    return false;
   }
 
   void logout() {
