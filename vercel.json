@@ -1,5 +1,7 @@
 {
   "version": 2,
+  "buildCommand": "curl -fsSL https://dart.dev/get-dart -o get-dart.sh && sh get-dart.sh --no-modify-path && export PATH=\"$HOME/.pub-cache/bin:$PATH\" && dart pub get && dart run jaspr:jaspr build",
+  "outputDirectory": "build/jaspr/web",
   "cleanUrls": true,
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
