@@ -122,6 +122,12 @@ class AppStore {
       final lStr = html.window.localStorage['ecomes_landing_config'];
       if (lStr != null && lStr.isNotEmpty) {
         landingConfig = LandingConfig.fromJson(jsonDecode(lStr));
+        if (landingConfig.stories.isEmpty) {
+          landingConfig.stories = _defaultStories();
+        }
+        if (landingConfig.faqs.isEmpty) {
+          landingConfig.faqs = _defaultFaqs();
+        }
       } else {
         _seedLandingConfig();
       }
@@ -322,12 +328,104 @@ class AppStore {
           'avatar': 'MI',
         },
       ],
+      stories: _defaultStories(),
+      faqs: _defaultFaqs(),
     );
   }
+
+  static List<Map<String, dynamic>> _defaultStories() => [
+    {
+      'title': 'New Drops ✨',
+      'label': 'New Drops',
+      'image': 'images/abelz_tas_rajut.png',
+      'desc': 'Koleksi tas rajut serut pastel edisi terbaru sudah rilis! Pilihan warna lilac, sage, dan cream siap diadopsi.',
+      'tag': 'Edisi Terbatas 🔥',
+    },
+    {
+      'title': 'OOTD Inspo 👗',
+      'label': 'OOTD Inspo',
+      'image': 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=500',
+      'desc': 'Inspirasi padu padan tas rajut Abelz dengan outfit casual santai, hangout coffee shop, hingga kuliah.',
+      'tag': 'Aesthetic Coquette 🎀',
+    },
+    {
+      'title': 'Behind Stitches 🧶',
+      'label': 'Behind Stitches',
+      'image': 'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=500',
+      'desc': 'Setiap simpul dibuat dengan ketelitian tinggi menggunakan benang Milk Cotton & Poliindo berkualitas.',
+      'tag': '100% Handcrafted 👐',
+    },
+    {
+      'title': 'Custom Charm 🎀',
+      'label': 'Custom Charm',
+      'image': 'images/abelz_ganci_miffy.png',
+      'desc': 'Bisa request inisial nama kamu atau bestie di gantungan boneka Miffy & gantungan tas unik.',
+      'tag': 'Free Inisial Nama ✨',
+    },
+    {
+      'title': 'Happy Besties 💖',
+      'label': 'Happy Besties',
+      'image': 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=500',
+      'desc': 'Lebih dari 1.200+ teman-teman Gen Z sudah mempercayakan koleksi tas rajut & kado unik ke Abelz Handmade.',
+      'tag': '1.2k+ Verified Reviews ⭐',
+    },
+  ];
+
+  static List<Map<String, dynamic>> _defaultFaqs() => [
+    {
+      'q': 'Berapa lama proses pembuatan rajutan custom?',
+      'a': 'Untuk produk ready stock langsung dikirim H+1. Untuk custom order (pilih warna/inisial), pengerjaan memakan waktu 3-7 hari kerja tergantung tingkat kerumitan dan antrean slot mingguan.',
+    },
+    {
+      'q': 'Apakah bisa request warna atau bentuk khusus?',
+      'a': 'Bisa banget! Kamu bisa konsultasi via WhatsApp Abelz Studio untuk request warna pastel/earth-tone favoritmu atau bentuk boneka/tas impianmu.',
+    },
+    {
+      'q': 'Bagaimana cara mencuci dan merawat produk rajutan?',
+      'a': 'Cuci secara lembut dengan tangan menggunakan air dingin dan sabun cair lembut (seperti sampo bayi). Jangan diperas kencang atau disikat, lalu keringkan di tempat teduh (jangan digantung agar rajutan tidak melar).',
+    },
+    {
+      'q': 'Apakah pengiriman aman ke seluruh Indonesia?',
+      'a': 'Sangat aman! Setiap pesanan dibungkus kardus gift box tebal, bubble wrap berlapis, dan gratis greeting card estetik bertuliskan nama penerima.',
+    },
+  ];
 
   void updateLandingConfig(LandingConfig config) {
     landingConfig = config;
     saveAll();
+  }
+
+  void saveStory(Map<String, dynamic> item) {
+    final idx = landingConfig.stories.indexWhere((s) => s['label'] == item['label'] || s['title'] == item['title']);
+    if (idx >= 0) {
+      landingConfig.stories[idx] = item;
+    } else {
+      landingConfig.stories.add(item);
+    }
+    saveAll();
+  }
+
+  void deleteStory(int index) {
+    if (index >= 0 && index < landingConfig.stories.length) {
+      landingConfig.stories.removeAt(index);
+      saveAll();
+    }
+  }
+
+  void saveFaq(Map<String, dynamic> item, {int? index}) {
+    if (index != null && index >= 0 && index < landingConfig.faqs.length) {
+      landingConfig.faqs[index] = item;
+    } else {
+      landingConfig.faqs.add(item);
+    }
+    saveAll();
+  }
+
+  void deleteFaq(int index) {
+    if (index >= 0 && index < landingConfig.faqs.length) {
+      landingConfig.faqs.removeAt(index);
+      saveAll();
+    }
   }
 
   void saveLandingProduct(Map<String, dynamic> item) {

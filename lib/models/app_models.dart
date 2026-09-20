@@ -561,8 +561,14 @@ class LandingConfig {
   String heroImage;
   String whatsappNumber;
   String instagramHandle;
+  String scarcityTitle;
+  String scarcitySubtitle;
+  int scarcityRemainingSlots;
+  int scarcityTotalSlots;
   List<Map<String, dynamic>> landingProducts;
   List<Map<String, dynamic>> testimonials;
+  List<Map<String, dynamic>> stories;
+  List<Map<String, dynamic>> faqs;
 
   LandingConfig({
     required this.storeName,
@@ -574,9 +580,16 @@ class LandingConfig {
     required this.heroImage,
     required this.whatsappNumber,
     required this.instagramHandle,
+    this.scarcityTitle = 'Slot Pre-Order Rajutan Custom: Tersisa 4 dari 10 Slot!',
+    this.scarcitySubtitle = 'Pengerjaan tangan handmade terbatas demi menjaga kerapian dan kualitas rajutan terbaik.',
+    this.scarcityRemainingSlots = 4,
+    this.scarcityTotalSlots = 10,
     required this.landingProducts,
     required this.testimonials,
-  });
+    List<Map<String, dynamic>>? stories,
+    List<Map<String, dynamic>>? faqs,
+  })  : stories = stories ?? [],
+        faqs = faqs ?? [];
 
   Map<String, dynamic> toJson() => {
     'storeName': storeName,
@@ -588,8 +601,14 @@ class LandingConfig {
     'heroImage': heroImage,
     'whatsappNumber': whatsappNumber,
     'instagramHandle': instagramHandle,
+    'scarcityTitle': scarcityTitle,
+    'scarcitySubtitle': scarcitySubtitle,
+    'scarcityRemainingSlots': scarcityRemainingSlots,
+    'scarcityTotalSlots': scarcityTotalSlots,
     'landingProducts': landingProducts,
     'testimonials': testimonials,
+    'stories': stories,
+    'faqs': faqs,
   };
 
   factory LandingConfig.fromJson(Map<String, dynamic> json) => LandingConfig(
@@ -605,7 +624,14 @@ class LandingConfig {
     heroImage: (json['heroImage'] ?? 'images/abelz_hero_cover.png') as String,
     whatsappNumber: (json['whatsappNumber'] ?? '6281234567890') as String,
     instagramHandle: (json['instagramHandle'] ?? '@yayukwahyuni26') as String,
+    scarcityTitle: (json['scarcityTitle'] ?? 'Slot Pre-Order Rajutan Custom: Tersisa 4 dari 10 Slot!') as String,
+    scarcitySubtitle: (json['scarcitySubtitle'] ?? 'Pengerjaan tangan handmade terbatas demi menjaga kerapian dan kualitas rajutan terbaik.') as String,
+    scarcityRemainingSlots: (json['scarcityRemainingSlots'] ?? 4) as int,
+    scarcityTotalSlots: (json['scarcityTotalSlots'] ?? 10) as int,
     landingProducts: List<Map<String, dynamic>>.from(json['landingProducts'] ?? []),
     testimonials: List<Map<String, dynamic>>.from(json['testimonials'] ?? []),
+    stories: List<Map<String, dynamic>>.from(json['stories'] ?? []),
+    faqs: List<Map<String, dynamic>>.from(json['faqs'] ?? []),
   );
 }
+

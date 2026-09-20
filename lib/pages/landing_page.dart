@@ -548,43 +548,8 @@ class _LandingPageState extends State<LandingPage> {
 
   // 2. Gen Z Story Highlights Bar (Mobile & Tablet First - Hidden on Desktop to avoid layout clash)
   Component _buildStoryHighlights() {
-    final stories = [
-      {
-        'title': 'New Drops ✨',
-        'label': 'New Drops',
-        'image': 'images/abelz_tas_rajut.png',
-        'desc': 'Koleksi tas rajut serut pastel edisi terbaru sudah rilis! Pilihan warna lilac, sage, dan cream siap diadopsi.',
-        'tag': 'Edisi Terbatas 🔥',
-      },
-      {
-        'title': 'OOTD Inspo 👗',
-        'label': 'OOTD Inspo',
-        'image': 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=500',
-        'desc': 'Inspirasi padu padan tas rajut Abelz dengan outfit casual santai, hangout coffee shop, hingga kuliah.',
-        'tag': 'Aesthetic Coquette 🎀',
-      },
-      {
-        'title': 'Behind Stitches 🧶',
-        'label': 'Behind Stitches',
-        'image': 'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=500',
-        'desc': 'Setiap simpul dibuat dengan ketelitian tinggi menggunakan benang Milk Cotton & Poliindo berkualitas.',
-        'tag': '100% Handcrafted 👐',
-      },
-      {
-        'title': 'Custom Charm 🎀',
-        'label': 'Custom Charm',
-        'image': 'images/abelz_ganci_miffy.png',
-        'desc': 'Bisa request inisial nama kamu atau bestie di gantungan boneka Miffy & gantungan tas unik.',
-        'tag': 'Free Inisial Nama ✨',
-      },
-      {
-        'title': 'Happy Besties 💖',
-        'label': 'Happy Besties',
-        'image': 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=500',
-        'desc': 'Lebih dari 1.200+ teman-teman Gen Z sudah mempercayakan koleksi tas rajut & kado unik ke Abelz Handmade.',
-        'tag': '1.2k+ Verified Reviews ⭐',
-      },
-    ];
+    final stories = AppStore().landingConfig.stories;
+    if (stories.isEmpty) return div([]);
 
     return div(classes: 'container py-2.5 border-bottom border-light-subtle d-lg-none', [
       div(classes: 'd-flex align-items-center gap-3 gap-md-4 overflow-x-auto navbar-scroll-hide py-1 text-center justify-content-start justify-content-md-center', [
@@ -712,6 +677,11 @@ class _LandingPageState extends State<LandingPage> {
 
   // 4. Scarcity & Limited Drop Banner
   Component _buildScarcityBanner() {
+    final config = AppStore().landingConfig;
+    final total = config.scarcityTotalSlots > 0 ? config.scarcityTotalSlots : 10;
+    final remaining = config.scarcityRemainingSlots.clamp(0, total);
+    final percentTaken = (((total - remaining) / total) * 100).clamp(0, 100).toInt();
+
     return div(classes: 'container my-3', [
       div(
         classes: 'card border-0 rounded-4 p-3 p-md-4 shadow-xs text-white position-relative overflow-hidden',
@@ -729,13 +699,17 @@ class _LandingPageState extends State<LandingPage> {
                 ]),
               ]),
               h5(classes: 'fw-bold text-white mb-1 font-serif-heading fs-5', [
-                Component.text('Slot Pre-Order Rajutan Custom: Tersisa 4 dari 10 Slot!'),
+                Component.text(config.scarcityTitle.isNotEmpty
+                    ? config.scarcityTitle
+                    : 'Slot Pre-Order Rajutan Custom: Tersisa $remaining dari $total Slot!'),
               ]),
               p(classes: 'text-white-50 fs-8 mb-2', [
-                Component.text('Pengerjaan tangan handmade terbatas demi menjaga kerapian dan kualitas rajutan terbaik.'),
+                Component.text(config.scarcitySubtitle.isNotEmpty
+                    ? config.scarcitySubtitle
+                    : 'Pengerjaan tangan handmade terbatas demi menjaga kerapian dan kualitas rajutan terbaik.'),
               ]),
               div(classes: 'progress rounded-pill bg-white bg-opacity-25', styles: Styles(height: 8.px, maxWidth: 360.px), [
-                div(classes: 'progress-bar bg-warning rounded-pill', styles: Styles(width: 60.percent), []),
+                div(classes: 'progress-bar bg-warning rounded-pill', styles: Styles(width: percentTaken.percent), []),
               ]),
             ]),
             div(classes: 'col-lg-4 text-lg-end', [
@@ -1305,24 +1279,8 @@ class _LandingPageState extends State<LandingPage> {
 
   // 8. Gen Z FAQ Section
   Component _buildFaqSection() {
-    final faqs = [
-      {
-        'q': 'Berapa lama estimasi pengerjaan pesanan Pre-Order (PO)?',
-        'a': 'Untuk produk ready stock, pesanan dikirim dalam 1x24 jam kerja. Untuk pesanan custom (PO), estimasi pengerjaan 3-5 hari kerja tergantung antrean slot mingguan.',
-      },
-      {
-        'q': 'Apakah bisa request warna dan inisial nama sendiri?',
-        'a': 'Tentu bisa! Kamu bebas memilih jenis benang (Milk Cotton / Poliindo), warna utama (Pastel Pink, Sage Green, Cream, dll), dan menambahkan inisial nama pada gantungan kunci atau tas.',
-      },
-      {
-        'q': 'Bagaimana keamanan pengiriman dan apakah ada kemasan kado?',
-        'a': 'Semua produk dikemas gratis dengan box hampers estetik dan pita cantik, dilapisi bubble wrap tebal. Kami bekerja sama dengan JNE, SiCepat, dan GoSend dengan nomor resi yang bisa dilacak real-time.',
-      },
-      {
-        'q': 'Metode pembayaran apa saja yang didukung?',
-        'a': 'Kami menerima QRIS (semua e-wallet: GoPay, OVO, Dana, ShopeePay), Transfer Bank (BCA, Mandiri, BRI, BNI), dan pemesanan cepat langsung terhubung ke WhatsApp Admin.',
-      },
-    ];
+    final faqs = AppStore().landingConfig.faqs;
+    if (faqs.isEmpty) return div([]);
 
     return div(classes: 'container mb-5 py-3', id: 'faq', [
       div(classes: 'text-center mb-4', [
@@ -1440,45 +1398,13 @@ class _LandingPageState extends State<LandingPage> {
 
   // 10. Gen Z Story Modal
   Component _buildStoryModal() {
-    final stories = [
-      {
-        'title': 'New Drops ✨',
-        'label': 'New Drops',
-        'image': 'images/abelz_tas_rajut.png',
-        'desc': 'Koleksi tas rajut serut pastel edisi terbaru sudah rilis! Pilihan warna lilac, sage, dan cream siap diadopsi.',
-        'tag': 'Edisi Terbatas 🔥',
-      },
-      {
-        'title': 'OOTD Inspo 👗',
-        'label': 'OOTD Inspo',
-        'image': 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=500',
-        'desc': 'Inspirasi padu padan tas rajut Abelz dengan outfit casual santai, hangout coffee shop, hingga kuliah.',
-        'tag': 'Aesthetic Coquette 🎀',
-      },
-      {
-        'title': 'Behind Stitches 🧶',
-        'label': 'Behind Stitches',
-        'image': 'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=500',
-        'desc': 'Setiap simpul dibuat dengan ketelitian tinggi menggunakan benang Milk Cotton & Poliindo berkualitas.',
-        'tag': '100% Handcrafted 👐',
-      },
-      {
-        'title': 'Custom Charm 🎀',
-        'label': 'Custom Charm',
-        'image': 'images/abelz_ganci_miffy.png',
-        'desc': 'Bisa request inisial nama kamu atau bestie di gantungan boneka Miffy & gantungan tas unik.',
-        'tag': 'Free Inisial Nama ✨',
-      },
-      {
-        'title': 'Happy Besties 💖',
-        'label': 'Happy Besties',
-        'image': 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=500',
-        'desc': 'Lebih dari 1.200+ teman-teman Gen Z sudah mempercayakan koleksi tas rajut & kado unik ke Abelz Handmade.',
-        'tag': '1.2k+ Verified Reviews ⭐',
-      },
-    ];
+    final stories = AppStore().landingConfig.stories;
+    if (stories.isEmpty) return div([]);
 
-    final currentStory = stories[activeStoryIndex ?? 0];
+    final safeIdx = (activeStoryIndex != null && activeStoryIndex! < stories.length && activeStoryIndex! >= 0)
+        ? activeStoryIndex!
+        : 0;
+    final currentStory = stories[safeIdx];
     final config = AppStore().landingConfig;
 
     return div(classes: 'modal fade show d-block bg-dark bg-opacity-75', attributes: {'tabindex': '-1'}, [
