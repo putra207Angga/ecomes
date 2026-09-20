@@ -420,24 +420,24 @@ class _LandingPageState extends State<LandingPage> {
   Component _buildStorefrontNavbar(int totalCartCount) {
     final config = AppStore().landingConfig;
     return nav(classes: 'navbar navbar-light glass-nav shadow-xs sticky-top py-2.5 border-bottom text-nowrap', [
-      div(classes: 'container-fluid px-3 px-lg-5 d-flex align-items-center justify-content-between flex-nowrap gap-2 gap-lg-3 navbar-scroll-hide', [
+      div(classes: 'container-fluid px-2 px-sm-3 px-xl-5 d-flex align-items-center justify-content-between flex-nowrap gap-2 navbar-scroll-hide', [
         // Brand Logo
         Link(
           to: '/landing',
-          child: a(classes: 'navbar-brand d-flex align-items-center gap-2 fw-bold text-espresso fs-5 text-nowrap me-2 font-serif-heading tap-bounce', href: '/landing', [
+          child: a(classes: 'navbar-brand d-flex align-items-center gap-2 fw-bold text-espresso fs-5 text-nowrap me-1 me-lg-2 font-serif-heading tap-bounce', href: '/landing', [
             span(classes: 'bg-rose-pink text-white rounded-circle d-flex align-items-center justify-content-center shadow-xs flex-shrink-0 animate-pulse-subtle', styles: Styles(width: 36.px, height: 36.px), [
               Component.text('🧶'),
             ]),
             span(classes: 'text-espresso font-serif-heading fw-bold fs-5 text-nowrap', [Component.text(config.storeName)]),
-            span(classes: 'badge badge-blush-pink d-none d-xl-inline-flex align-items-center gap-1 px-2.5 py-1 fs-9 fw-bold ms-1', [
+            span(classes: 'badge badge-blush-pink d-none d-xxl-inline-flex align-items-center gap-1 px-2.5 py-1 fs-9 fw-bold ms-1', [
               i(classes: 'bi bi-stars', []),
               Component.text('Handcrafted with Love'),
             ]),
           ]),
         ),
 
-        // Nav Links (Desktop)
-        ul(classes: 'navbar-nav d-none d-lg-flex flex-row flex-nowrap gap-3 gap-lg-4 fw-semibold fs-7 text-nowrap mb-0 mx-auto text-uppercase tracking-wider', [
+        // Nav Links (Desktop) - Streamlined for perfect fit across all desktop widths
+        ul(classes: 'navbar-nav d-none d-lg-flex flex-row flex-nowrap gap-2 gap-xl-3 fw-semibold fs-7 text-nowrap mb-0 mx-auto text-uppercase tracking-wider', [
           li(classes: 'nav-item', [
             button(
               type: ButtonType.button,
@@ -452,23 +452,22 @@ class _LandingPageState extends State<LandingPage> {
               classes: 'btn btn-link nav-link ${isFullStoreMode ? 'text-terracotta fw-bold' : 'text-espresso'} py-1 px-2 text-decoration-none tap-bounce',
               events: {'click': (e) => setState(() => isFullStoreMode = true)},
               [
-                Component.text('KATALOG TOKO 🛍️'),
+                Component.text('KATALOG 🛍️'),
               ],
             ),
           ]),
-          li(classes: 'nav-item', [a(classes: 'nav-link text-espresso py-1 px-2', href: '#katalog', [Component.text('KATEGORI')]),]),
-          li(classes: 'nav-item', [a(classes: 'nav-link text-espresso py-1 px-2', href: '#custom', [Component.text('CUSTOM ORDER')]),]),
+          li(classes: 'nav-item', [a(classes: 'nav-link text-espresso py-1 px-2', href: '#custom', [Component.text('CUSTOM')]),]),
           li(classes: 'nav-item', [a(classes: 'nav-link text-espresso py-1 px-2', href: '#testimoni', [Component.text('TESTIMONI')]),]),
           li(classes: 'nav-item', [a(classes: 'nav-link text-espresso py-1 px-2', href: '#faq', [Component.text('FAQ')]),]),
         ]),
 
         // Quick Actions Icon Buttons with Tooltips
-        div(classes: 'd-flex align-items-center gap-2 flex-nowrap text-nowrap flex-shrink-0', [
+        div(classes: 'd-flex align-items-center gap-1.5 gap-md-2 flex-nowrap text-nowrap flex-shrink-0', [
           // Quick Search Button / Toggle to Full Store
           button(
             type: ButtonType.button,
             classes: 'btn btn-light rounded-circle shadow-xs border border-light text-espresso position-relative d-flex align-items-center justify-content-center p-0 hover-scale tap-bounce',
-            styles: Styles(width: 40.px, height: 40.px),
+            styles: Styles(width: 38.px, height: 38.px),
             attributes: {'title': 'Cari Produk Rajutan', 'data-bs-toggle': 'tooltip'},
             events: {
               'click': (e) {
@@ -484,7 +483,7 @@ class _LandingPageState extends State<LandingPage> {
           button(
             type: ButtonType.button,
             classes: 'btn btn-light rounded-circle shadow-xs border border-light text-espresso position-relative d-none d-sm-flex align-items-center justify-content-center p-0 hover-scale tap-bounce',
-            styles: Styles(width: 40.px, height: 40.px),
+            styles: Styles(width: 38.px, height: 38.px),
             attributes: {'title': 'Lacak Pesanan Pembeli', 'data-bs-toggle': 'tooltip'},
             events: {'click': (e) => setState(() => showOrderTrackerModal = true)},
             [
@@ -496,7 +495,7 @@ class _LandingPageState extends State<LandingPage> {
           button(
             type: ButtonType.button,
             classes: 'btn btn-clay-pill rounded-circle shadow-xs border-0 position-relative d-none d-lg-flex align-items-center justify-content-center p-0 hover-scale tap-bounce',
-            styles: Styles(width: 40.px, height: 40.px),
+            styles: Styles(width: 38.px, height: 38.px),
             attributes: {'title': 'Wishlist & Produk Favorit Saya', 'data-bs-toggle': 'tooltip'},
             events: {'click': (e) => setState(() => showWishlistModal = true)},
             [
@@ -512,7 +511,7 @@ class _LandingPageState extends State<LandingPage> {
           button(
             type: ButtonType.button,
             classes: 'btn btn-clay-pill rounded-circle shadow-xs border-0 position-relative d-none d-lg-flex align-items-center justify-content-center p-0 hover-scale tap-bounce',
-            styles: Styles(width: 40.px, height: 40.px),
+            styles: Styles(width: 38.px, height: 38.px),
             attributes: {
               'title': AppStore().currentMember != null ? 'Portal Member (${AppStore().currentMember!.name})' : 'Login / Daftar Member',
               'data-bs-toggle': 'tooltip'
@@ -531,7 +530,7 @@ class _LandingPageState extends State<LandingPage> {
           button(
             type: ButtonType.button,
             classes: 'btn btn-terracotta rounded-circle shadow-xs border-0 text-white position-relative d-flex align-items-center justify-content-center p-0 hover-scale tap-bounce ms-1',
-            styles: Styles(width: 42.px, height: 42.px),
+            styles: Styles(width: 40.px, height: 40.px),
             attributes: {'title': 'Keranjang Belanja Saya', 'data-bs-toggle': 'tooltip'},
             events: {'click': (e) => setState(() => showCartModal = true)},
             [
@@ -587,12 +586,12 @@ class _LandingPageState extends State<LandingPage> {
       },
     ];
 
-    return div(classes: 'container py-3 border-bottom border-light-subtle d-lg-none', [
+    return div(classes: 'container py-2.5 border-bottom border-light-subtle d-lg-none', [
       div(classes: 'd-flex align-items-center gap-3 gap-md-4 overflow-x-auto navbar-scroll-hide py-1 text-center justify-content-start justify-content-md-center', [
         for (var i = 0; i < stories.length; i++)
           div(
             classes: 'd-flex flex-column align-items-center cursor-pointer flex-shrink-0 tap-bounce',
-            styles: Styles(width: 78.px),
+            styles: Styles(width: 86.px),
             events: {
               'click': (e) {
                 setState(() {
@@ -609,7 +608,7 @@ class _LandingPageState extends State<LandingPage> {
                   attributes: {'alt': stories[i]['label'] as String},
                 ),
               ]),
-              span(classes: 'fs-8 fw-bold text-espresso text-truncate w-100', [
+              span(classes: 'fs-8 fw-semibold text-espresso text-center lh-sm', [
                 Component.text(stories[i]['label'] as String),
               ]),
             ],
@@ -1556,30 +1555,185 @@ class _LandingPageState extends State<LandingPage> {
 
   Component _buildStorefrontFooter() {
     final config = AppStore().landingConfig;
-    return footer(classes: 'bg-pink-cream text-espresso pt-5 pb-4 border-top border-light-subtle', [
+    return footer(classes: 'bg-pink-cream text-espresso pt-5 pb-3 border-top border-light-subtle', [
       div(classes: 'container', [
         div(classes: 'row g-4 mb-4 border-bottom border-light-subtle pb-4', [
-          div(classes: 'col-lg-4', [
+          // Column 1: Brand & Bio (col-lg-4 col-md-6)
+          div(classes: 'col-lg-4 col-md-6', [
             div(classes: 'd-flex align-items-center gap-2 mb-3', [
               span(classes: 'fs-3', [Component.text('🧶')]),
               h4(classes: 'font-serif-heading fw-bold text-espresso mb-0', [Component.text(config.storeName)]),
             ]),
-            p(classes: 'text-espresso-muted fs-7 mb-3', [
+            p(classes: 'text-espresso-muted fs-7 mb-3 lh-base', [
               Component.text(
-                "Abel'z handmade menyajikan kerajinan rajut buatan tangan estetik. Tas rajut serut, cup holder eco-friendly, gantungan kunci Miffy doll, dan kado custom pilihan.",
+                "Abel'z Handmade menyajikan kerajinan rajut buatan tangan estetik. Setiap helai benang dirajut teliti dan penuh cinta oleh Yayuk Wahyuni (@yayukwahyuni26) untuk gaya hidup ramah lingkungan.",
               ),
             ]),
-            div(classes: 'd-flex gap-2', [
-              Component.text('📍 Workshop Studio: Jl. Kerajinan No. 45, Bandung, Jawa Barat'),
+            div(classes: 'd-flex align-items-center gap-2 text-espresso-muted fs-8 mb-2', [
+              i(classes: 'bi bi-geo-alt-fill text-terracotta', []),
+              Component.text('Workshop Studio: Jl. Kerajinan No. 45, Bandung, Jawa Barat'),
+            ]),
+            div(classes: 'd-flex align-items-center gap-2 text-espresso-muted fs-8', [
+              i(classes: 'bi bi-clock-fill text-terracotta', []),
+              Component.text('Senin - Sabtu (08.00 - 17.00 WIB)'),
+            ]),
+          ]),
+
+          // Column 2: Katalog Pilihan (col-lg-2 col-md-6 col-6)
+          div(classes: 'col-lg-2 col-md-6 col-6', [
+            h6(classes: 'fw-bold text-espresso font-serif-heading mb-3', [Component.text('Katalog Pilihan')]),
+            ul(classes: 'list-unstyled fs-7 mb-0 d-flex flex-column gap-2', [
+              li([
+                button(
+                  type: ButtonType.button,
+                  classes: 'btn btn-link p-0 text-start text-espresso-muted text-decoration-none fs-7',
+                  events: {'click': (e) => setState(() { activeCategory = 'Tas Rajut'; isFullStoreMode = true; })},
+                  [Component.text('Tas Rajut Serut')],
+                ),
+              ]),
+              li([
+                button(
+                  type: ButtonType.button,
+                  classes: 'btn btn-link p-0 text-start text-espresso-muted text-decoration-none fs-7',
+                  events: {'click': (e) => setState(() { activeCategory = 'Cup Holder & Sleeve'; isFullStoreMode = true; })},
+                  [Component.text('Cup Holder & Sleeve')],
+                ),
+              ]),
+              li([
+                button(
+                  type: ButtonType.button,
+                  classes: 'btn btn-link p-0 text-start text-espresso-muted text-decoration-none fs-7',
+                  events: {'click': (e) => setState(() { activeCategory = 'Gantungan Kunci'; isFullStoreMode = true; })},
+                  [Component.text('Gantungan Miffy Doll')],
+                ),
+              ]),
+              li([
+                button(
+                  type: ButtonType.button,
+                  classes: 'btn btn-link p-0 text-start text-espresso-muted text-decoration-none fs-7',
+                  events: {'click': (e) => setState(() { activeCategory = 'Pouch & Organiser'; isFullStoreMode = true; })},
+                  [Component.text('Pouch Multifungsi')],
+                ),
+              ]),
+              li([
+                button(
+                  type: ButtonType.button,
+                  classes: 'btn btn-link p-0 text-start text-espresso-muted text-decoration-none fs-7',
+                  events: {'click': (e) => setState(() { activeCategory = 'Semua'; isFullStoreMode = true; })},
+                  [Component.text('Semua Produk ✨')],
+                ),
+              ]),
+            ]),
+          ]),
+
+          // Column 3: Bantuan & Layanan (col-lg-3 col-md-6 col-6)
+          div(classes: 'col-lg-3 col-md-6 col-6', [
+            h6(classes: 'fw-bold text-espresso font-serif-heading mb-3', [Component.text('Bantuan & Info')]),
+            ul(classes: 'list-unstyled fs-7 mb-0 d-flex flex-column gap-2', [
+              li([
+                button(
+                  type: ButtonType.button,
+                  classes: 'btn btn-link p-0 text-start text-espresso-muted text-decoration-none fs-7',
+                  events: {'click': (e) => setState(() => showOrderTrackerModal = true)},
+                  [
+                    i(classes: 'bi bi-truck me-1 text-terracotta', []),
+                    Component.text('Lacak Status Pesanan'),
+                  ],
+                ),
+              ]),
+              li([
+                button(
+                  type: ButtonType.button,
+                  classes: 'btn btn-link p-0 text-start text-espresso-muted text-decoration-none fs-7',
+                  events: {'click': (e) => setState(() => showWishlistModal = true)},
+                  [
+                    i(classes: 'bi bi-heart me-1 text-terracotta', []),
+                    Component.text('Wishlist Favorit Saya'),
+                  ],
+                ),
+              ]),
+              li([
+                button(
+                  type: ButtonType.button,
+                  classes: 'btn btn-link p-0 text-start text-espresso-muted text-decoration-none fs-7',
+                  events: {'click': (e) => setState(() { showMemberModal = true; memberErrorMsg = ''; })},
+                  [
+                    i(classes: 'bi bi-award me-1 text-terracotta', []),
+                    Component.text('Member VIP & Poin'),
+                  ],
+                ),
+              ]),
+              li([
+                a(
+                  classes: 'text-espresso-muted text-decoration-none fs-7',
+                  href: '#faq',
+                  [
+                    i(classes: 'bi bi-question-circle me-1 text-terracotta', []),
+                    Component.text('Panduan & FAQ Rajutan'),
+                  ],
+                ),
+              ]),
+              li([
+                button(
+                  type: ButtonType.button,
+                  classes: 'btn btn-link p-0 text-start text-espresso-muted text-decoration-none fs-7',
+                  events: {'click': (e) => setState(() => showWriteReviewModal = true)},
+                  [
+                    i(classes: 'bi bi-star me-1 text-terracotta', []),
+                    Component.text('Tulis Ulasan Pembeli'),
+                  ],
+                ),
+              ]),
+            ]),
+          ]),
+
+          // Column 4: Kontak & Social Media (col-lg-3 col-md-6)
+          div(classes: 'col-lg-3 col-md-6', [
+            h6(classes: 'fw-bold text-espresso font-serif-heading mb-3', [Component.text('Hubungi Kami')]),
+            p(classes: 'text-espresso-muted fs-7 mb-3', [
+              Component.text('Ingin pesan kado custom atau tanya stok pengerjaan? Hubungi langsung via WhatsApp atau Instagram kami.'),
+            ]),
+            div(classes: 'd-flex flex-column gap-2 mb-3', [
+              button(
+                type: ButtonType.button,
+                classes: 'btn btn-sm btn-success rounded-pill px-3 py-2 fw-bold d-flex align-items-center justify-content-center gap-2 tap-bounce shadow-xs',
+                events: {
+                  'click': (e) {
+                    html.window.open('https://wa.me/${config.whatsappNumber}?text=Halo%20${config.storeName},%20saya%20mau%20tanya%20produk%20rajutan', '_blank');
+                  }
+                },
+                [
+                  i(classes: 'bi bi-whatsapp fs-6', []),
+                  Component.text('Chat WhatsApp Studio'),
+                ],
+              ),
+              button(
+                type: ButtonType.button,
+                classes: 'btn btn-sm btn-outline-danger rounded-pill px-3 py-2 fw-bold d-flex align-items-center justify-content-center gap-2 tap-bounce',
+                events: {
+                  'click': (e) {
+                    html.window.open('https://instagram.com/${config.instagramHandle.replaceAll('@', '')}', '_blank');
+                  }
+                },
+                [
+                  i(classes: 'bi bi-instagram fs-6', []),
+                  Component.text(config.instagramHandle),
+                ],
+              ),
             ]),
           ]),
         ]),
-        div(classes: 'd-flex flex-wrap justify-content-between align-items-center text-secondary fs-8', [
-          div([Component.text('© 2026 ${config.storeName} Handmade Studio. Seluruh Hak Dilindungi.')]),
+
+        // Bottom Bar (Copyright & Admin link)
+        div(classes: 'd-flex flex-wrap justify-content-between align-items-center text-secondary fs-8 py-2', [
+          div([Component.text('© 2026 ${config.storeName} Handmade Studio. Handcrafted with love by Yayuk Wahyuni.')]),
           div(classes: 'd-flex gap-3', [
             Link(to: '/', child: a(href: '/', classes: 'text-secondary text-decoration-none fw-bold', [Component.text('⚙️ Masuk Admin Panel')])),
           ]),
         ]),
+
+        // Mobile Bottom Dock Clearance Spacer (Guarantees bottom dock never overlaps copyright & admin link on mobile!)
+        div(classes: 'd-lg-none', styles: Styles(height: 100.px), []),
       ]),
     ]);
   }
