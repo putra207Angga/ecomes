@@ -483,7 +483,7 @@ class _LandingPageState extends State<LandingPage> {
           // 1. Icon Button Lacak Pesanan
           button(
             type: ButtonType.button,
-            classes: 'btn btn-light rounded-circle shadow-xs border border-light text-espresso position-relative d-flex align-items-center justify-content-center p-0 hover-scale tap-bounce',
+            classes: 'btn btn-light rounded-circle shadow-xs border border-light text-espresso position-relative d-none d-sm-flex align-items-center justify-content-center p-0 hover-scale tap-bounce',
             styles: Styles(width: 40.px, height: 40.px),
             attributes: {'title': 'Lacak Pesanan Pembeli', 'data-bs-toggle': 'tooltip'},
             events: {'click': (e) => setState(() => showOrderTrackerModal = true)},
@@ -492,10 +492,10 @@ class _LandingPageState extends State<LandingPage> {
             ],
           ),
 
-          // 2. Icon Button Wishlist
+          // 2. Icon Button Wishlist (Hidden on mobile, available in Mobile Bottom Dock)
           button(
             type: ButtonType.button,
-            classes: 'btn btn-clay-pill rounded-circle shadow-xs border-0 position-relative d-flex align-items-center justify-content-center p-0 hover-scale tap-bounce',
+            classes: 'btn btn-clay-pill rounded-circle shadow-xs border-0 position-relative d-none d-lg-flex align-items-center justify-content-center p-0 hover-scale tap-bounce',
             styles: Styles(width: 40.px, height: 40.px),
             attributes: {'title': 'Wishlist & Produk Favorit Saya', 'data-bs-toggle': 'tooltip'},
             events: {'click': (e) => setState(() => showWishlistModal = true)},
@@ -508,10 +508,10 @@ class _LandingPageState extends State<LandingPage> {
             ],
           ),
 
-          // 3. Icon Button Member Portal
+          // 3. Icon Button Member Portal (Hidden on mobile, available in Mobile Bottom Dock)
           button(
             type: ButtonType.button,
-            classes: 'btn btn-clay-pill rounded-circle shadow-xs border-0 position-relative d-flex align-items-center justify-content-center p-0 hover-scale tap-bounce',
+            classes: 'btn btn-clay-pill rounded-circle shadow-xs border-0 position-relative d-none d-lg-flex align-items-center justify-content-center p-0 hover-scale tap-bounce',
             styles: Styles(width: 40.px, height: 40.px),
             attributes: {
               'title': AppStore().currentMember != null ? 'Portal Member (${AppStore().currentMember!.name})' : 'Login / Daftar Member',
@@ -547,7 +547,7 @@ class _LandingPageState extends State<LandingPage> {
     ]);
   }
 
-  // 2. Gen Z Story Highlights Bar
+  // 2. Gen Z Story Highlights Bar (Mobile & Tablet First - Hidden on Desktop to avoid layout clash)
   Component _buildStoryHighlights() {
     final stories = [
       {
@@ -587,7 +587,7 @@ class _LandingPageState extends State<LandingPage> {
       },
     ];
 
-    return div(classes: 'container py-3 border-bottom border-light-subtle', [
+    return div(classes: 'container py-3 border-bottom border-light-subtle d-lg-none', [
       div(classes: 'd-flex align-items-center gap-3 gap-md-4 overflow-x-auto navbar-scroll-hide py-1 text-center justify-content-start justify-content-md-center', [
         for (var i = 0; i < stories.length; i++)
           div(
@@ -622,10 +622,10 @@ class _LandingPageState extends State<LandingPage> {
   Component _buildHeroSection() {
     final config = AppStore().landingConfig;
     return div(
-      classes: 'hero-section py-4 py-lg-5 bg-pink-cream text-espresso position-relative overflow-hidden',
+      classes: 'hero-section py-4 py-lg-5 pb-5 pb-lg-5 bg-pink-cream text-espresso position-relative overflow-hidden',
       [
         div(classes: 'container py-2 py-lg-3', [
-          div(classes: 'card-genz bg-soft-card p-4 p-md-5 overflow-hidden border-0 position-relative shadow-xs', [
+          div(classes: 'card-genz bg-soft-card p-4 p-md-5 mb-3 mb-lg-0 overflow-hidden border-0 position-relative shadow-xs', [
             div(classes: 'row align-items-center g-4 g-lg-5', [
               div(classes: 'col-lg-6', [
                 span(classes: 'badge badge-blush-pink px-3 py-2 fs-7 fw-bold mb-3 d-inline-flex align-items-center gap-1 shadow-xs', [
