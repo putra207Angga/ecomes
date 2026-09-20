@@ -13,14 +13,19 @@ class LoginPage extends StatefulComponent {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String email = 'admin@ecomes.com';
-  String password = '••••••••';
+  String email = '';
+  String password = '';
   String? errorMessage;
 
-  void _handleLogin([String? customEmail, String? customRole]) {
-    final targetEmail = customEmail ?? email;
+  void _handleLogin() {
+    if (email.trim().isEmpty || password.trim().isEmpty) {
+      setState(() {
+        errorMessage = 'Silakan masukkan email dan password admin Anda.';
+      });
+      return;
+    }
     final auth = AuthService();
-    final success = auth.login(targetEmail, password);
+    final success = auth.login(email.trim(), password.trim());
     if (success) {
       Router.of(context).push('/admin');
     } else {
@@ -64,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
                     type: InputType.email,
                     classes: 'form-control',
                     value: email,
-                    attributes: {'placeholder': 'Email Admin'},
+                    attributes: {'placeholder': 'Email Admin', 'required': 'required'},
                     events: {
                       'input': (e) {
                         final val = (e.target as html.InputElement).value ?? '';
@@ -79,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                     type: InputType.password,
                     classes: 'form-control',
                     value: password,
-                    attributes: {'placeholder': 'Password'},
+                    attributes: {'placeholder': 'Password', 'required': 'required'},
                     events: {
                       'input': (e) {
                         final val = (e.target as html.InputElement).value ?? '';
@@ -115,47 +120,6 @@ class _LoginPageState extends State<LoginPage> {
                 ]),
               ],
             ),
-            div(classes: 'hr-text text-center text-muted position-relative mb-3 fs-8', [
-              span(classes: 'bg-white px-2 text-muted', [Component.text('ATAU LOGIN DENGAN DEMO AKUN')]),
-            ]),
-            div(classes: 'd-grid gap-2', [
-              button(
-                type: ButtonType.button,
-                classes: 'btn btn-outline-primary btn-sm d-flex align-items-center justify-content-between px-3 py-2 rounded-3',
-                events: {'click': (e) => _handleLogin('admin@ecomes.com', 'Super Admin')},
-                [
-                  div(classes: 'text-start', [
-                    div(classes: 'fw-bold fs-7', [Component.text('Super Admin')]),
-                    div(classes: 'fs-8 text-muted', [Component.text('admin@ecomes.com (Akses Penuh)')]),
-                  ]),
-                  span(classes: 'badge bg-primary rounded-pill', [Component.text('Full Access')]),
-                ],
-              ),
-              button(
-                type: ButtonType.button,
-                classes: 'btn btn-outline-success btn-sm d-flex align-items-center justify-content-between px-3 py-2 rounded-3',
-                events: {'click': (e) => _handleLogin('manager@ecomes.com', 'Store Manager')},
-                [
-                  div(classes: 'text-start', [
-                    div(classes: 'fw-bold fs-7', [Component.text('Store Manager')]),
-                    div(classes: 'fs-8 text-muted', [Component.text('manager@ecomes.com (Katalog & Stok)')]),
-                  ]),
-                  span(classes: 'badge bg-success rounded-pill', [Component.text('Manager')]),
-                ],
-              ),
-              button(
-                type: ButtonType.button,
-                classes: 'btn btn-outline-info btn-sm d-flex align-items-center justify-content-between px-3 py-2 rounded-3',
-                events: {'click': (e) => _handleLogin('cs@ecomes.com', 'CS Support')},
-                [
-                  div(classes: 'text-start', [
-                    div(classes: 'fw-bold fs-7', [Component.text('CS Support')]),
-                    div(classes: 'fs-8 text-muted', [Component.text('cs@ecomes.com (Chat & Ulasan)')]),
-                  ]),
-                  span(classes: 'badge bg-info text-dark rounded-pill', [Component.text('CS Staff')]),
-                ],
-              ),
-            ]),
           ]),
           div(classes: 'card-footer text-center bg-light py-3 border-0 fs-8 text-muted', [
             Component.text('© 2026 E-Comes Admin Panel | Jaspr Dart Web & AdminLTE 4'),
