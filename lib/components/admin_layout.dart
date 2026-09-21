@@ -4,6 +4,7 @@ import 'package:jaspr/dom.dart';
 import 'package:jaspr/jaspr.dart';
 import 'package:jaspr_router/jaspr_router.dart';
 import '../models/app_models.dart';
+import '../services/admin_route_crypto.dart';
 import '../services/app_store.dart';
 import '../services/auth_service.dart';
 
@@ -143,10 +144,14 @@ class _AdminLayoutState extends State<AdminLayout> {
           ]),
           li(classes: 'nav-item d-none d-md-block', [
             Link(
-              to: '/admin',
-              child: a(classes: 'nav-link fw-semibold text-primary', href: '/admin', [
+              to: AdminRouteCrypto.pathFor('dashboard'),
+              child: a(classes: 'nav-link fw-semibold text-primary d-flex align-items-center', href: AdminRouteCrypto.pathFor('dashboard'), [
                 i(classes: 'bi bi-bag-check me-1', []),
                 Component.text('E-Commerce Admin Panel'),
+                span(classes: 'badge bg-success-subtle text-success border border-success-subtle rounded-pill ms-2 fs-8 align-items-center gap-1 py-1 px-2', [
+                  i(classes: 'bi bi-shield-lock-fill me-1', []),
+                  Component.text('URL Encrypted'),
+                ]),
               ]),
             ),
           ]),
@@ -199,10 +204,10 @@ class _AdminLayoutState extends State<AdminLayout> {
                   div(classes: 'px-2 py-1 fs-8 fw-bold text-uppercase text-muted border-bottom mb-1', [Component.text('Produk Katalog')]),
                   for (var p in matchedProducts)
                     Link(
-                      to: '/products',
+                      to: AdminRouteCrypto.pathFor('products'),
                       child: a(
                         classes: 'dropdown-item py-1.5 px-2 rounded-2 d-flex align-items-center justify-content-between fs-7 text-dark',
-                        href: '/products',
+                        href: AdminRouteCrypto.pathFor('products'),
                         events: {'click': (e) => setState(() => headerSearchQuery = '')},
                         [
                           div(classes: 'd-flex align-items-center gap-2', [
@@ -218,10 +223,10 @@ class _AdminLayoutState extends State<AdminLayout> {
                   div(classes: 'px-2 py-1 fs-8 fw-bold text-uppercase text-muted border-bottom mt-2 mb-1', [Component.text('Pesanan & Invoice')]),
                   for (var o in matchedOrders)
                     Link(
-                      to: '/orders',
+                      to: AdminRouteCrypto.pathFor('orders'),
                       child: a(
                         classes: 'dropdown-item py-1.5 px-2 rounded-2 d-flex align-items-center justify-content-between fs-7 text-dark',
-                        href: '/orders',
+                        href: AdminRouteCrypto.pathFor('orders'),
                         events: {'click': (e) => setState(() => headerSearchQuery = '')},
                         [
                           div(classes: 'd-flex align-items-center gap-2', [
@@ -237,10 +242,10 @@ class _AdminLayoutState extends State<AdminLayout> {
                   div(classes: 'px-2 py-1 fs-8 fw-bold text-uppercase text-muted border-bottom mt-2 mb-1', [Component.text('Pelanggan CRM')]),
                   for (var c in matchedCustomers)
                     Link(
-                      to: '/customers',
+                      to: AdminRouteCrypto.pathFor('customers'),
                       child: a(
                         classes: 'dropdown-item py-1.5 px-2 rounded-2 d-flex align-items-center justify-content-between fs-7 text-dark',
-                        href: '/customers',
+                        href: AdminRouteCrypto.pathFor('customers'),
                         events: {'click': (e) => setState(() => headerSearchQuery = '')},
                         [
                           div(classes: 'd-flex align-items-center gap-2', [
@@ -351,8 +356,8 @@ class _AdminLayoutState extends State<AdminLayout> {
               ]),
               li([
                 Link(
-                  to: '/orders',
-                  child: a(classes: 'dropdown-item py-2 px-3 border-bottom d-flex align-items-center justify-content-between', href: '/orders', [
+                  to: AdminRouteCrypto.pathFor('orders'),
+                  child: a(classes: 'dropdown-item py-2 px-3 border-bottom d-flex align-items-center justify-content-between', href: AdminRouteCrypto.pathFor('orders'), [
                     div(classes: 'd-flex align-items-center gap-2', [
                       i(classes: 'bi bi-cart-check text-primary fs-5', []),
                       span(classes: 'fs-7 text-dark fw-medium', [Component.text('Pesanan Baru Masuk')]),
@@ -388,8 +393,8 @@ class _AdminLayoutState extends State<AdminLayout> {
               ]),
               li([
                 Link(
-                  to: '/profile',
-                  child: a(classes: 'dropdown-item py-2 d-flex align-items-center gap-2', href: '/profile', [
+                  to: AdminRouteCrypto.pathFor('profile'),
+                  child: a(classes: 'dropdown-item py-2 d-flex align-items-center gap-2', href: AdminRouteCrypto.pathFor('profile'), [
                     i(classes: 'bi bi-person-circle text-primary', []),
                     Component.text('Lihat Profil Lengkap'),
                   ]),
@@ -397,8 +402,8 @@ class _AdminLayoutState extends State<AdminLayout> {
               ]),
               li([
                 Link(
-                  to: '/settings',
-                  child: a(classes: 'dropdown-item py-2 d-flex align-items-center gap-2', href: '/settings', [
+                  to: AdminRouteCrypto.pathFor('settings'),
+                  child: a(classes: 'dropdown-item py-2 d-flex align-items-center gap-2', href: AdminRouteCrypto.pathFor('settings'), [
                     i(classes: 'bi bi-gear text-secondary', []),
                     Component.text('Pengaturan Toko'),
                   ]),
@@ -433,8 +438,8 @@ class _AdminLayoutState extends State<AdminLayout> {
         // Brand Header
         div(classes: 'sidebar-brand border-bottom border-secondary', [
           Link(
-            to: '/admin',
-            child: a(classes: 'brand-link d-flex align-items-center text-decoration-none px-3 py-2', href: '/admin', [
+            to: AdminRouteCrypto.pathFor('dashboard'),
+            child: a(classes: 'brand-link d-flex align-items-center text-decoration-none px-3 py-2', href: AdminRouteCrypto.pathFor('dashboard'), [
               i(classes: 'bi bi-shop brand-image fs-3 me-2 text-warning', []),
               span(classes: 'brand-text fw-bold text-white fs-5', [Component.text('E-COMES ')]),
               span(classes: 'text-warning fs-6 ms-1', [Component.text('v4.9')]),
@@ -453,33 +458,33 @@ class _AdminLayoutState extends State<AdminLayout> {
                 li(classes: 'nav-header text-uppercase text-secondary fw-bold fs-7 px-3 mt-2 mb-1', [
                   Component.text('UTAMA & OPERASIONAL'),
                 ]),
-                _buildNavItem('/admin', 'Dashboard V1', 'bi-speedometer2', currentPath == '/admin' || currentPath == '/dashboard'),
-                _buildNavItem('/', 'Lihat Toko (Storefront)', 'bi-shop', currentPath == '/', badgeText: 'Live', badgeClass: 'bg-success'),
-                _buildNavItem('/landing-cms', 'Manajemen Landing Page', 'bi-window-stack', currentPath == '/landing-cms' || currentPath == '/admin/landing', badgeText: 'CMS', badgeClass: 'bg-danger'),
-                _buildNavItem('/products', 'Katalog & Stok', 'bi-box-seam', currentPath == '/products' || currentPath == '/admin/products', badgeText: 'Hot'),
-                _buildNavItem('/orders', 'Pesanan Toko', 'bi-cart-check', currentPath == '/orders' || currentPath == '/admin/orders', badgeText: 'Dinamis', badgeClass: 'bg-primary'),
+                _buildNavItem(AdminRouteCrypto.pathFor('dashboard'), 'Dashboard V1', 'bi-speedometer2', AdminRouteCrypto.isPageActive(currentPath, 'dashboard')),
+                _buildNavItem('/', 'Lihat Toko (Storefront)', 'bi-shop', currentPath == '/' || currentPath == '/ecomes', badgeText: 'Live', badgeClass: 'bg-success'),
+                _buildNavItem(AdminRouteCrypto.pathFor('landing'), 'Manajemen Landing Page', 'bi-window-stack', AdminRouteCrypto.isPageActive(currentPath, 'landing'), badgeText: 'CMS', badgeClass: 'bg-danger'),
+                _buildNavItem(AdminRouteCrypto.pathFor('products'), 'Katalog & Stok', 'bi-box-seam', AdminRouteCrypto.isPageActive(currentPath, 'products'), badgeText: 'Hot'),
+                _buildNavItem(AdminRouteCrypto.pathFor('orders'), 'Pesanan Toko', 'bi-cart-check', AdminRouteCrypto.isPageActive(currentPath, 'orders'), badgeText: 'Dinamis', badgeClass: 'bg-primary'),
 
                 li(classes: 'nav-header text-uppercase text-secondary fw-bold fs-7 px-3 mt-3 mb-1', [
                   Component.text('PELANGGAN & PEMASARAN'),
                 ]),
-                _buildNavItem('/customers', 'Pelanggan (CRM)', 'bi-people', currentPath == '/customers'),
-                _buildNavItem('/categories', 'Kategori & Brand', 'bi-grid-3x3-gap', currentPath == '/categories'),
-                _buildNavItem('/promos', 'Kupon & Diskon', 'bi-ticket-perforated', currentPath == '/promos'),
-                _buildNavItem('/reviews', 'Ulasan & Rating', 'bi-star-half', currentPath == '/reviews'),
+                _buildNavItem(AdminRouteCrypto.pathFor('customers'), 'Pelanggan (CRM)', 'bi-people', AdminRouteCrypto.isPageActive(currentPath, 'customers')),
+                _buildNavItem(AdminRouteCrypto.pathFor('categories'), 'Kategori & Brand', 'bi-grid-3x3-gap', AdminRouteCrypto.isPageActive(currentPath, 'categories')),
+                _buildNavItem(AdminRouteCrypto.pathFor('promos'), 'Kupon & Diskon', 'bi-ticket-perforated', AdminRouteCrypto.isPageActive(currentPath, 'promos')),
+                _buildNavItem(AdminRouteCrypto.pathFor('reviews'), 'Ulasan & Rating', 'bi-star-half', AdminRouteCrypto.isPageActive(currentPath, 'reviews')),
 
                 li(classes: 'nav-header text-uppercase text-secondary fw-bold fs-7 px-3 mt-3 mb-1', [
                   Component.text('LAYANAN & LAPORAN'),
                 ]),
-                _buildNavItem('/chat', 'Live Chat Support', 'bi-chat-dots', currentPath == '/chat', badgeText: 'Live', badgeClass: 'bg-danger'),
-                _buildNavItem('/invoice', 'Cetak Invoice', 'bi-receipt', currentPath == '/invoice'),
-                _buildNavItem('/reports', 'Laporan Penjualan', 'bi-bar-chart-line', currentPath == '/reports'),
+                _buildNavItem(AdminRouteCrypto.pathFor('chat'), 'Live Chat Support', 'bi-chat-dots', AdminRouteCrypto.isPageActive(currentPath, 'chat'), badgeText: 'Live', badgeClass: 'bg-danger'),
+                _buildNavItem(AdminRouteCrypto.pathFor('invoice'), 'Cetak Invoice', 'bi-receipt', AdminRouteCrypto.isPageActive(currentPath, 'invoice')),
+                _buildNavItem(AdminRouteCrypto.pathFor('reports'), 'Laporan Penjualan', 'bi-bar-chart-line', AdminRouteCrypto.isPageActive(currentPath, 'reports')),
 
                 li(classes: 'nav-header text-uppercase text-secondary fw-bold fs-7 px-3 mt-3 mb-1', [
                   Component.text('SISTEM & KONFIGURASI'),
                 ]),
-                _buildNavItem('/settings', 'Pengaturan Toko', 'bi-gear', currentPath == '/settings'),
-                _buildNavItem('/profile', 'Profil Admin', 'bi-person', currentPath == '/profile'),
-                _buildNavItem('/about', 'Tentang Aplikasi', 'bi-info-circle', currentPath == '/about'),
+                _buildNavItem(AdminRouteCrypto.pathFor('settings'), 'Pengaturan Toko', 'bi-gear', AdminRouteCrypto.isPageActive(currentPath, 'settings')),
+                _buildNavItem(AdminRouteCrypto.pathFor('profile'), 'Profil Admin', 'bi-person', AdminRouteCrypto.isPageActive(currentPath, 'profile')),
+                _buildNavItem(AdminRouteCrypto.pathFor('about'), 'Tentang Aplikasi', 'bi-info-circle', AdminRouteCrypto.isPageActive(currentPath, 'about')),
               ],
             ),
           ]),

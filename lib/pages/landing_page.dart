@@ -4,6 +4,7 @@ import 'package:jaspr/dom.dart';
 import 'package:jaspr/jaspr.dart';
 import 'package:jaspr_router/jaspr_router.dart';
 import '../models/app_models.dart';
+import '../services/admin_route_crypto.dart';
 import '../services/app_store.dart';
 
 class LandingPage extends StatefulComponent {
@@ -1307,7 +1308,7 @@ class _LandingPageState extends State<LandingPage> {
               'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=400',
               'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=400',
               'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=400',
-              'https://images.unsplash.com/photo-1607344645866-009c320c5ab8?w=400',
+              'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400',
               'https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?w=400',
             ])
               div(classes: 'col-6 col-sm-4 col-md-2', [
@@ -1725,7 +1726,7 @@ class _LandingPageState extends State<LandingPage> {
         div(classes: 'd-flex flex-wrap justify-content-between align-items-center text-secondary fs-8 py-2', [
           div([Component.text('© 2026 ${config.storeName} Handmade Studio. Handcrafted with love by Yayuk Wahyuni.')]),
           div(classes: 'd-flex gap-3', [
-            Link(to: '/admin', child: a(href: '/admin', classes: 'text-secondary text-decoration-none fw-bold', [Component.text('⚙️ Masuk Admin Panel')])),
+            Link(to: AdminRouteCrypto.pathFor('dashboard'), child: a(href: AdminRouteCrypto.pathFor('dashboard'), classes: 'text-secondary text-decoration-none fw-bold', [Component.text('⚙️ Masuk Admin Panel')])),
           ]),
         ]),
 

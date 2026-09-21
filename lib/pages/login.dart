@@ -4,6 +4,7 @@ import 'dart:html' as html;
 import 'package:jaspr/dom.dart';
 import 'package:jaspr/jaspr.dart';
 import 'package:jaspr_router/jaspr_router.dart';
+import '../services/admin_route_crypto.dart';
 import '../services/app_store.dart';
 import '../services/auth_service.dart';
 
@@ -102,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
         successMessage = 'Login Admin berhasil! Mengalihkan ke Dashboard Toko...';
       });
       Future.delayed(const Duration(milliseconds: 600), () {
-        Router.of(context).push('/admin');
+        Router.of(context).push(AdminRouteCrypto.pathFor('dashboard'));
       });
       return;
     }

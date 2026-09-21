@@ -19,6 +19,7 @@ import 'pages/promos.dart';
 import 'pages/reports.dart';
 import 'pages/reviews.dart';
 import 'pages/settings.dart';
+import 'services/admin_route_crypto.dart';
 import 'services/auth_service.dart';
 
 class App extends StatelessComponent {
@@ -97,6 +98,23 @@ class App extends StatelessComponent {
             return AdminLayout(child: child);
           },
           routes: [
+            // Rute dinamis admin terenkripsi & berslug: /admin/:slug
+            Route(
+              path: '/admin/:slug',
+              title: 'E-Comes Admin Panel - Protected',
+              builder: (context, state) {
+                final slug = state.params['slug'];
+                return AdminRouteCrypto.resolveComponent(slug);
+              },
+            ),
+            Route(
+              path: '/ecomes/admin/:slug',
+              title: 'E-Comes Admin Panel - Protected',
+              builder: (context, state) {
+                final slug = state.params['slug'];
+                return AdminRouteCrypto.resolveComponent(slug);
+              },
+            ),
             Route(path: '/admin', title: 'Dashboard V1 - E-Comes Admin', builder: (context, state) => const Home()),
             Route(path: '/ecomes/admin', title: 'Dashboard V1 - E-Comes Admin', builder: (context, state) => const Home()),
             Route(path: '/dashboard', title: 'Dashboard V1 - E-Comes Admin', builder: (context, state) => const Home()),

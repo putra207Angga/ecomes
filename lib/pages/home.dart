@@ -4,6 +4,7 @@ import 'package:jaspr/dom.dart';
 import 'package:jaspr/jaspr.dart';
 import 'package:jaspr_router/jaspr_router.dart';
 import '../models/app_models.dart';
+import '../services/admin_route_crypto.dart';
 import '../services/app_store.dart';
 
 class Home extends StatefulComponent {
@@ -63,10 +64,10 @@ class _HomeState extends State<Home> {
 
       // 2. Small-Box Metrics Cards (AdminLTE 4 Style)
       div(classes: 'row g-3 mb-4', [
-        _buildSmallBox(formattedSales, 'Total Omset Penjualan', 'bi-currency-dollar', 'text-bg-primary', '/reports'),
-        _buildSmallBox('$totalOrders Pesanan', 'Pesanan Baru Masuk', 'bi-cart-check', 'text-bg-success', '/orders'),
-        _buildSmallBox('$totalProducts Katalog', 'Total Produk Aktif', 'bi-box-seam', 'text-bg-warning text-dark', '/products'),
-        _buildSmallBox('$totalCustomers Pembeli', 'Pelanggan Terdaftar', 'bi-people', 'text-bg-danger', '/customers'),
+        _buildSmallBox(formattedSales, 'Total Omset Penjualan', 'bi-currency-dollar', 'text-bg-primary', AdminRouteCrypto.pathFor('reports')),
+        _buildSmallBox('$totalOrders Pesanan', 'Pesanan Baru Masuk', 'bi-cart-check', 'text-bg-success', AdminRouteCrypto.pathFor('orders')),
+        _buildSmallBox('$totalProducts Katalog', 'Total Produk Aktif', 'bi-box-seam', 'text-bg-warning text-dark', AdminRouteCrypto.pathFor('products')),
+        _buildSmallBox('$totalCustomers Pembeli', 'Pelanggan Terdaftar', 'bi-people', 'text-bg-danger', AdminRouteCrypto.pathFor('customers')),
       ]),
 
       // 2.5 Status Database DB Widget (Embedded SQLite / Zero External Server Required)
@@ -89,8 +90,8 @@ class _HomeState extends State<Home> {
             ]),
           ]),
           Link(
-            to: '/settings',
-            child: a(classes: 'btn btn-outline-primary btn-sm rounded-pill px-3 py-1.5 fw-semibold shadow-xs', href: '/settings', [
+            to: AdminRouteCrypto.pathFor('settings'),
+            child: a(classes: 'btn btn-outline-primary btn-sm rounded-pill px-3 py-1.5 fw-semibold shadow-xs', href: AdminRouteCrypto.pathFor('settings'), [
               i(classes: 'bi bi-gear me-1', []),
               Component.text('Pengaturan DB & Toko'),
             ]),
@@ -141,7 +142,7 @@ class _HomeState extends State<Home> {
                 i(classes: 'bi bi-fire text-danger me-2', []),
                 Component.text('Produk Terlaris (Top Sellers)'),
               ]),
-              Link(to: '/products', child: a(href: '/products', classes: 'btn btn-sm btn-outline-primary', [Component.text('Lihat Semua')])),
+              Link(to: AdminRouteCrypto.pathFor('products'), child: a(href: AdminRouteCrypto.pathFor('products'), classes: 'btn btn-sm btn-outline-primary', [Component.text('Lihat Semua')])),
             ]),
             div(classes: 'card-body p-0', [
               div(classes: 'table-responsive', [
@@ -243,22 +244,22 @@ class _HomeState extends State<Home> {
             ]),
             div(classes: 'd-grid gap-2', [
               Link(
-                to: '/products',
-                child: a(classes: 'btn btn-outline-primary btn-sm text-start d-flex align-items-center justify-content-between', href: '/products', [
+                to: AdminRouteCrypto.pathFor('products'),
+                child: a(classes: 'btn btn-outline-primary btn-sm text-start d-flex align-items-center justify-content-between', href: AdminRouteCrypto.pathFor('products'), [
                   span([i(classes: 'bi bi-plus-circle me-2', []), Component.text('Tambah Produk Baru')]),
                   i(classes: 'bi bi-chevron-right', []),
                 ]),
               ),
               Link(
-                to: '/orders',
-                child: a(classes: 'btn btn-outline-success btn-sm text-start d-flex align-items-center justify-content-between', href: '/orders', [
+                to: AdminRouteCrypto.pathFor('orders'),
+                child: a(classes: 'btn btn-outline-success btn-sm text-start d-flex align-items-center justify-content-between', href: AdminRouteCrypto.pathFor('orders'), [
                   span([i(classes: 'bi bi-truck me-2', []), Component.text('Update Resi Pesanan')]),
                   i(classes: 'bi bi-chevron-right', []),
                 ]),
               ),
               Link(
-                to: '/promos',
-                child: a(classes: 'btn btn-outline-warning text-dark btn-sm text-start d-flex align-items-center justify-content-between', href: '/promos', [
+                to: AdminRouteCrypto.pathFor('promos'),
+                child: a(classes: 'btn btn-outline-warning text-dark btn-sm text-start d-flex align-items-center justify-content-between', href: AdminRouteCrypto.pathFor('promos'), [
                   span([i(classes: 'bi bi-ticket-perforated me-2', []), Component.text('Buat Voucher Promo')]),
                   i(classes: 'bi bi-chevron-right', []),
                 ]),
