@@ -39,10 +39,15 @@ class AppStore {
     } catch (_) {}
 
     try {
-      final wStr = html.window.localStorage['ecomes_wishlist'];
-      if (wStr != null && wStr.isNotEmpty) {
-        final List list = jsonDecode(wStr);
-        wishlistProductIds = list.map((e) => e.toString()).toList();
+      if (currentMember != null) {
+        final wStr = html.window.localStorage['ecomes_wishlist_${currentMember!.id}'] ??
+            html.window.localStorage['ecomes_wishlist'];
+        if (wStr != null && wStr.isNotEmpty) {
+          final List list = jsonDecode(wStr);
+          wishlistProductIds = list.map((e) => e.toString()).toList();
+        }
+      } else {
+        wishlistProductIds = [];
       }
     } catch (_) {}
     try {
@@ -1093,9 +1098,18 @@ class AppStore {
     for (var c in customers) {
       if ((c.email.toLowerCase() == cleanInput ||
               (cleanNum.isNotEmpty && c.phone.replaceAll(RegExp(r'[^0-9]'), '').contains(cleanNum))) &&
-          (c.password == password || password == '123456')) {
+          c.password == password) {
         currentMember = c;
         html.window.localStorage['ecomes_current_member'] = jsonEncode(c.toJson());
+        try {
+          final wStr = html.window.localStorage['ecomes_wishlist_${c.id}'] ?? html.window.localStorage['ecomes_wishlist'];
+          if (wStr != null && wStr.isNotEmpty) {
+            final List list = jsonDecode(wStr);
+            wishlistProductIds = list.map((e) => e.toString()).toList();
+          } else {
+            wishlistProductIds = [];
+          }
+        } catch (_) {}
         return true;
       }
     }
@@ -1119,6 +1133,56 @@ class AppStore {
     );
     customers.insert(0, newCustomer);
     currentMember = newCustomer;
+    wishlistProductIds = [];
+    html.window.localStorage['ecomes_current_member'] = jsonEncode(newCustomer.toJson());
+    saveAll();
+    return true;
+  }
+
+  bool loginOrRegisterSocial({
+    required String provider,
+    required String name,
+    required String email,
+    required String avatar,
+  }) {
+    final cleanEmail = email.trim().toLowerCase();
+    for (var c in customers) {
+      if (c.email.toLowerCase() == cleanEmail) {
+        currentMember = c;
+        if (avatar.isNotEmpty && (c.avatar.isEmpty || c.avatar.contains('unsplash.com/photo-1534528741775-53994a69daeb'))) {
+          c.avatar = avatar;
+        }
+        html.window.localStorage['ecomes_current_member'] = jsonEncode(c.toJson());
+        try {
+          final wStr = html.window.localStorage['ecomes_wishlist_${c.id}'] ?? html.window.localStorage['ecomes_wishlist'];
+          if (wStr != null && wStr.isNotEmpty) {
+            final List list = jsonDecode(wStr);
+            wishlistProductIds = list.map((e) => e.toString()).toList();
+          } else {
+            wishlistProductIds = [];
+          }
+        } catch (_) {}
+        saveAll();
+        return true;
+      }
+    }
+    final newCustomer = CustomerItem(
+      id: 'CUST-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}',
+      name: name.trim(),
+      email: cleanEmail,
+      phone: '08${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}',
+      level: 'Gold Member',
+      totalOrders: 0,
+      totalSpent: 0,
+      avatar: avatar.isNotEmpty ? avatar : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+      points: 100,
+      password: 'social_login_$provider',
+      registeredDate:
+          '${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}',
+    );
+    customers.insert(0, newCustomer);
+    currentMember = newCustomer;
+    wishlistProductIds = [];
     html.window.localStorage['ecomes_current_member'] = jsonEncode(newCustomer.toJson());
     saveAll();
     return true;
@@ -1126,6 +1190,7 @@ class AppStore {
 
   void logoutMember() {
     currentMember = null;
+    wishlistProductIds = [];
     html.window.localStorage.remove('ecomes_current_member');
   }
 
@@ -1140,17 +1205,20 @@ class AppStore {
     }
   }
 
-  // --- WISHLIST SYSTEM ---
-  void toggleWishlist(String productId) {
+  // --- WISHLIST SYSTEM (EXCLUSIVELY FOR LOGGED-IN MEMBERS) ---
+  bool toggleWishlist(String productId) {
+    if (currentMember == null) return false;
     if (wishlistProductIds.contains(productId)) {
       wishlistProductIds.remove(productId);
     } else {
       wishlistProductIds.add(productId);
     }
-    html.window.localStorage['ecomes_wishlist'] = jsonEncode(wishlistProductIds);
+    html.window.localStorage['ecomes_wishlist_${currentMember!.id}'] = jsonEncode(wishlistProductIds);
+    return true;
   }
 
   bool isWishlisted(String productId) {
+    if (currentMember == null) return false;
     return wishlistProductIds.contains(productId);
   }
 

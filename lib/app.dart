@@ -60,12 +60,32 @@ class App extends StatelessComponent {
         ),
         Route(
           path: '/login',
-          title: 'Login Admin - E-Comes',
-          builder: (context, state) => const LoginPage(),
+          title: 'Masuk Akun - Abel\'z Handmade & E-Comes',
+          builder: (context, state) => const LoginPage(initialMode: 'login'),
         ),
         Route(
           path: '/ecomes/login',
-          title: 'Login Admin - E-Comes',
+          title: 'Masuk Akun - Abel\'z Handmade & E-Comes',
+          builder: (context, state) => const LoginPage(initialMode: 'login'),
+        ),
+        Route(
+          path: '/register',
+          title: 'Daftar Member - Abel\'z Handmade & E-Comes',
+          builder: (context, state) => const LoginPage(initialMode: 'register'),
+        ),
+        Route(
+          path: '/ecomes/register',
+          title: 'Daftar Member - Abel\'z Handmade & E-Comes',
+          builder: (context, state) => const LoginPage(initialMode: 'register'),
+        ),
+        Route(
+          path: '/auth',
+          title: 'Portal Akun - Abel\'z Handmade & E-Comes',
+          builder: (context, state) => const LoginPage(),
+        ),
+        Route(
+          path: '/ecomes/auth',
+          title: 'Portal Akun - Abel\'z Handmade & E-Comes',
           builder: (context, state) => const LoginPage(),
         ),
         ShellRoute(

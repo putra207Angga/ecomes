@@ -121,7 +121,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 events: {'click': (e) => _resetDefaultData()},
                 [
                   i(classes: 'bi bi-arrow-counterclockwise me-1', []),
-                  Component.text('Reset Data Demo'),
+                  Component.text('Reset Data Default'),
                 ],
               ),
               button(
