@@ -296,7 +296,7 @@ class _LandingCmsPageState extends State<LandingCmsPage> {
         div(classes: 'container-fluid', [
           div(classes: 'row align-items-center', [
             div(classes: 'col-md-7', [
-              h3(classes: 'mb-0 fw-bold text-dark d-flex align-items-center gap-2', [
+              h3(classes: 'mb-0 fw-bold text-body-emphasis d-flex align-items-center gap-2', [
                 i(classes: 'bi bi-palette2 text-danger', []),
                 Component.text('CMS & Konten Landing Page'),
               ]),
@@ -342,10 +342,10 @@ class _LandingCmsPageState extends State<LandingCmsPage> {
         ]),
 
       // 3. Modern CMS Tabs Navigation
-      div(classes: 'nav nav-pills bg-white p-2 rounded-4 shadow-sm mb-4 border d-flex gap-2 flex-wrap', [
+      div(classes: 'nav nav-pills bg-body p-2 rounded-4 shadow-sm mb-4 border d-flex gap-2 flex-wrap', [
         button(
           type: ButtonType.button,
-          classes: 'nav-link rounded-pill px-4 py-2 fs-7 fw-bold ${activeCmsTab == 'hero' ? 'active bg-danger text-white shadow-sm' : 'text-dark bg-light'}',
+          classes: 'nav-link rounded-pill px-4 py-2 fs-7 fw-bold ${activeCmsTab == 'hero' ? 'active bg-danger text-white shadow-sm' : 'text-body-emphasis bg-body-tertiary'}',
           events: {'click': (e) => setState(() => activeCmsTab = 'hero')},
           [
             i(classes: 'bi bi-image me-2', []),
@@ -354,7 +354,7 @@ class _LandingCmsPageState extends State<LandingCmsPage> {
         ),
         button(
           type: ButtonType.button,
-          classes: 'nav-link rounded-pill px-4 py-2 fs-7 fw-bold ${activeCmsTab == 'scarcity' ? 'active bg-danger text-white shadow-sm' : 'text-dark bg-light'}',
+          classes: 'nav-link rounded-pill px-4 py-2 fs-7 fw-bold ${activeCmsTab == 'scarcity' ? 'active bg-danger text-white shadow-sm' : 'text-body-emphasis bg-body-tertiary'}',
           events: {'click': (e) => setState(() => activeCmsTab = 'scarcity')},
           [
             i(classes: 'bi bi-lightning-charge-fill me-2', []),
@@ -363,7 +363,7 @@ class _LandingCmsPageState extends State<LandingCmsPage> {
         ),
         button(
           type: ButtonType.button,
-          classes: 'nav-link rounded-pill px-4 py-2 fs-7 fw-bold ${activeCmsTab == 'stories' ? 'active bg-danger text-white shadow-sm' : 'text-dark bg-light'}',
+          classes: 'nav-link rounded-pill px-4 py-2 fs-7 fw-bold ${activeCmsTab == 'stories' ? 'active bg-danger text-white shadow-sm' : 'text-body-emphasis bg-body-tertiary'}',
           events: {'click': (e) => setState(() => activeCmsTab = 'stories')},
           [
             i(classes: 'bi bi-camera-reels-fill me-2', []),
@@ -372,7 +372,7 @@ class _LandingCmsPageState extends State<LandingCmsPage> {
         ),
         button(
           type: ButtonType.button,
-          classes: 'nav-link rounded-pill px-4 py-2 fs-7 fw-bold ${activeCmsTab == 'faqs' ? 'active bg-danger text-white shadow-sm' : 'text-dark bg-light'}',
+          classes: 'nav-link rounded-pill px-4 py-2 fs-7 fw-bold ${activeCmsTab == 'faqs' ? 'active bg-danger text-white shadow-sm' : 'text-body-emphasis bg-body-tertiary'}',
           events: {'click': (e) => setState(() => activeCmsTab = 'faqs')},
           [
             i(classes: 'bi bi-question-circle-fill me-2', []),
@@ -1053,7 +1053,7 @@ class _LandingCmsPageState extends State<LandingCmsPage> {
   Component _buildStoryModalDialog() {
     return div(classes: 'modal fade show d-block bg-dark bg-opacity-75', attributes: {'tabindex': '-1'}, [
       div(classes: 'modal-dialog modal-dialog-centered', [
-        div(classes: 'modal-content border-0 shadow-lg rounded-4 overflow-hidden', [
+        div(classes: 'modal-content border-0 shadow-lg rounded-4 overflow-hidden bg-body text-body', [
           div(classes: 'modal-header bg-danger text-white py-3', [
             h5(classes: 'modal-title fw-bold fs-6 d-flex align-items-center gap-2', [
               i(classes: 'bi bi-camera-reels-fill fs-5', []),
@@ -1066,7 +1066,7 @@ class _LandingCmsPageState extends State<LandingCmsPage> {
               [],
             ),
           ]),
-          div(classes: 'modal-body p-4 bg-white', [
+          div(classes: 'modal-body p-4 bg-body', [
             div(classes: 'mb-3', [
               label(classes: 'form-label fw-bold fs-7', [Component.text('Label Tombol Bubble Story (Singkat)')]),
               input(
@@ -1128,7 +1128,7 @@ class _LandingCmsPageState extends State<LandingCmsPage> {
               ),
             ]),
           ]),
-          div(classes: 'modal-footer bg-light py-3', [
+          div(classes: 'modal-footer bg-body-tertiary border-top py-3', [
             button(
               type: ButtonType.button,
               classes: 'btn btn-secondary rounded-pill px-4 fw-semibold fs-7',
@@ -1151,7 +1151,7 @@ class _LandingCmsPageState extends State<LandingCmsPage> {
   Component _buildFaqModalDialog() {
     return div(classes: 'modal fade show d-block bg-dark bg-opacity-75', attributes: {'tabindex': '-1'}, [
       div(classes: 'modal-dialog modal-dialog-centered', [
-        div(classes: 'modal-content border-0 shadow-lg rounded-4 overflow-hidden', [
+        div(classes: 'modal-content border-0 shadow-lg rounded-4 overflow-hidden bg-body text-body', [
           div(classes: 'modal-header bg-danger text-white py-3', [
             h5(classes: 'modal-title fw-bold fs-6 d-flex align-items-center gap-2', [
               i(classes: 'bi bi-question-circle-fill fs-5', []),
@@ -1164,7 +1164,7 @@ class _LandingCmsPageState extends State<LandingCmsPage> {
               [],
             ),
           ]),
-          div(classes: 'modal-body p-4 bg-white', [
+          div(classes: 'modal-body p-4 bg-body', [
             div(classes: 'mb-3', [
               label(classes: 'form-label fw-bold fs-7', [Component.text('Pertanyaan (Question)')]),
               input(
@@ -1186,7 +1186,7 @@ class _LandingCmsPageState extends State<LandingCmsPage> {
               ),
             ]),
           ]),
-          div(classes: 'modal-footer bg-light py-3', [
+          div(classes: 'modal-footer bg-body-tertiary border-top py-3', [
             button(
               type: ButtonType.button,
               classes: 'btn btn-secondary rounded-pill px-4 fw-semibold fs-7',

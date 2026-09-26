@@ -214,7 +214,34 @@ class AppStore {
         html.window.localStorage['ecomes_customers'] = jsonEncode(customers.map((e) => e.toJson()).toList());
       }
 
-      // 3. Fetch Landing Config from Supabase
+      // 3. Fetch Orders from Supabase
+      final oList = await _supabase.get('orders', query: 'select=*&limit=50');
+      if (oList.isNotEmpty) {
+        for (var o in oList) {
+          final orderNo = o['order_no']?.toString() ?? '';
+          if (orderNo.isNotEmpty && !orders.any((element) => element.orderNo == orderNo)) {
+            orders.add(OrderItem(
+              id: o['id']?.toString() ?? 'ORD-${DateTime.now().millisecondsSinceEpoch}',
+              orderNo: orderNo,
+              customerName: o['customer_name']?.toString() ?? 'Pelanggan',
+              customerPhone: o['customer_phone']?.toString() ?? '',
+              date: o['date']?.toString() ?? 'Hari Ini',
+              total: (o['total'] as num?)?.toDouble() ?? 0.0,
+              courier: o['courier']?.toString() ?? 'JNE Reguler',
+              status: o['status']?.toString() ?? 'Pending',
+              paymentMethod: o['payment_method']?.toString() ?? 'BCA Virtual Account',
+              trackingNo: o['tracking_no']?.toString() ?? '',
+              cancelReason: o['cancel_reason']?.toString() ?? '',
+              items: [
+                OrderProductItem(productName: 'Koleksi Rajutan Abel\'z Handmade', qty: 1, price: (o['total'] as num?)?.toDouble() ?? 0.0),
+              ],
+            ));
+          }
+        }
+        html.window.localStorage['ecomes_orders'] = jsonEncode(orders.map((e) => e.toJson()).toList());
+      }
+
+      // 4. Fetch Landing Config from Supabase
       final lList = await _supabase.get('landing_config', query: 'id=eq.default');
       if (lList.isNotEmpty) {
         final map = lList.first;
@@ -263,6 +290,18 @@ class AppStore {
         'points': e.points,
         'avatar': e.avatar,
         'address': e.address,
+      }).toList());
+
+      _supabase.upsertBatch('orders', orders.map((e) => {
+        'order_no': e.orderNo,
+        'customer_name': e.customerName,
+        'customer_phone': e.customerPhone,
+        'total': e.total,
+        'courier': e.courier,
+        'status': e.status,
+        'payment_method': e.paymentMethod,
+        'tracking_no': e.trackingNo,
+        'cancel_reason': e.cancelReason,
       }).toList());
 
       _supabase.upsert('landing_config', {
@@ -950,6 +989,12 @@ class AppStore {
   void addOrder(OrderItem order) {
     orders.insert(0, order);
     final now = DateTime.now();
+    final isPending = order.status == 'Pending';
+    final gateway = order.paymentMethod.contains('Virtual Account')
+        ? 'Bank Virtual Account'
+        : order.paymentMethod.contains('QRIS')
+            ? 'Midtrans QRIS'
+            : 'Store Direct';
     final newTrx = TransactionItem(
       id: 'trx-${now.millisecondsSinceEpoch}',
       transactionNo:
@@ -957,14 +1002,27 @@ class AppStore {
       orderId: order.id,
       orderNo: order.orderNo,
       customerName: order.customerName,
-      paymentGateway: 'Payment Gateway / WA',
+      paymentGateway: gateway,
       paymentType: order.paymentMethod,
       grossAmount: order.total,
-      transactionStatus: 'settlement',
+      transactionStatus: isPending ? 'pending' : 'settlement',
       date: order.date,
     );
     transactions.insert(0, newTrx);
     saveAll();
+  }
+
+  void confirmPaymentVirtualAccount(String orderId) {
+    final idx = orders.indexWhere((element) => element.id == orderId || element.orderNo == orderId);
+    if (idx != -1) {
+      orders[idx].status = 'Diproses';
+      final trxIdx = transactions.indexWhere((t) => t.orderId == orders[idx].id || t.orderNo == orders[idx].orderNo);
+      if (trxIdx != -1) {
+        transactions[trxIdx].transactionStatus = 'settlement';
+      }
+      playNotificationChime();
+      saveAll();
+    }
   }
 
   void updateOrderStatus(String orderId, String newStatus, {String trackingNo = '', String cancelReason = ''}) {

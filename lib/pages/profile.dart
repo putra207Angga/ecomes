@@ -62,7 +62,7 @@ class _ProfilePageState extends State<ProfilePage> {
         div(classes: 'container-fluid', [
           div(classes: 'row align-items-center', [
             div(classes: 'col-sm-6', [
-              h3(classes: 'mb-0 fw-bold text-dark', [Component.text('Profil Pengguna & Keamanan Sesi')]),
+              h3(classes: 'mb-0 fw-bold text-body-emphasis', [Component.text('Profil Pengguna & Keamanan Sesi')]),
               p(classes: 'text-muted mb-0 fs-7', [Component.text('Manajemen identitas pengelola toko, peranan role, dan kredensial password.')]),
             ]),
           ]),
@@ -73,13 +73,13 @@ class _ProfilePageState extends State<ProfilePage> {
       div(classes: 'row g-4', [
         // Left Column (Avatar Card)
         div(classes: 'col-lg-4', [
-          div(classes: 'card shadow-sm border-0 rounded-4 text-center p-4 bg-white mb-4', [
+          div(classes: 'card shadow-sm border-0 rounded-4 text-center p-4 bg-body mb-4', [
             div(
               classes: 'bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold mx-auto mb-3 display-5 shadow-sm',
               styles: Styles(width: 80.px, height: 80.px),
               [Component.text(initial)],
             ),
-            h5(classes: 'fw-bold text-dark mb-1', [Component.text(user?.name ?? 'Admin')]),
+            h5(classes: 'fw-bold text-body-emphasis mb-1', [Component.text(user?.name ?? 'Admin')]),
             p(classes: 'text-muted fs-7 mb-2', [Component.text(user?.email ?? 'admin@ecomes.com')]),
             span(classes: 'badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3 py-1 fs-7 mx-auto', [
               i(classes: 'bi bi-shield-check me-1', []),
@@ -91,8 +91,8 @@ class _ProfilePageState extends State<ProfilePage> {
         // Right Column (Forms)
         div(classes: 'col-lg-8', [
           // Update Profile Info
-          div(classes: 'card shadow-sm border-0 rounded-4 p-4 bg-white mb-4', [
-            h5(classes: 'fw-bold text-dark mb-3 border-bottom pb-2', [
+          div(classes: 'card shadow-sm border-0 rounded-4 p-4 bg-body mb-4', [
+            h5(classes: 'fw-bold text-body-emphasis mb-3 border-bottom pb-2', [
               i(classes: 'bi bi-person-gear text-primary me-2', []),
               Component.text('Informasi Personal Administrator'),
             ]),
@@ -140,8 +140,8 @@ class _ProfilePageState extends State<ProfilePage> {
           ]),
 
           // Change Password Form
-          div(classes: 'card shadow-sm border-0 rounded-4 p-4 bg-white', [
-            h5(classes: 'fw-bold text-dark mb-3 border-bottom pb-2', [
+          div(classes: 'card shadow-sm border-0 rounded-4 p-4 bg-body', [
+            h5(classes: 'fw-bold text-body-emphasis mb-3 border-bottom pb-2', [
               i(classes: 'bi bi-key text-warning me-2', []),
               Component.text('Ganti Password Keamanan'),
             ]),
@@ -178,7 +178,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ]),
               button(
                 type: ButtonType.button,
-                classes: 'btn btn-outline-warning text-dark fw-semibold px-4 rounded-3',
+                classes: 'btn btn-outline-warning fw-semibold px-4 rounded-3',
                 events: {'click': (e) => _changePassword()},
                 [
                   i(classes: 'bi bi-shield-lock me-1', []),

@@ -12,7 +12,7 @@ class About extends StatelessComponent {
         div(classes: 'container-fluid', [
           div(classes: 'row align-items-center', [
             div(classes: 'col-sm-6', [
-              h3(classes: 'mb-0 fw-bold text-dark', [Component.text('Tentang E-Comes & Arsitektur Sistem')]),
+              h3(classes: 'mb-0 fw-bold text-body-emphasis', [Component.text('Tentang E-Comes & Arsitektur Sistem')]),
               p(classes: 'text-muted mb-0 fs-7', [Component.text('Informasi teknologi Jaspr Dart Web dan template AdminLTE v4.9.1.')]),
             ]),
             div(classes: 'col-sm-6', [
@@ -26,8 +26,8 @@ class About extends StatelessComponent {
       ]),
 
       // Main Card
-      div(classes: 'card shadow-sm border-0 rounded-3', [
-        div(classes: 'card-header bg-white py-3 border-bottom', [
+      div(classes: 'card shadow-sm border-0 rounded-3 bg-body', [
+        div(classes: 'card-header bg-body py-3 border-bottom', [
           h5(classes: 'card-title fw-bold mb-0 text-primary', [
             i(classes: 'bi bi-info-circle me-2', []),
             Component.text('Spesifikasi Teknologi Framework'),
@@ -36,7 +36,7 @@ class About extends StatelessComponent {
         div(classes: 'card-body p-4', [
           div(classes: 'row g-4', [
             div(classes: 'col-md-6', [
-              div(classes: 'border rounded-3 p-3 bg-light', [
+              div(classes: 'border rounded-3 p-3 bg-body-tertiary', [
                 h6(classes: 'fw-bold text-primary mb-2', [
                   i(classes: 'bi bi-lightning-charge me-2', []),
                   Component.text('Jaspr Framework (Dart Web)'),
@@ -47,7 +47,7 @@ class About extends StatelessComponent {
               ]),
             ]),
             div(classes: 'col-md-6', [
-              div(classes: 'border rounded-3 p-3 bg-light', [
+              div(classes: 'border rounded-3 p-3 bg-body-tertiary', [
                 h6(classes: 'fw-bold text-success mb-2', [
                   i(classes: 'bi bi-layout-text-window-reverse me-2', []),
                   Component.text('AdminLTE 4.9.1 UI Template'),

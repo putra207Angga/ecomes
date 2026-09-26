@@ -39,6 +39,14 @@ class _LandingPageState extends State<LandingPage> {
   OrderItem? searchedOrderResult;
   bool orderSearchAttempted = false;
 
+  // Multi-Payment & Virtual Account Modal State
+  String selectedPaymentMethod = 'BCA Virtual Account';
+  bool showVaPaymentModal = false;
+  OrderItem? activeVaOrder;
+  String activeVaInstructionTab = 'mbanking';
+  bool vaCopied = false;
+  bool nominalCopied = false;
+
   // Write Review State
   bool showWriteReviewModal = false;
   String reviewNameInput = '';
@@ -290,6 +298,91 @@ class _LandingPageState extends State<LandingPage> {
     });
   }
 
+  void _checkoutVirtualAccount() {
+    if (cartItems.isEmpty) return;
+
+    double subtotal = 0;
+    final orderItemsList = <OrderProductItem>[];
+
+    for (var item in cartItems) {
+      final pPrice = item['price'] as int;
+      final pQty = item['qty'] as int;
+      subtotal += pPrice * pQty;
+
+      String cColor = (item['color'] ?? '').toString();
+      String cYarn = (item['yarn'] ?? '').toString();
+
+      orderItemsList.add(OrderProductItem(
+        productName: item['name'].toString(),
+        qty: pQty,
+        price: pPrice.toDouble(),
+        customColor: cColor,
+        yarnType: cYarn,
+        customNotes: (item['notes'] ?? '').toString(),
+      ));
+    }
+
+    final member = AppStore().currentMember;
+    double memberDiscount = 0;
+    if (member != null && member.discountPercent > 0) {
+      memberDiscount = (subtotal * member.discountPercent / 100);
+    }
+    double pointsDiscount = 0;
+    if (useMemberPointsInCart && member != null && member.points > 0) {
+      pointsDiscount = member.points * 1000.0;
+      if (pointsDiscount > subtotal * 0.5) pointsDiscount = subtotal * 0.5;
+    }
+    double finalTotal = subtotal - memberDiscount - promoDiscountAmount - pointsDiscount;
+    if (finalTotal < 0) finalTotal = 0;
+
+    final now = DateTime.now();
+    final orderId = 'ORD-RJT-${now.millisecondsSinceEpoch.toString().substring(6)}';
+    final orderNo = 'INV/${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}/RJT/${now.millisecondsSinceEpoch.toString().substring(8)}';
+
+    String vaPrefix = '80777';
+    if (selectedPaymentMethod.contains('Mandiri')) {
+      vaPrefix = '88908';
+    } else if (selectedPaymentMethod.contains('BRI')) {
+      vaPrefix = '12800';
+    } else if (selectedPaymentMethod.contains('BNI')) {
+      vaPrefix = '98800';
+    } else if (selectedPaymentMethod.contains('QRIS')) {
+      vaPrefix = 'QRIS';
+    }
+    final custPhoneDigits = (member?.phone ?? '081234567890').replaceAll(RegExp(r'[^0-9]'), '');
+    final generatedVa = '$vaPrefix$custPhoneDigits';
+
+    final newOrder = OrderItem(
+      id: orderId,
+      orderNo: orderNo,
+      customerName: member != null ? member.name : 'Pelanggan Toko Rajutan',
+      customerPhone: member != null ? member.phone : '081234567890',
+      date: '${now.day} Sep ${now.year}, ${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}',
+      total: finalTotal,
+      courier: 'JNE Reguler (Rajutan)',
+      status: 'Pending',
+      paymentMethod: selectedPaymentMethod,
+      vaNumber: generatedVa,
+      items: orderItemsList,
+    );
+
+    AppStore().addOrder(newOrder);
+
+    setState(() {
+      cartItems.clear();
+      promoCodeInput = '';
+      promoDiscountAmount = 0;
+      promoFeedbackMessage = '';
+      useMemberPointsInCart = false;
+      showCartModal = false;
+      activeVaOrder = newOrder;
+      showVaPaymentModal = true;
+      activeVaInstructionTab = 'mbanking';
+      vaCopied = false;
+      nominalCopied = false;
+    });
+  }
+
   void _orderDirectWhatsApp(Map<String, dynamic> item) {
     final now = DateTime.now();
     final orderId = 'ORD-RJT-${now.millisecondsSinceEpoch.toString().substring(6)}';
@@ -414,6 +507,9 @@ class _LandingPageState extends State<LandingPage> {
 
       // Interactive Shopping Cart Modal
       if (showCartModal) _buildCartModal(),
+
+      // Virtual Account & Instant Payment Instructions Guide Modal
+      if (showVaPaymentModal && activeVaOrder != null) _buildVaPaymentModal(),
 
       // Product Detail Quick View Modal
       if (showProductDetailModal && selectedProductDetail != null) _buildProductDetailModal(),
@@ -1862,6 +1958,26 @@ class _LandingPageState extends State<LandingPage> {
                     ),
                   ]),
                 ]),
+              // Pilihan Metode Pembayaran
+              div(classes: 'card border-0 shadow-sm rounded-3 mb-3 p-3 bg-white', [
+                label(classes: 'form-label fw-bold fs-7 text-espresso mb-2 d-flex align-items-center justify-content-between', [
+                  div([
+                    i(classes: 'bi bi-credit-card-2-front-fill text-terracotta me-1', []),
+                    Component.text('Pilih Metode Pembayaran:'),
+                  ]),
+                  span(classes: 'badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill fs-8', [
+                    Component.text('Otomatis Verifikasi'),
+                  ]),
+                ]),
+                div(classes: 'row g-2', [
+                  _buildPaymentOptionCard('BCA Virtual Account', 'BCA VA', 'bi-credit-card-2-front', 'badge-primary'),
+                  _buildPaymentOptionCard('Mandiri Virtual Account', 'Mandiri VA', 'bi-credit-card-2-back', 'badge-warning'),
+                  _buildPaymentOptionCard('BRI Virtual Account', 'BRI VA (BRIVA)', 'bi-bank', 'badge-info'),
+                  _buildPaymentOptionCard('BNI Virtual Account', 'BNI VA', 'bi-wallet2', 'badge-secondary'),
+                  _buildPaymentOptionCard('QRIS Instant', 'QRIS (Semua E-Wallet)', 'bi-qr-code-scan', 'badge-success'),
+                  _buildPaymentOptionCard('WhatsApp Store', 'Pesan via WhatsApp', 'bi-whatsapp', 'badge-success'),
+                ]),
+              ]),
               // Detailed Breakdown & Total
               div(classes: 'p-3 bg-white rounded-3 border shadow-sm', [
                 div(classes: 'd-flex justify-content-between align-items-center mb-1 fs-7 text-secondary', [
@@ -1899,15 +2015,26 @@ class _LandingPageState extends State<LandingPage> {
               [Component.text('Lanjut Belanja')],
             ),
             if (cartItems.isNotEmpty)
-              button(
-                type: ButtonType.button,
-                classes: 'btn btn-success px-4 rounded-pill fw-extrabold d-flex align-items-center gap-2 shadow-sm tap-bounce',
-                events: {'click': (e) => _checkoutWhatsApp()},
-                [
-                  i(classes: 'bi bi-whatsapp fs-5', []),
-                  Component.text('Checkout Pesanan Via WhatsApp'),
-                ],
-              ),
+              if (selectedPaymentMethod == 'WhatsApp Store')
+                button(
+                  type: ButtonType.button,
+                  classes: 'btn btn-success px-4 rounded-pill fw-extrabold d-flex align-items-center gap-2 shadow-sm tap-bounce',
+                  events: {'click': (e) => _checkoutWhatsApp()},
+                  [
+                    i(classes: 'bi bi-whatsapp fs-5', []),
+                    Component.text('Checkout Via WhatsApp'),
+                  ],
+                )
+              else
+                button(
+                  type: ButtonType.button,
+                  classes: 'btn btn-terracotta px-4 rounded-pill fw-extrabold d-flex align-items-center gap-2 shadow-sm tap-bounce text-white',
+                  events: {'click': (e) => _checkoutVirtualAccount()},
+                  [
+                    i(classes: selectedPaymentMethod.contains('QRIS') ? 'bi bi-qr-code-scan fs-5' : 'bi bi-credit-card-2-front fs-5', []),
+                    Component.text('Bayar Sekarang (${selectedPaymentMethod.replaceAll('Virtual Account', 'VA')})'),
+                  ],
+                ),
           ]),
         ]),
       ]),
@@ -2211,6 +2338,275 @@ class _LandingPageState extends State<LandingPage> {
         i(classes: 'bi ${isDone ? 'bi-check-lg' : 'bi-circle'} fs-6', []),
       ]),
       small(classes: 'd-block fw-bold fs-8 ${isDone ? 'text-dark' : 'text-muted'}', [Component.text(label)]),
+    ]);
+  }
+
+  Component _buildPaymentOptionCard(String value, String label, String icon, String colorClass) {
+    final isSelected = selectedPaymentMethod == value;
+    return div(classes: 'col-6 col-sm-4', [
+      div(
+        classes: 'p-2 rounded-3 border cursor-pointer text-center transition-all ${isSelected ? "border-danger bg-danger-subtle bg-opacity-25 shadow-xs" : "bg-light border-light-subtle"}',
+        events: {'click': (e) => setState(() => selectedPaymentMethod = value)},
+        [
+          i(classes: 'bi $icon fs-5 ${isSelected ? "text-danger" : "text-secondary"} d-block mb-1', []),
+          div(classes: 'fs-8 fw-bold ${isSelected ? "text-danger" : "text-dark"} lh-sm text-truncate', [
+            Component.text(label),
+          ]),
+        ],
+      ),
+    ]);
+  }
+
+  Component _buildVaPaymentModal() {
+    final order = activeVaOrder!;
+    final isPending = order.status == 'Pending';
+    final isQris = order.paymentMethod.contains('QRIS');
+
+    return div(classes: 'modal fade show d-block bg-dark bg-opacity-75', attributes: {'tabindex': '-1'}, [
+      div(classes: 'modal-dialog modal-dialog-centered modal-lg', [
+        div(classes: 'modal-content border-0 shadow-lg rounded-4 overflow-hidden bg-white', [
+          // Header
+          div(classes: 'modal-header bg-dark text-white py-3', [
+            div(classes: 'd-flex align-items-center gap-2', [
+              i(classes: isQris ? 'bi bi-qr-code-scan text-warning fs-5' : 'bi bi-credit-card-2-front-fill text-warning fs-5', []),
+              div([
+                h5(classes: 'modal-title fw-bold fs-6 mb-0 text-white', [
+                  Component.text(isQris ? 'Panduan Pembayaran QRIS Instant' : 'Panduan Pembayaran Virtual Account'),
+                ]),
+                small(classes: 'text-white-50 fs-8', [
+                  Component.text('Ref Order: ${order.orderNo}'),
+                ]),
+              ]),
+            ]),
+            button(
+              type: ButtonType.button,
+              classes: 'btn-close btn-close-white',
+              events: {'click': (e) => setState(() => showVaPaymentModal = false)},
+              [],
+            ),
+          ]),
+
+          div(classes: 'modal-body p-4 bg-light', [
+            // Status Banner
+            if (isPending)
+              div(classes: 'alert alert-warning border-warning shadow-xs rounded-3 p-3 mb-3 d-flex align-items-center justify-content-between', [
+                div(classes: 'd-flex align-items-center gap-2', [
+                  i(classes: 'bi bi-hourglass-split fs-4 text-warning-emphasis', []),
+                  div([
+                    div(classes: 'fw-bold text-dark fs-7', [Component.text(isQris ? 'Menunggu Pembayaran Scan QRIS' : 'Menunggu Transfer Virtual Account')]),
+                    small(classes: 'text-muted fs-8', [Component.text('Selesaikan pembayaran sebelum batas waktu berakhir:')]),
+                  ]),
+                ]),
+                span(classes: 'badge bg-danger text-white rounded-pill px-3 py-1.5 fs-7 font-monospace fw-bold', [
+                  i(classes: 'bi bi-clock me-1', []),
+                  Component.text('23:59:45'),
+                ]),
+              ])
+            else
+              div(classes: 'alert alert-success border-success shadow-xs rounded-3 p-3 mb-3 d-flex align-items-center gap-2', [
+                i(classes: 'bi bi-check-circle-fill fs-3 text-success', []),
+                div([
+                  div(classes: 'fw-bold text-dark fs-6', [Component.text('PEMBAYARAN TERVERIFIKASI LUNAS! ✅')]),
+                  small(classes: 'text-muted fs-7', [Component.text('Terima kasih! Pesanan Anda telah diverifikasi otomatis dan masuk antrean produksi rajutan.')]),
+                ]),
+              ]),
+
+            // VA Number Card & Nominal Card
+            div(classes: 'row g-3 mb-3', [
+              // VA Number or QRIS
+              div(classes: isQris ? 'col-12 text-center' : 'col-md-7', [
+                div(classes: 'p-3 bg-white rounded-3 border shadow-xs h-100', [
+                  if (isQris) ...[
+                    small(classes: 'text-muted fw-bold fs-8 text-uppercase d-block mb-2', [Component.text('Scan Kode QRIS di bawah ini:')]),
+                    img(
+                      src: 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${order.orderNo}',
+                      classes: 'img-fluid rounded border p-2 bg-white shadow-xs mb-2',
+                      attributes: {'width': '150', 'height': '150', 'alt': 'QRIS Tagihan'},
+                    ),
+                    small(classes: 'text-muted fs-8 d-block', [Component.text('Mendukung GoPay, OVO, Dana, ShopeePay, LinkAja, & BCA QRIS.')]),
+                  ] else ...[
+                    small(classes: 'text-muted fw-bold fs-8 text-uppercase d-block mb-1', [
+                      Component.text(order.paymentMethod),
+                    ]),
+                    div(classes: 'd-flex align-items-center justify-content-between', [
+                      span(classes: 'fw-extrabold text-primary font-monospace fs-4', [
+                        Component.text(order.vaNumber),
+                      ]),
+                      button(
+                        type: ButtonType.button,
+                        classes: 'btn btn-sm ${vaCopied ? "btn-success text-white" : "btn-outline-primary"} rounded-pill px-3 fw-bold fs-8',
+                        events: {
+                          'click': (e) {
+                            try {
+                              html.window.navigator.clipboard?.writeText(order.vaNumber);
+                            } catch (_) {}
+                            setState(() => vaCopied = true);
+                            Future.delayed(const Duration(seconds: 2), () {
+                              if (mounted) setState(() => vaCopied = false);
+                            });
+                          }
+                        },
+                        [
+                          i(classes: 'bi ${vaCopied ? "bi-check-lg" : "bi-copy"} me-1', []),
+                          Component.text(vaCopied ? 'Tersalin!' : 'Salin VA'),
+                        ],
+                      ),
+                    ]),
+                    small(classes: 'text-muted fs-8 d-block mt-1', [
+                      Component.text('Atas Nama: '),
+                      strong([Component.text('ABELZ HANDMADE / E-COMES')]),
+                    ]),
+                  ],
+                ]),
+              ]),
+
+              // Total Amount
+              div(classes: isQris ? 'col-12' : 'col-md-5', [
+                div(classes: 'p-3 bg-white rounded-3 border shadow-xs h-100', [
+                  small(classes: 'text-muted fw-bold fs-8 text-uppercase d-block mb-1', [Component.text('Total Pembayaran')]),
+                  div(classes: 'd-flex align-items-center justify-content-between', [
+                    span(classes: 'fw-extrabold text-terracotta fs-4', [
+                      Component.text('Rp ${order.total.toInt()}'),
+                    ]),
+                    button(
+                      type: ButtonType.button,
+                      classes: 'btn btn-sm ${nominalCopied ? "btn-success text-white" : "btn-outline-secondary"} rounded-pill px-2.5 fw-bold fs-8',
+                      events: {
+                        'click': (e) {
+                          try {
+                            html.window.navigator.clipboard?.writeText(order.total.toInt().toString());
+                          } catch (_) {}
+                          setState(() => nominalCopied = true);
+                          Future.delayed(const Duration(seconds: 2), () {
+                            if (mounted) setState(() => nominalCopied = false);
+                          });
+                        }
+                      },
+                      [
+                        i(classes: 'bi ${nominalCopied ? "bi-check-lg" : "bi-copy"} me-1', []),
+                        Component.text(nominalCopied ? 'Tersalin!' : 'Salin'),
+                      ],
+                    ),
+                  ]),
+                  small(classes: 'text-success fs-8 d-block mt-1 fw-semibold', [
+                    i(classes: 'bi bi-shield-check me-1', []),
+                    Component.text('Verifikasi Otomatis Tanpa Bukti Transfer'),
+                  ]),
+                ]),
+              ]),
+            ]),
+
+            // Tabbed Payment Instructions
+            div(classes: 'card border-0 shadow-xs rounded-3 bg-white p-3 mb-3', [
+              h6(classes: 'fw-bold text-dark fs-7 mb-2 d-flex align-items-center gap-1.5', [
+                i(classes: 'bi bi-info-circle-fill text-primary', []),
+                Component.text('Petunjuk Langkah Pembayaran:'),
+              ]),
+              ul(classes: 'nav nav-pills nav-fill mb-3 gap-1', [
+                li(classes: 'nav-item', [
+                  button(
+                    type: ButtonType.button,
+                    classes: 'nav-link py-1.5 fs-8 rounded-pill fw-semibold ${activeVaInstructionTab == 'mbanking' ? 'active bg-primary text-white' : 'text-muted bg-light'}',
+                    events: {'click': (e) => setState(() => activeVaInstructionTab = 'mbanking')},
+                    [Component.text('Mobile Banking (m-Banking)')],
+                  ),
+                ]),
+                li(classes: 'nav-item', [
+                  button(
+                    type: ButtonType.button,
+                    classes: 'nav-link py-1.5 fs-8 rounded-pill fw-semibold ${activeVaInstructionTab == 'atm' ? 'active bg-primary text-white' : 'text-muted bg-light'}',
+                    events: {'click': (e) => setState(() => activeVaInstructionTab = 'atm')},
+                    [Component.text('Mesin ATM Bank')],
+                  ),
+                ]),
+                li(classes: 'nav-item', [
+                  button(
+                    type: ButtonType.button,
+                    classes: 'nav-link py-1.5 fs-8 rounded-pill fw-semibold ${activeVaInstructionTab == 'ibanking' ? 'active bg-primary text-white' : 'text-muted bg-light'}',
+                    events: {'click': (e) => setState(() => activeVaInstructionTab = 'ibanking')},
+                    [Component.text('Internet Banking')],
+                  ),
+                ]),
+              ]),
+
+              // Content based on tab
+              if (activeVaInstructionTab == 'mbanking')
+                ol(classes: 'ps-3 mb-0 text-muted fs-8 lh-base', [
+                  li(classes: 'mb-1', [Component.text('Buka aplikasi Mobile Banking di smartphone Anda (BCA mobile, Livin\' by Mandiri, BRImo, atau BNI Mobile).')]),
+                  li(classes: 'mb-1', [Component.text('Pilih menu Transfer atau Pembayaran, kemudian pilih Virtual Account.')]),
+                  li(classes: 'mb-1', [Component.text('Masukkan Nomor Virtual Account: '), strong(classes: 'text-dark font-monospace', [Component.text(order.vaNumber)])]),
+                  li(classes: 'mb-1', [Component.text('Pastikan nama penerima adalah ABELZ HANDMADE dan jumlah tagihan sesuai (Rp ${order.total.toInt()}).')]),
+                  li([Component.text('Masukkan PIN m-Banking Anda dan simpan bukti konfirmasi transfer.')]),
+                ])
+              else if (activeVaInstructionTab == 'atm')
+                ol(classes: 'ps-3 mb-0 text-muted fs-8 lh-base', [
+                  li(classes: 'mb-1', [Component.text('Masukkan kartu ATM dan PIN 6-digit Anda pada mesin ATM.')]),
+                  li(classes: 'mb-1', [Component.text('Pilih menu Transaksi Lainnya > Transfer > Ke Rekening Virtual Account.')]),
+                  li(classes: 'mb-1', [Component.text('Ketik 16 digit Nomor Virtual Account: '), strong(classes: 'text-dark font-monospace', [Component.text(order.vaNumber)])]),
+                  li(classes: 'mb-1', [Component.text('Di halaman konfirmasi, pastikan nama dan jumlah tagihan benar, lalu pilih Ya / Benar.')]),
+                  li([Component.text('Ambil dan simpan struk ATM sebagai bukti transaksi.')]),
+                ])
+              else
+                ol(classes: 'ps-3 mb-0 text-muted fs-8 lh-base', [
+                  li(classes: 'mb-1', [Component.text('Login ke akun Internet Banking resmi bank Anda.')]),
+                  li(classes: 'mb-1', [Component.text('Buka menu Pembayaran Tagihan > Pembayaran Virtual Account.')]),
+                  li(classes: 'mb-1', [Component.text('Input nomor VA: '), strong(classes: 'text-dark font-monospace', [Component.text(order.vaNumber)])]),
+                  li(classes: 'mb-1', [Component.text('Verifikasi detail transaksi dan masukkan kode respon Token pengaman.')]),
+                  li([Component.text('Transaksi selesai dan bukti transaksi elektronik dapat diunduh.')]),
+                ]),
+            ]),
+          ]),
+
+          // Modal Footer
+          div(classes: 'modal-footer bg-white py-3 d-flex flex-wrap align-items-center justify-content-between gap-2', [
+            if (isPending)
+              button(
+                type: ButtonType.button,
+                classes: 'btn btn-success rounded-pill px-4 fw-bold shadow-xs d-flex align-items-center gap-1.5 tap-bounce',
+                events: {
+                  'click': (e) {
+                    AppStore().confirmPaymentVirtualAccount(order.id);
+                    setState(() {
+                      order.status = 'Diproses';
+                      toastMessageText = 'Pembayaran Virtual Account berhasil dikonfirmasi! Pesanan siap diproses.';
+                      showSuccessToast = true;
+                    });
+                  }
+                },
+                [
+                  i(classes: 'bi bi-lightning-charge-fill', []),
+                  Component.text('⚡ Simulasi Bayar VA Sekarang (Lunas Instan)'),
+                ],
+              )
+            else
+              button(
+                type: ButtonType.button,
+                classes: 'btn btn-outline-primary rounded-pill px-3 fs-8 fw-semibold',
+                events: {
+                  'click': (e) {
+                    setState(() {
+                      showVaPaymentModal = false;
+                      orderTrackerQuery = order.orderNo;
+                      _searchOrderTracker();
+                      showOrderTrackerModal = true;
+                    });
+                  }
+                },
+                [
+                  i(classes: 'bi bi-truck me-1', []),
+                  Component.text('Lacak Status Pesanan Ini'),
+                ],
+              ),
+
+            button(
+              type: ButtonType.button,
+              classes: 'btn btn-secondary rounded-pill px-4 fw-semibold',
+              events: {'click': (e) => setState(() => showVaPaymentModal = false)},
+              [Component.text('Tutup & Lanjut Belanja')],
+            ),
+          ]),
+        ]),
+      ]),
     ]);
   }
 

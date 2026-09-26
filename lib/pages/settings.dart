@@ -24,6 +24,7 @@ class _SettingsPageState extends State<SettingsPage> {
   late double taxRate;
 
   String? toastMessage;
+  bool isSyncingCloud = false;
 
   @override
   void initState() {
@@ -37,6 +38,20 @@ class _SettingsPageState extends State<SettingsPage> {
     midtransKey = s.midtransKey;
     xenditKey = s.xenditKey;
     taxRate = s.taxRate;
+  }
+
+  void _syncSupabaseCloud() async {
+    setState(() => isSyncingCloud = true);
+    final res = await DatabaseService().syncWithCloudDatabase();
+    setState(() {
+      isSyncingCloud = false;
+      toastMessage = res['status'] == 'success'
+          ? 'Sinkronisasi Cloud Supabase Berhasil! (${res['syncedProducts']} Produk, ${res['syncedOrders']} Pesanan)'
+          : 'Gagal sinkronisasi Supabase: ${res['message']}';
+    });
+    Future.delayed(const Duration(milliseconds: 3500), () {
+      if (mounted) setState(() => toastMessage = null);
+    });
   }
 
   void _saveSettings() {
@@ -111,7 +126,7 @@ class _SettingsPageState extends State<SettingsPage> {
         div(classes: 'container-fluid', [
           div(classes: 'row align-items-center', [
             div(classes: 'col-sm-6', [
-              h3(classes: 'mb-0 fw-bold text-dark', [Component.text('Pengaturan Toko & Payment Gateway')]),
+              h3(classes: 'mb-0 fw-bold text-body-emphasis', [Component.text('Pengaturan Toko & Payment Gateway')]),
               p(classes: 'text-muted mb-0 fs-7', [Component.text('Konfigurasi identitas toko, alamat gudang, kurir pengiriman, dan tarif PPN.')]),
             ]),
             div(classes: 'col-sm-6 text-sm-end mt-2 mt-sm-0', [
@@ -148,8 +163,8 @@ class _SettingsPageState extends State<SettingsPage> {
       div(classes: 'row g-4', [
         // Left Column (Identitas & Kontak)
         div(classes: 'col-lg-7', [
-          div(classes: 'card shadow-sm border-0 rounded-4 p-4 bg-white mb-4', [
-            h5(classes: 'fw-bold text-dark mb-3 border-bottom pb-2', [
+          div(classes: 'card shadow-sm border-0 rounded-4 p-4 bg-body mb-4', [
+            h5(classes: 'fw-bold text-body-emphasis mb-3 border-bottom pb-2', [
               i(classes: 'bi bi-shop text-primary me-2', []),
               Component.text('Profil & Alamat Operasional Toko'),
             ]),
@@ -242,8 +257,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
         // Right Column (Payment Gateway Integrations)
         div(classes: 'col-lg-5', [
-          div(classes: 'card shadow-sm border-0 rounded-4 p-4 bg-white mb-4', [
-            h5(classes: 'fw-bold text-dark mb-3 border-bottom pb-2', [
+          div(classes: 'card shadow-sm border-0 rounded-4 p-4 bg-body mb-4', [
+            h5(classes: 'fw-bold text-body-emphasis mb-3 border-bottom pb-2', [
               i(classes: 'bi bi-credit-card-2-front text-success me-2', []),
               Component.text('Konfigurasi Payment Gateway'),
             ]),
@@ -273,15 +288,15 @@ class _SettingsPageState extends State<SettingsPage> {
                 },
               ),
             ]),
-            div(classes: 'p-3 bg-light rounded-3 border fs-8 text-muted', [
+            div(classes: 'p-3 bg-body-tertiary rounded-3 border fs-8 text-muted', [
               i(classes: 'bi bi-shield-lock-fill me-1 text-success', []),
               Component.text('API key Anda terenkripsi di penyimpanan lokal browser.'),
             ]),
           ]),
 
           // Status Database DB (Embedded SQLite Engine)
-          div(classes: 'card shadow-sm border-0 rounded-4 p-4 bg-white mb-4', [
-            h5(classes: 'fw-bold text-dark mb-3 border-bottom pb-2 d-flex align-items-center justify-content-between', [
+          div(classes: 'card shadow-sm border-0 rounded-4 p-4 bg-body mb-4', [
+            h5(classes: 'fw-bold text-body-emphasis mb-3 border-bottom pb-2 d-flex align-items-center justify-content-between', [
               div(classes: 'd-flex align-items-center gap-2', [
                 i(classes: 'bi bi-database-check text-success fs-5', []),
                 Component.text('Status Engine Database DB'),
@@ -301,13 +316,13 @@ class _SettingsPageState extends State<SettingsPage> {
             ]),
             div(classes: 'row g-2 text-center fs-8 fw-bold mb-3', [
               div(classes: 'col-6', [
-                div(classes: 'p-2 border rounded-2 bg-light', [
+                div(classes: 'p-2 border rounded-2 bg-body-tertiary', [
                   div(classes: 'text-primary fs-6', [Component.text(AppStore().products.length.toString())]),
                   span(classes: 'text-muted fw-normal', [Component.text('Produk Katalog')]),
                 ]),
               ]),
               div(classes: 'col-6', [
-                div(classes: 'p-2 border rounded-2 bg-light', [
+                div(classes: 'p-2 border rounded-2 bg-body-tertiary', [
                   div(classes: 'text-success fs-6', [Component.text(AppStore().orders.length.toString())]),
                   span(classes: 'text-muted fw-normal', [Component.text('Pesanan Toko')]),
                 ]),
@@ -334,6 +349,47 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ]),
             ]),
+          ]),
+
+          // Cloud Database (Supabase PostgreSQL Integration)
+          div(classes: 'card shadow-sm border-0 rounded-4 p-4 bg-body mb-4', [
+            h5(classes: 'fw-bold text-body-emphasis mb-3 border-bottom pb-2 d-flex align-items-center justify-content-between', [
+              div(classes: 'd-flex align-items-center gap-2', [
+                i(classes: 'bi bi-cloud-check-fill text-primary fs-5', []),
+                Component.text('Supabase Cloud Database'),
+              ]),
+              span(classes: 'badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill fs-8', [
+                Component.text('PostgreSQL Live'),
+              ]),
+            ]),
+            div(classes: 'p-3 bg-body-tertiary rounded-3 border mb-3 fs-8', [
+              div(classes: 'd-flex justify-content-between mb-1', [
+                span(classes: 'text-muted', [Component.text('Status Sinkronisasi:')]),
+                span(classes: 'fw-bold text-success d-flex align-items-center gap-1', [
+                  i(classes: 'bi bi-check-circle-fill fs-8', []),
+                  Component.text('Connected'),
+                ]),
+              ]),
+              div(classes: 'd-flex justify-content-between mb-1', [
+                span(classes: 'text-muted', [Component.text('Project Endpoint:')]),
+                span(classes: 'font-monospace text-body-emphasis text-truncate', styles: Styles(maxWidth: 160.px), [
+                  Component.text('lsyonosmjndjefhpmpoy.supabase.co'),
+                ]),
+              ]),
+              div(classes: 'd-flex justify-content-between', [
+                span(classes: 'text-muted', [Component.text('Security Level:')]),
+                span(classes: 'badge bg-success text-white fs-8', [Component.text('SSL / TLS 256-bit')]),
+              ]),
+            ]),
+            button(
+              type: ButtonType.button,
+              classes: 'btn btn-primary btn-sm rounded-3 fw-bold w-100 d-flex align-items-center justify-content-center gap-2 shadow-sm ${isSyncingCloud ? 'disabled' : ''}',
+              events: {'click': (e) => _syncSupabaseCloud()},
+              [
+                i(classes: isSyncingCloud ? 'spinner-border spinner-border-sm me-1' : 'bi bi-arrow-repeat me-1', []),
+                Component.text(isSyncingCloud ? 'Sedang Menyinkronkan...' : 'Sinkronkan Sekarang ke Supabase'),
+              ],
+            ),
           ]),
         ]),
       ]),

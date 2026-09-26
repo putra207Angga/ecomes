@@ -52,7 +52,7 @@ class _InvoicePageState extends State<InvoicePage> {
         div(classes: 'container-fluid', [
           div(classes: 'row align-items-center', [
             div(classes: 'col-sm-6', [
-              h3(classes: 'mb-0 fw-bold text-dark', [Component.text('Lembar Invoice & Faktur Resmi')]),
+              h3(classes: 'mb-0 fw-bold text-body-emphasis', [Component.text('Lembar Invoice & Faktur Resmi')]),
               p(classes: 'text-muted mb-0 fs-7', [Component.text('Cetak dokumen transaksi resmi untuk pelanggan & arsip akuntansi.')]),
             ]),
             div(classes: 'col-sm-6 text-sm-end mt-2 mt-sm-0 d-flex align-items-center justify-content-sm-end gap-2', [
@@ -96,7 +96,10 @@ class _InvoicePageState extends State<InvoicePage> {
       ]),
 
       // 2. Printable Invoice Sheet Card
-      div(classes: 'card shadow-sm border-0 rounded-4 overflow-hidden bg-white p-4 p-md-5', [
+      div(
+        classes: 'card shadow border-0 rounded-4 overflow-hidden bg-white text-dark p-4 p-md-5 mx-auto',
+        styles: Styles(maxWidth: 860.px),
+        [
         div(classes: 'invoice-header border-bottom pb-4 mb-4', [
           div(classes: 'row align-items-center', [
             div(classes: 'col-6', [
@@ -187,6 +190,107 @@ class _InvoicePageState extends State<InvoicePage> {
             div(classes: 'd-flex justify-content-between py-2 fs-5 fw-bold text-primary', [
               span([Component.text('Grand Total:')]),
               span([Component.text('Rp ${order.total.toInt()}')]),
+            ]),
+          ]),
+        ]),
+
+        // 3. Panduan Pembayaran Virtual Account (VA Guide Section)
+        hr(classes: 'my-4 border-secondary border-opacity-25'),
+        div(classes: 'p-4 rounded-4 border bg-light-subtle', [
+          div(classes: 'd-flex flex-wrap align-items-center justify-content-between gap-2 mb-3', [
+            div(classes: 'd-flex align-items-center gap-2', [
+              i(classes: 'bi bi-credit-card-2-back-fill fs-4 text-primary', []),
+              div([
+                h5(classes: 'fw-bold text-dark mb-0 fs-6', [Component.text('Panduan Pembayaran Virtual Account (VA)')]),
+                small(classes: 'text-muted fs-8', [Component.text('Petunjuk transfer otomatis via ATM, Mobile Banking, dan Internet Banking.')]),
+              ]),
+            ]),
+            if (order.status == 'Pending')
+              button(
+                type: ButtonType.button,
+                classes: 'btn btn-success btn-sm rounded-pill px-3 fw-bold d-print-none shadow-sm',
+                events: {
+                  'click': (e) {
+                    AppStore().confirmPaymentVirtualAccount(order.id);
+                    setState(() {});
+                  }
+                },
+                [
+                  i(classes: 'bi bi-check2-circle me-1', []),
+                  Component.text('⚡ Simulasi Bayar VA (Lunas Instan)'),
+                ],
+              )
+            else
+              span(classes: 'badge bg-success-subtle text-success border border-success-subtle rounded-pill fs-7 px-3 py-1.5 fw-bold', [
+                i(classes: 'bi bi-patch-check-fill me-1', []),
+                Component.text('Pembayaran Terverifikasi Lunas'),
+              ]),
+          ]),
+
+          // VA Details Card
+          div(classes: 'card border-0 shadow-sm rounded-3 p-3 bg-white mb-3', [
+            div(classes: 'row g-3 align-items-center', [
+              div(classes: 'col-md-4 border-end-md', [
+                small(classes: 'text-muted d-block fs-8 fw-semibold text-uppercase', [Component.text('Bank Tujuan Transfer:')]),
+                span(classes: 'fw-bold fs-6 text-dark', [
+                  Component.text(order.paymentMethod.contains('Virtual Account') ? order.paymentMethod : 'BCA Virtual Account'),
+                ]),
+              ]),
+              div(classes: 'col-md-4 border-end-md', [
+                small(classes: 'text-muted d-block fs-8 fw-semibold text-uppercase', [Component.text('Nomor Virtual Account:')]),
+                span(classes: 'fw-extrabold fs-5 text-primary font-monospace', [
+                  Component.text(order.vaNumber.isNotEmpty ? order.vaNumber : '80777${order.customerPhone.replaceAll(RegExp(r'[^0-9]'), '')}'),
+                ]),
+              ]),
+              div(classes: 'col-md-4', [
+                small(classes: 'text-muted d-block fs-8 fw-semibold text-uppercase', [Component.text('Atas Nama Rekening:')]),
+                span(classes: 'fw-bold fs-7 text-dark', [Component.text('ABELZ HANDMADE / E-COMES')]),
+              ]),
+            ]),
+          ]),
+
+          // Bank Guide Accordion
+          div(classes: 'row g-3 fs-7', [
+            div(classes: 'col-md-4', [
+              div(classes: 'p-3 bg-white rounded-3 border h-100 shadow-xs', [
+                h6(classes: 'fw-bold text-dark fs-7 mb-2 d-flex align-items-center gap-1', [
+                  i(classes: 'bi bi-phone text-primary', []),
+                  Component.text('1. Mobile Banking (m-BCA / Livin)'),
+                ]),
+                ol(classes: 'ps-3 mb-0 text-muted fs-8', [
+                  li([Component.text('Buka aplikasi m-Banking di smartphone Anda.')]),
+                  li([Component.text('Pilih menu Transfer > Virtual Account.')]),
+                  li([Component.text('Masukkan nomor Virtual Account di atas.')]),
+                  li([Component.text('Periksa kesesuaian nama & nominal lalu masukkan PIN.')]),
+                ]),
+              ]),
+            ]),
+            div(classes: 'col-md-4', [
+              div(classes: 'p-3 bg-white rounded-3 border h-100 shadow-xs', [
+                h6(classes: 'fw-bold text-dark fs-7 mb-2 d-flex align-items-center gap-1', [
+                  i(classes: 'bi bi-hdd text-success', []),
+                  Component.text('2. Mesin ATM Bank'),
+                ]),
+                ol(classes: 'ps-3 mb-0 text-muted fs-8', [
+                  li([Component.text('Masukkan kartu ATM dan PIN 6-digit Anda.')]),
+                  li([Component.text('Pilih menu Transaksi Lainnya > Transfer > Virtual Account.')]),
+                  li([Component.text('Input nomor Virtual Account pesanan.')]),
+                  li([Component.text('Konfirmasi transfer dan simpan struk pembayaran.')]),
+                ]),
+              ]),
+            ]),
+            div(classes: 'col-md-4', [
+              div(classes: 'p-3 bg-white rounded-3 border h-100 shadow-xs', [
+                h6(classes: 'fw-bold text-dark fs-7 mb-2 d-flex align-items-center gap-1', [
+                  i(classes: 'bi bi-globe text-info', []),
+                  Component.text('3. Internet Banking (KlikBCA / Mandiri)'),
+                ]),
+                ol(classes: 'ps-3 mb-0 text-muted fs-8', [
+                  li([Component.text('Login ke akun Internet Banking resmi.')]),
+                  li([Component.text('Pilih Pembayaran > Pembayaran Virtual Account.')]),
+                  li([Component.text('Masukkan nomor VA & selesaikan dengan Token respon.')]),
+                ]),
+              ]),
             ]),
           ]),
         ]),

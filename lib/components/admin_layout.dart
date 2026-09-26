@@ -21,6 +21,18 @@ class _AdminLayoutState extends State<AdminLayout> {
   String quickMessage = '';
   String headerSearchQuery = '';
 
+  @override
+  void initState() {
+    super.initState();
+    final body = html.document.body;
+    if (body != null) {
+      body.classes.remove('bg-pink-cream');
+      if (!body.classes.contains('layout-fixed')) body.classes.add('layout-fixed');
+      if (!body.classes.contains('sidebar-expand-lg')) body.classes.add('sidebar-expand-lg');
+      if (!body.classes.contains('bg-body-tertiary')) body.classes.add('bg-body-tertiary');
+    }
+  }
+
   void _toggleSidebar() {
     final body = html.document.body;
     if (body != null) {
@@ -30,16 +42,14 @@ class _AdminLayoutState extends State<AdminLayout> {
           body.classes.remove('sidebar-open');
           body.classes.add('sidebar-collapse');
         } else {
-          body.classes.add('sidebar-open');
           body.classes.remove('sidebar-collapse');
+          body.classes.add('sidebar-open');
         }
       } else {
         if (body.classes.contains('sidebar-collapse')) {
           body.classes.remove('sidebar-collapse');
-          body.classes.add('sidebar-open');
         } else {
           body.classes.add('sidebar-collapse');
-          body.classes.remove('sidebar-open');
         }
       }
     }
@@ -94,6 +104,18 @@ class _AdminLayoutState extends State<AdminLayout> {
       // 2. Main Menu Sidebar (Left)
       _buildSidebar(context),
 
+      // Mobile Sidebar Overlay Backdrop (Click outside drawer to dismiss)
+      div(
+        classes: 'sidebar-overlay',
+        events: {
+          'click': (e) {
+            html.document.body?.classes.remove('sidebar-open');
+            html.document.body?.classes.add('sidebar-collapse');
+          }
+        },
+        [],
+      ),
+
       // 3. Main Content Area
       main_(classes: 'app-main', [
         component.child,
@@ -139,7 +161,7 @@ class _AdminLayoutState extends State<AdminLayout> {
                   _toggleSidebar();
                 }
               },
-              [i(classes: 'bi bi-list fs-4 text-dark', [])],
+              [i(classes: 'bi bi-list fs-4 text-body', [])],
             ),
           ]),
           li(classes: 'nav-item d-none d-md-block', [
@@ -158,108 +180,112 @@ class _AdminLayoutState extends State<AdminLayout> {
         ]),
 
         // Interactive Premium Global Search Bar (UI/UX Upgraded)
-        div(classes: 'navbar-search position-relative d-none d-md-block ms-md-4 flex-grow-1 max-w-400px', [
-          div(classes: 'input-group input-group-sm rounded-pill border bg-body-tertiary shadow-xs overflow-hidden px-2 py-1 align-items-center', [
-            span(classes: 'input-group-text bg-transparent border-0 pe-1 text-primary', [
-              i(classes: 'bi bi-search fs-7', []),
-            ]),
-            input(
-              type: InputType.text,
-              classes: 'form-control border-0 bg-transparent shadow-none fs-7 py-1',
-              attributes: {
-                'placeholder': 'Cari produk, invoice, pelanggan... (Ctrl+K)',
-                'value': headerSearchQuery,
-              },
-              events: {
-                'input': (e) {
-                  setState(() {
-                    headerSearchQuery = (e.target as html.InputElement).value ?? '';
-                  });
-                }
-              },
-            ),
-            if (headerSearchQuery.isNotEmpty)
-              button(
-                type: ButtonType.button,
-                classes: 'btn btn-sm btn-link text-secondary p-0 me-1 border-0 text-decoration-none',
-                events: {'click': (e) => setState(() => headerSearchQuery = '')},
-                [i(classes: 'bi bi-x-circle-fill fs-7', [])]
-              )
-            else
-              span(classes: 'badge bg-secondary-subtle text-secondary border rounded px-1.5 py-0.5 fs-8 me-1 fw-mono', [
-                Component.text('Ctrl K'),
+        div(
+          classes: 'navbar-search position-relative d-none d-md-block ms-md-4 flex-grow-1 max-w-400px',
+          styles: Styles(maxWidth: 400.px),
+          [
+            div(classes: 'input-group input-group-sm rounded-pill border bg-body-tertiary shadow-xs overflow-hidden px-2 py-1 align-items-center', [
+              span(classes: 'input-group-text bg-transparent border-0 pe-1 text-primary', [
+                i(classes: 'bi bi-search fs-7', []),
               ]),
-          ]),
-
-          // Live Search Results Dropdown Overlay
-          if (headerSearchQuery.trim().isNotEmpty)
-            div(classes: 'position-absolute top-100 start-0 w-100 mt-1 bg-white border rounded-3 shadow-lg z-3 overflow-hidden p-2 text-start', [
-              if (matchedProducts.isEmpty && matchedOrders.isEmpty && matchedCustomers.isEmpty)
-                div(classes: 'p-3 text-center text-muted fs-7', [
-                  i(classes: 'bi bi-search text-secondary mb-1 d-block fs-5', []),
-                  Component.text('Tidak ditemukan hasil untuk "${headerSearchQuery.trim()}"'),
-                ])
-              else ...[
-                if (matchedProducts.isNotEmpty) ...[
-                  div(classes: 'px-2 py-1 fs-8 fw-bold text-uppercase text-muted border-bottom mb-1', [Component.text('Produk Katalog')]),
-                  for (var p in matchedProducts)
-                    Link(
-                      to: AdminRouteCrypto.pathFor('products'),
-                      child: a(
-                        classes: 'dropdown-item py-1.5 px-2 rounded-2 d-flex align-items-center justify-content-between fs-7 text-dark',
-                        href: AdminRouteCrypto.pathFor('products'),
-                        events: {'click': (e) => setState(() => headerSearchQuery = '')},
-                        [
-                          div(classes: 'd-flex align-items-center gap-2', [
-                            i(classes: 'bi bi-box-seam text-warning', []),
-                            span(classes: 'fw-semibold text-truncate max-w-200px', [Component.text(p.name)]),
-                          ]),
-                          span(classes: 'fw-bold text-danger fs-8', [Component.text('Rp ${p.price.toInt()}')]),
-                        ],
-                      ),
-                    ),
-                ],
-                if (matchedOrders.isNotEmpty) ...[
-                  div(classes: 'px-2 py-1 fs-8 fw-bold text-uppercase text-muted border-bottom mt-2 mb-1', [Component.text('Pesanan & Invoice')]),
-                  for (var o in matchedOrders)
-                    Link(
-                      to: AdminRouteCrypto.pathFor('orders'),
-                      child: a(
-                        classes: 'dropdown-item py-1.5 px-2 rounded-2 d-flex align-items-center justify-content-between fs-7 text-dark',
-                        href: AdminRouteCrypto.pathFor('orders'),
-                        events: {'click': (e) => setState(() => headerSearchQuery = '')},
-                        [
-                          div(classes: 'd-flex align-items-center gap-2', [
-                            i(classes: 'bi bi-receipt text-primary', []),
-                            span(classes: 'fw-semibold', [Component.text(o.orderNo)]),
-                          ]),
-                          span(classes: 'badge bg-primary-subtle text-primary fs-8', [Component.text(o.customerName)]),
-                        ],
-                      ),
-                    ),
-                ],
-                if (matchedCustomers.isNotEmpty) ...[
-                  div(classes: 'px-2 py-1 fs-8 fw-bold text-uppercase text-muted border-bottom mt-2 mb-1', [Component.text('Pelanggan CRM')]),
-                  for (var c in matchedCustomers)
-                    Link(
-                      to: AdminRouteCrypto.pathFor('customers'),
-                      child: a(
-                        classes: 'dropdown-item py-1.5 px-2 rounded-2 d-flex align-items-center justify-content-between fs-7 text-dark',
-                        href: AdminRouteCrypto.pathFor('customers'),
-                        events: {'click': (e) => setState(() => headerSearchQuery = '')},
-                        [
-                          div(classes: 'd-flex align-items-center gap-2', [
-                            i(classes: 'bi bi-person text-success', []),
-                            span(classes: 'fw-semibold', [Component.text(c.name)]),
-                          ]),
-                          small(classes: 'text-muted fs-8', [Component.text(c.phone)]),
-                        ],
-                      ),
-                    ),
-                ],
-              ],
+              input(
+                type: InputType.text,
+                classes: 'form-control border-0 bg-transparent shadow-none fs-7 py-1',
+                attributes: {
+                  'placeholder': 'Cari produk, invoice, pelanggan... (Ctrl+K)',
+                  'value': headerSearchQuery,
+                },
+                events: {
+                  'input': (e) {
+                    setState(() {
+                      headerSearchQuery = (e.target as html.InputElement).value ?? '';
+                    });
+                  }
+                },
+              ),
+              if (headerSearchQuery.isNotEmpty)
+                button(
+                  type: ButtonType.button,
+                  classes: 'btn btn-sm btn-link text-secondary p-0 me-1 border-0 text-decoration-none',
+                  events: {'click': (e) => setState(() => headerSearchQuery = '')},
+                  [i(classes: 'bi bi-x-circle-fill fs-7', [])]
+                )
+              else
+                span(classes: 'badge bg-secondary-subtle text-secondary border rounded px-1.5 py-0.5 fs-8 me-1 fw-mono', [
+                  Component.text('Ctrl K'),
+                ]),
             ]),
-        ]),
+
+            // Live Search Results Dropdown Overlay
+            if (headerSearchQuery.trim().isNotEmpty)
+              div(classes: 'position-absolute top-100 start-0 w-100 mt-1 bg-body border rounded-3 shadow-lg z-3 overflow-hidden p-2 text-start', [
+                if (matchedProducts.isEmpty && matchedOrders.isEmpty && matchedCustomers.isEmpty)
+                  div(classes: 'p-3 text-center text-muted fs-7', [
+                    i(classes: 'bi bi-search text-secondary mb-1 d-block fs-5', []),
+                    Component.text('Tidak ditemukan hasil untuk "${headerSearchQuery.trim()}"'),
+                  ])
+                else ...[
+                  if (matchedProducts.isNotEmpty) ...[
+                    div(classes: 'px-2 py-1 fs-8 fw-bold text-uppercase text-muted border-bottom mb-1', [Component.text('Produk Katalog')]),
+                    for (var p in matchedProducts)
+                      Link(
+                        to: AdminRouteCrypto.pathFor('products'),
+                        child: a(
+                          classes: 'dropdown-item py-1.5 px-2 rounded-2 d-flex align-items-center justify-content-between fs-7 text-body',
+                          href: AdminRouteCrypto.pathFor('products'),
+                          events: {'click': (e) => setState(() => headerSearchQuery = '')},
+                          [
+                            div(classes: 'd-flex align-items-center gap-2', [
+                              i(classes: 'bi bi-box-seam text-warning', []),
+                              span(classes: 'fw-semibold text-truncate max-w-200px', [Component.text(p.name)]),
+                            ]),
+                            span(classes: 'fw-bold text-danger fs-8', [Component.text('Rp ${p.price.toInt()}')]),
+                          ],
+                        ),
+                      ),
+                  ],
+                  if (matchedOrders.isNotEmpty) ...[
+                    div(classes: 'px-2 py-1 fs-8 fw-bold text-uppercase text-muted border-bottom mt-2 mb-1', [Component.text('Pesanan & Invoice')]),
+                    for (var o in matchedOrders)
+                      Link(
+                        to: AdminRouteCrypto.pathFor('orders'),
+                        child: a(
+                          classes: 'dropdown-item py-1.5 px-2 rounded-2 d-flex align-items-center justify-content-between fs-7 text-body',
+                          href: AdminRouteCrypto.pathFor('orders'),
+                          events: {'click': (e) => setState(() => headerSearchQuery = '')},
+                          [
+                            div(classes: 'd-flex align-items-center gap-2', [
+                              i(classes: 'bi bi-receipt text-primary', []),
+                              span(classes: 'fw-semibold', [Component.text(o.orderNo)]),
+                            ]),
+                            span(classes: 'badge bg-primary-subtle text-primary fs-8', [Component.text(o.customerName)]),
+                          ],
+                        ),
+                      ),
+                  ],
+                  if (matchedCustomers.isNotEmpty) ...[
+                    div(classes: 'px-2 py-1 fs-8 fw-bold text-uppercase text-muted border-bottom mt-2 mb-1', [Component.text('Pelanggan CRM')]),
+                    for (var c in matchedCustomers)
+                      Link(
+                        to: AdminRouteCrypto.pathFor('customers'),
+                        child: a(
+                          classes: 'dropdown-item py-1.5 px-2 rounded-2 d-flex align-items-center justify-content-between fs-7 text-body',
+                          href: AdminRouteCrypto.pathFor('customers'),
+                          events: {'click': (e) => setState(() => headerSearchQuery = '')},
+                          [
+                            div(classes: 'd-flex align-items-center gap-2', [
+                              i(classes: 'bi bi-person text-success', []),
+                              span(classes: 'fw-semibold', [Component.text(c.name)]),
+                            ]),
+                            small(classes: 'text-muted fs-8', [Component.text(c.phone)]),
+                          ],
+                        ),
+                      ),
+                  ],
+                ],
+              ]),
+          ],
+        ),
 
         // Right Navbar Icons
         ul(classes: 'navbar-nav ms-auto align-items-center gap-1', [
@@ -291,18 +317,42 @@ class _AdminLayoutState extends State<AdminLayout> {
             a(classes: 'nav-link dropdown-toggle d-flex align-items-center gap-1', href: '#', id: 'bd-theme', attributes: {'data-bs-toggle': 'dropdown'}, [
               i(classes: 'bi bi-sun-fill text-warning fs-5', []),
             ]),
-            ul(classes: 'dropdown-menu dropdown-menu-end shadow-sm', [
+            ul(classes: 'dropdown-menu dropdown-menu-end shadow-sm bg-body', [
               li([
-                button(type: ButtonType.button, classes: 'dropdown-item d-flex align-items-center gap-2', attributes: {'data-bs-theme-value': 'light'}, [
-                  i(classes: 'bi bi-sun-fill text-warning', []),
-                  Component.text('Light Mode'),
-                ]),
+                button(
+                  type: ButtonType.button,
+                  classes: 'dropdown-item d-flex align-items-center gap-2 text-body',
+                  attributes: {'data-bs-theme-value': 'light'},
+                  events: {
+                    'click': (e) {
+                      html.document.documentElement?.setAttribute('data-bs-theme', 'light');
+                      html.window.localStorage['lte-theme'] = 'light';
+                      setState(() {});
+                    }
+                  },
+                  [
+                    i(classes: 'bi bi-sun-fill text-warning', []),
+                    Component.text('Light Mode'),
+                  ],
+                ),
               ]),
               li([
-                button(type: ButtonType.button, classes: 'dropdown-item d-flex align-items-center gap-2', attributes: {'data-bs-theme-value': 'dark'}, [
-                  i(classes: 'bi bi-moon-fill text-primary', []),
-                  Component.text('Dark Mode'),
-                ]),
+                button(
+                  type: ButtonType.button,
+                  classes: 'dropdown-item d-flex align-items-center gap-2 text-body',
+                  attributes: {'data-bs-theme-value': 'dark'},
+                  events: {
+                    'click': (e) {
+                      html.document.documentElement?.setAttribute('data-bs-theme', 'dark');
+                      html.window.localStorage['lte-theme'] = 'dark';
+                      setState(() {});
+                    }
+                  },
+                  [
+                    i(classes: 'bi bi-moon-fill text-primary', []),
+                    Component.text('Dark Mode'),
+                  ],
+                ),
               ]),
             ]),
           ]),
@@ -350,8 +400,8 @@ class _AdminLayoutState extends State<AdminLayout> {
                 [Component.text('5')],
               ),
             ]),
-            ul(classes: 'dropdown-menu dropdown-menu-lg dropdown-menu-end shadow p-0', [
-              li(classes: 'dropdown-header bg-light fw-bold text-dark py-2 px-3 border-bottom', [
+            ul(classes: 'dropdown-menu dropdown-menu-lg dropdown-menu-end shadow p-0 bg-body border', [
+              li(classes: 'dropdown-header bg-body-tertiary fw-bold text-body py-2 px-3 border-bottom', [
                 Component.text('Notifikasi Aktivitas Toko'),
               ]),
               li([
@@ -360,7 +410,7 @@ class _AdminLayoutState extends State<AdminLayout> {
                   child: a(classes: 'dropdown-item py-2 px-3 border-bottom d-flex align-items-center justify-content-between', href: AdminRouteCrypto.pathFor('orders'), [
                     div(classes: 'd-flex align-items-center gap-2', [
                       i(classes: 'bi bi-cart-check text-primary fs-5', []),
-                      span(classes: 'fs-7 text-dark fw-medium', [Component.text('Pesanan Baru Masuk')]),
+                      span(classes: 'fs-7 text-body fw-medium', [Component.text('Pesanan Baru Masuk')]),
                     ]),
                     small(classes: 'text-muted fs-7', [Component.text('Baru saja')]),
                   ]),
@@ -379,14 +429,14 @@ class _AdminLayoutState extends State<AdminLayout> {
               ),
               span(classes: 'd-none d-md-inline fw-semibold', [Component.text(user?.name ?? 'Admin')]),
             ]),
-            ul(classes: 'dropdown-menu dropdown-menu-lg dropdown-menu-end shadow-sm p-3', [
+            ul(classes: 'dropdown-menu dropdown-menu-lg dropdown-menu-end shadow-sm p-3 bg-body border', [
               li(classes: 'text-center border-bottom pb-3 mb-2', [
                 div(
                   classes: 'bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold mx-auto mb-2 display-6',
                   styles: Styles(width: 50.px, height: 50.px),
                   [Component.text(initial)],
                 ),
-                h6(classes: 'fw-bold text-dark mb-0', [Component.text(user?.name ?? 'Admin')]),
+                h6(classes: 'fw-bold text-body mb-0', [Component.text(user?.name ?? 'Admin')]),
                 small(classes: 'badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill mt-1', [
                   Component.text(user?.role ?? 'Super Admin'),
                 ]),
@@ -394,7 +444,7 @@ class _AdminLayoutState extends State<AdminLayout> {
               li([
                 Link(
                   to: AdminRouteCrypto.pathFor('profile'),
-                  child: a(classes: 'dropdown-item py-2 d-flex align-items-center gap-2', href: AdminRouteCrypto.pathFor('profile'), [
+                  child: a(classes: 'dropdown-item py-2 d-flex align-items-center gap-2 text-body', href: AdminRouteCrypto.pathFor('profile'), [
                     i(classes: 'bi bi-person-circle text-primary', []),
                     Component.text('Lihat Profil Lengkap'),
                   ]),
@@ -403,7 +453,7 @@ class _AdminLayoutState extends State<AdminLayout> {
               li([
                 Link(
                   to: AdminRouteCrypto.pathFor('settings'),
-                  child: a(classes: 'dropdown-item py-2 d-flex align-items-center gap-2', href: AdminRouteCrypto.pathFor('settings'), [
+                  child: a(classes: 'dropdown-item py-2 d-flex align-items-center gap-2 text-body', href: AdminRouteCrypto.pathFor('settings'), [
                     i(classes: 'bi bi-gear text-secondary', []),
                     Component.text('Pengaturan Toko'),
                   ]),
@@ -463,6 +513,7 @@ class _AdminLayoutState extends State<AdminLayout> {
                 _buildNavItem(AdminRouteCrypto.pathFor('landing'), 'Manajemen Landing Page', 'bi-window-stack', AdminRouteCrypto.isPageActive(currentPath, 'landing'), badgeText: 'CMS', badgeClass: 'bg-danger'),
                 _buildNavItem(AdminRouteCrypto.pathFor('products'), 'Katalog & Stok', 'bi-box-seam', AdminRouteCrypto.isPageActive(currentPath, 'products'), badgeText: 'Hot'),
                 _buildNavItem(AdminRouteCrypto.pathFor('orders'), 'Pesanan Toko', 'bi-cart-check', AdminRouteCrypto.isPageActive(currentPath, 'orders'), badgeText: 'Dinamis', badgeClass: 'bg-primary'),
+                _buildNavItem(AdminRouteCrypto.pathFor('kanban'), 'Fulfillment Kanban', 'bi-kanban', AdminRouteCrypto.isPageActive(currentPath, 'kanban'), badgeText: 'Gudang', badgeClass: 'bg-warning text-dark'),
 
                 li(classes: 'nav-header text-uppercase text-secondary fw-bold fs-7 px-3 mt-3 mb-1', [
                   Component.text('PELANGGAN & PEMASARAN'),

@@ -52,10 +52,68 @@
       }
       
       body {
-        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      }
+      body.bg-pink-cream:not(.layout-fixed) {
         color: #2C221E;
         background-color: #FAF6F2;
       }
+      body.layout-fixed {
+        font-family: 'Source Sans 3', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+        color: var(--bs-body-color);
+        background-color: var(--bs-body-bg);
+      }
+      .app-wrapper {
+        min-height: 100vh;
+        background-color: var(--bs-body-bg);
+      }
+      .app-main {
+        background-color: var(--bs-tertiary-bg);
+      }
+
+      /* AdminLTE 4 Sidebar Overlay (Mobile Drawer Backdrop) */
+      .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.45);
+        z-index: 1035;
+        display: none;
+        backdrop-filter: blur(2px);
+      }
+      body.sidebar-open .sidebar-overlay {
+        display: block;
+      }
+      @media (min-width: 992px) {
+        .sidebar-overlay {
+          display: none !important;
+        }
+        body.sidebar-collapse .app-wrapper {
+          grid-template-columns: 0 1fr !important;
+        }
+        body.sidebar-collapse .app-sidebar {
+          min-width: 0 !important;
+          max-width: 0 !important;
+          width: 0 !important;
+          overflow: hidden !important;
+          border-right: none !important;
+          transform: translateX(-100%) !important;
+          visibility: hidden !important;
+          margin-left: 0 !important;
+          padding: 0 !important;
+        }
+      }
+
+      .max-w-400px { max-width: 400px !important; }
+      .max-w-200px { max-width: 200px !important; }
+      .max-w-160px { max-width: 160px !important; }
+      .fs-7 { font-size: 0.875rem !important; }
+      .fs-8 { font-size: 0.75rem !important; }
+      .shadow-xs { box-shadow: 0 1px 3px rgba(0,0,0,0.06) !important; }
 
       .font-serif-heading {
         font-family: 'Playfair Display', Georgia, serif !important;
@@ -465,37 +523,61 @@
         touch-action: auto !important;
       }
 
-      /* Desktop Sidebar Expand & Collapse State Handling */
+      /* AdminLTE 4 Desktop Sidebar Expand & Collapse State Handling */
+      .app-sidebar {
+        z-index: 1038;
+      }
+
       @media (min-width: 992px) {
-        body:not(.sidebar-collapse) .app-sidebar {
-          width: 250px !important;
-          position: fixed !important;
+        body.layout-fixed:not(.sidebar-collapse) .app-sidebar {
+          width: 250px;
+          min-width: 250px;
+          max-width: 250px;
+          position: sticky;
           top: 0;
-          left: 0;
-          bottom: 0;
-          z-index: 1038;
-          display: block !important;
-        }
-        body:not(.sidebar-collapse) .app-header,
-        body:not(.sidebar-collapse) .app-main,
-        body:not(.sidebar-collapse) .app-footer {
-          margin-left: 250px !important;
-          transition: margin-left 0.25s ease-in-out;
+          height: 100vh;
         }
 
-        body.sidebar-collapse .app-sidebar {
-          display: none !important;
+        body.layout-fixed.sidebar-collapse .app-sidebar {
+          margin-left: -250px;
+          transition: margin-left 0.3s ease-in-out;
         }
-        body.sidebar-collapse .app-header,
-        body.sidebar-collapse .app-main,
-        body.sidebar-collapse .app-footer {
+
+        body.layout-fixed .app-header,
+        body.layout-fixed .app-main,
+        body.layout-fixed .app-footer {
           margin-left: 0 !important;
-          transition: margin-left 0.25s ease-in-out;
         }
       }
 
-      /* Mobile Device Fixes */
+      /* Mobile Device Offcanvas Sidebar Drawer */
       @media (max-width: 991.98px) {
+        .app-sidebar {
+          position: fixed !important;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          width: 260px !important;
+          max-width: 85vw !important;
+          z-index: 1045 !important;
+          margin-left: -280px !important;
+          transition: margin-left 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+        }
+
+        body.sidebar-open .app-sidebar {
+          margin-left: 0 !important;
+          box-shadow: 0 0 30px rgba(0,0,0,0.5) !important;
+        }
+
+        body.sidebar-open::after {
+          content: "";
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.45);
+          z-index: 1040;
+          backdrop-filter: blur(2px);
+        }
+
         .app-header, .app-main, .app-footer {
           margin-left: 0 !important;
         }

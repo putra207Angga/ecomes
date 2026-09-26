@@ -96,6 +96,7 @@ class OrderItem {
   final String courier;
   String status; // 'Pending', 'Diproses', 'Dikirim', 'Selesai', 'Dibatalkan'
   final String paymentMethod;
+  String vaNumber;
   String trackingNo;
   String cancelReason;
   final List<OrderProductItem> items;
@@ -110,6 +111,7 @@ class OrderItem {
     required this.courier,
     required this.status,
     required this.paymentMethod,
+    this.vaNumber = '',
     this.trackingNo = '',
     this.cancelReason = '',
     required this.items,
@@ -125,6 +127,7 @@ class OrderItem {
     'courier': courier,
     'status': status,
     'paymentMethod': paymentMethod,
+    'vaNumber': vaNumber,
     'trackingNo': trackingNo,
     'cancelReason': cancelReason,
     'items': items.map((e) => e.toJson()).toList(),
@@ -140,6 +143,7 @@ class OrderItem {
     courier: json['courier'] as String,
     status: json['status'] as String,
     paymentMethod: json['paymentMethod'] as String,
+    vaNumber: (json['vaNumber'] ?? '') as String,
     trackingNo: (json['trackingNo'] ?? '') as String,
     cancelReason: (json['cancelReason'] ?? '') as String,
     items: (json['items'] as List<dynamic>).map((e) => OrderProductItem.fromJson(e as Map<String, dynamic>)).toList(),

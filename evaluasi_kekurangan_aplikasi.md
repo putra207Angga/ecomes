@@ -57,8 +57,21 @@ Aplikasi ini kini telah memenuhi standar **Enterprise-Grade ERP Admin System** d
 * 🟢 **Form Update Profil & Password:** Manajemen identitas admin dan kredensial password.
 
 ### 10. 🌐 Progressive Web App (PWA) & Security
-* 🟢 **PWA Service Worker (`sw.js`):** Script `sw.js` terdaftar di [index.html](file:///d:/Users/Projek/Freelance/web/ecomes/web/index.html) untuk *offline asset caching* dan dukungan PWA Desktop App.
+* 🟢 **PWA Service Worker (`sw.js`):** Script `sw.js` terdaftar di `web/index.html` untuk *offline asset caching* dan dukungan PWA Desktop App.
 * 🟢 **Auth Guards & Session Token:** Rute dilindungi verifikasi login `AuthService` dengan 3 mode akun demo.
+
+### 11. 💳 Panduan Pembayaran Virtual Account & Multi-Metode Checkout (`/` & `/invoice`)
+* 🟢 **Multi-Payment Selector:** Pilihan metode pembayaran terintegrasi di keranjang: BCA VA, Mandiri VA, BRI VA (BRIVA), BNI VA, QRIS Instant, & WhatsApp Store.
+* 🟢 **Modal Panduan Pembayaran Virtual Account:** Nomor VA otomatis 16-digit, 1-click salin nomor VA & nominal, countdown timer 24 jam, dan tab panduan langkah transfer (m-Banking, ATM, Internet Banking).
+* 🟢 **Simulasi Pembayaran Instan (Instant Lunas):** Tombol simulasi bayar langsung mengonfirmasi status pesanan menjadi *Diproses*, update transaksi ke *settlement*, dan notifikasi audio chime.
+* 🟢 **Panduan Pembayaran di Halaman Invoice:** Lembar invoice memuat nomor VA dan petunjuk langkah transfer bank lengkap saat dicetak atau diunduh PDF.
+
+### 12. 📋 Fulfillment Kanban Board (`/kanban`)
+* 🟢 **Visual Pipeline 4 Kolom:** Papan alur gudang (*1. Pesanan Masuk -> 2. Packing & Rajutan -> 3. Pengiriman Kurir -> 4. Pesanan Selesai*).
+* 🟢 **Aksi Cepat & Cetak Stiker Thermal:** Tombol advance status per kartu pesanan, filter kurir ekspedisi, dan cetak label thermal 10x15 langsung dari papan kanban.
+
+### 13. ☁️ Supabase PostgreSQL Cloud 2-Way Sync
+* 🟢 **Sinkronisasi 2-Arah:** Sinkronisasi cloud otomatis dan tombol trigger live sync di Pengaturan Toko (`/settings`) untuk tabel `products`, `customers`, `orders`, `order_items`, dan `landing_config`.
 
 ---
 

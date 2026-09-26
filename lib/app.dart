@@ -8,6 +8,7 @@ import 'pages/chat_page.dart';
 import 'pages/customers.dart';
 import 'pages/home.dart';
 import 'pages/invoice_page.dart';
+import 'pages/kanban.dart';
 import 'pages/landing_cms.dart';
 import 'pages/landing_page.dart';
 import 'pages/login.dart';
@@ -127,6 +128,10 @@ class App extends StatelessComponent {
             Route(path: '/ecomes/orders', title: 'Pesanan Toko - E-Comes Admin', builder: (context, state) => const OrdersPage()),
             Route(path: '/admin/orders', title: 'Pesanan Toko - E-Comes Admin', builder: (context, state) => const OrdersPage()),
             Route(path: '/ecomes/admin/orders', title: 'Pesanan Toko - E-Comes Admin', builder: (context, state) => const OrdersPage()),
+            Route(path: '/kanban', title: 'Fulfillment Kanban - E-Comes Admin', builder: (context, state) => const KanbanPage()),
+            Route(path: '/ecomes/kanban', title: 'Fulfillment Kanban - E-Comes Admin', builder: (context, state) => const KanbanPage()),
+            Route(path: '/admin/kanban', title: 'Fulfillment Kanban - E-Comes Admin', builder: (context, state) => const KanbanPage()),
+            Route(path: '/ecomes/admin/kanban', title: 'Fulfillment Kanban - E-Comes Admin', builder: (context, state) => const KanbanPage()),
             Route(path: '/customers', title: 'Pelanggan - E-Comes Admin', builder: (context, state) => const CustomersPage()),
             Route(path: '/ecomes/customers', title: 'Pelanggan - E-Comes Admin', builder: (context, state) => const CustomersPage()),
             Route(path: '/admin/customers', title: 'Pelanggan - E-Comes Admin', builder: (context, state) => const CustomersPage()),

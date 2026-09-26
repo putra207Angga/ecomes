@@ -88,7 +88,7 @@ class _CustomersPageState extends State<CustomersPage> {
         div(classes: 'container-fluid', [
           div(classes: 'row align-items-center', [
             div(classes: 'col-sm-6', [
-              h3(classes: 'mb-0 fw-bold text-dark', [Component.text('Direktori Pelanggan & CRM Toko')]),
+              h3(classes: 'mb-0 fw-bold text-body-emphasis', [Component.text('Direktori Pelanggan & CRM Toko')]),
               p(classes: 'text-muted mb-0 fs-7', [Component.text('Manajemen database pembeli, status keanggotaan VIP, dan riwayat LTV.')]),
             ]),
             div(classes: 'col-sm-6 text-sm-end mt-2 mt-sm-0', [
@@ -116,14 +116,14 @@ class _CustomersPageState extends State<CustomersPage> {
       ]),
 
       // 2. Customers Table
-      div(classes: 'card shadow-sm border-0 rounded-3', [
-        div(classes: 'card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between gap-2', [
+      div(classes: 'card shadow-sm border-0 rounded-3 bg-body', [
+        div(classes: 'card-header bg-body py-3 border-bottom d-flex align-items-center justify-content-between gap-2', [
           div(classes: 'd-flex align-items-center gap-2', [
             i(classes: 'bi bi-people-fill text-primary fs-5', []),
-            h5(classes: 'card-title fw-bold mb-0 text-dark', [Component.text('Daftar Pembeli Terdaftar')]),
+            h5(classes: 'card-title fw-bold mb-0 text-body-emphasis', [Component.text('Daftar Pembeli Terdaftar')]),
           ]),
           div(classes: 'input-group input-group-sm ms-auto', styles: Styles(width: 250.px), [
-            span(classes: 'input-group-text bg-light border-end-0', [i(classes: 'bi bi-search', [])]),
+            span(classes: 'input-group-text bg-body-tertiary border-end-0', [i(classes: 'bi bi-search', [])]),
             input(
               type: InputType.text,
               classes: 'form-control border-start-0',
@@ -170,7 +170,7 @@ class _CustomersPageState extends State<CustomersPage> {
                             [Component.text(c.avatar)],
                           ),
                           div([
-                            div(classes: 'fw-bold fs-7 text-dark', [
+                            div(classes: 'fw-bold fs-7 text-body-emphasis', [
                               Component.text(c.name),
                               if (c.isBlocked)
                                 span(classes: 'badge bg-danger ms-2 fs-8', [Component.text('Dibloki')]),
@@ -181,17 +181,17 @@ class _CustomersPageState extends State<CustomersPage> {
                       ]),
                       td(classes: 'fs-7 text-start text-nowrap', [
                         div([
-                          div(classes: 'text-dark', [Component.text(c.email)]),
+                          div(classes: 'text-body-emphasis', [Component.text(c.email)]),
                           small(classes: 'text-muted fs-8', [Component.text(c.phone)]),
                         ]),
                       ]),
                       td(classes: 'text-center text-nowrap', [
-                        span(classes: 'badge ${c.level.contains('VIP') ? 'bg-warning text-dark' : 'bg-light text-dark border'} rounded-pill fs-8', [
+                        span(classes: 'badge ${c.level.contains('VIP') ? 'bg-warning text-dark' : 'bg-body-secondary text-body-emphasis border'} rounded-pill fs-8', [
                           if (c.level.contains('VIP')) i(classes: 'bi bi-star-fill me-1 text-dark', []),
                           Component.text(c.level),
                         ]),
                       ]),
-                      td(classes: 'fs-7 fw-semibold text-dark text-center text-nowrap', [
+                      td(classes: 'fs-7 fw-semibold text-body-emphasis text-center text-nowrap', [
                         Component.text('${c.totalOrders} Pesanan'),
                       ]),
                       td(classes: 'fw-bold text-primary fs-7 text-start text-nowrap', [
@@ -228,7 +228,7 @@ class _CustomersPageState extends State<CustomersPage> {
       if (activeCustomerDetail != null)
         div(classes: 'modal fade show d-block bg-dark bg-opacity-50', attributes: {'tabindex': '-1'}, [
           div(classes: 'modal-dialog modal-dialog-centered', [
-            div(classes: 'modal-content border-0 shadow-lg rounded-4 overflow-hidden', [
+            div(classes: 'modal-content bg-body text-body border-0 shadow-lg rounded-4 overflow-hidden', [
               div(classes: 'modal-header bg-primary text-white py-3', [
                 h5(classes: 'modal-title fw-bold fs-6', [
                   i(classes: 'bi bi-person-lines-fill me-2', []),
@@ -241,7 +241,7 @@ class _CustomersPageState extends State<CustomersPage> {
                   [],
                 ),
               ]),
-              div(classes: 'modal-body p-4 text-dark fs-7', [
+              div(classes: 'modal-body p-4 text-body fs-7', [
                 div(classes: 'd-flex align-items-center gap-3 border-bottom pb-3 mb-3', [
                   div(
                     classes: 'bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold fs-4 shadow-sm',
@@ -249,7 +249,7 @@ class _CustomersPageState extends State<CustomersPage> {
                     [Component.text(activeCustomerDetail!.avatar)],
                   ),
                   div([
-                    h5(classes: 'fw-bold mb-1', [Component.text(activeCustomerDetail!.name)]),
+                    h5(classes: 'fw-bold text-body-emphasis mb-1', [Component.text(activeCustomerDetail!.name)]),
                     span(classes: 'badge bg-warning text-dark me-2', [Component.text(activeCustomerDetail!.level)]),
                     small(classes: 'text-muted', [Component.text(activeCustomerDetail!.id)]),
                   ]),
@@ -266,10 +266,10 @@ class _CustomersPageState extends State<CustomersPage> {
                   strong(classes: 'text-muted d-block fs-8', [Component.text('ALAMAT UTAMA PENGIRIMAN:')]),
                   Component.text(activeCustomerDetail!.address),
                 ]),
-                div(classes: 'p-3 bg-light rounded-3 border mt-3 d-flex justify-content-between', [
+                div(classes: 'p-3 bg-body-tertiary rounded-3 border mt-3 d-flex justify-content-between', [
                   div([
                     small(classes: 'text-muted d-block fs-8', [Component.text('Total Pesanan')]),
-                    strong(classes: 'fs-6 text-dark', [Component.text('${activeCustomerDetail!.totalOrders} Order')]),
+                    strong(classes: 'fs-6 text-body-emphasis', [Component.text('${activeCustomerDetail!.totalOrders} Order')]),
                   ]),
                   div(classes: 'text-end', [
                     small(classes: 'text-muted d-block fs-8', [Component.text('Lifetime Value (LTV)')]),
@@ -277,7 +277,7 @@ class _CustomersPageState extends State<CustomersPage> {
                   ]),
                 ]),
               ]),
-              div(classes: 'modal-footer bg-light py-3', [
+              div(classes: 'modal-footer bg-body-tertiary border-top py-3', [
                 button(
                   type: ButtonType.button,
                   classes: 'btn btn-secondary px-4',
@@ -293,7 +293,7 @@ class _CustomersPageState extends State<CustomersPage> {
       if (showAddModal)
         div(classes: 'modal fade show d-block bg-dark bg-opacity-50', attributes: {'tabindex': '-1'}, [
           div(classes: 'modal-dialog modal-dialog-centered', [
-            div(classes: 'modal-content border-0 shadow-lg rounded-4 overflow-hidden', [
+            div(classes: 'modal-content bg-body text-body border-0 shadow-lg rounded-4 overflow-hidden', [
               div(classes: 'modal-header bg-primary text-white py-3', [
                 h5(classes: 'modal-title fw-bold fs-6', [
                   i(classes: 'bi bi-person-plus me-2', []),
@@ -306,7 +306,7 @@ class _CustomersPageState extends State<CustomersPage> {
                   [],
                 ),
               ]),
-              div(classes: 'modal-body p-4', [
+              div(classes: 'modal-body p-4 bg-body', [
                 form([
                   div(classes: 'mb-3', [
                     label(classes: 'form-label fw-semibold fs-7', [Component.text('Nama Lengkap')]),
@@ -377,7 +377,7 @@ class _CustomersPageState extends State<CustomersPage> {
                   ]),
                 ]),
               ]),
-              div(classes: 'modal-footer bg-light py-3', [
+              div(classes: 'modal-footer bg-body-tertiary border-top py-3', [
                 button(
                   type: ButtonType.button,
                   classes: 'btn btn-secondary px-3',

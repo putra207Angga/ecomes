@@ -93,7 +93,7 @@ class _OrdersPageState extends State<OrdersPage> {
         div(classes: 'container-fluid', [
           div(classes: 'row align-items-center', [
             div(classes: 'col-sm-6', [
-              h3(classes: 'mb-0 fw-bold text-dark', [Component.text('Kelola Pesanan & Fulfillment Toko')]),
+              h3(classes: 'mb-0 fw-bold text-body-emphasis', [Component.text('Kelola Pesanan & Fulfillment Toko')]),
               p(classes: 'text-muted mb-0 fs-7', [Component.text('Verifikasi pembayaran, cetak label resi pengiriman, dan proses pengemasan.')]),
             ]),
             div(classes: 'col-sm-6 text-sm-end mt-2 mt-sm-0', [
@@ -121,7 +121,7 @@ class _OrdersPageState extends State<OrdersPage> {
       ]),
 
       // 2. Status Filter Pills
-      div(classes: 'card shadow-sm border-0 mb-4 rounded-3 p-2 bg-white d-print-none', [
+      div(classes: 'card shadow-sm border-0 mb-4 rounded-3 p-2 bg-body d-print-none', [
         div(classes: 'd-flex flex-wrap align-items-center justify-content-between gap-2', [
           ul(classes: 'nav nav-pills gap-1', [
             _buildFilterPill('Semua', allOrders.length),
@@ -132,10 +132,10 @@ class _OrdersPageState extends State<OrdersPage> {
             _buildFilterPill('Dibatalkan', allOrders.where((e) => e.status == 'Dibatalkan').length, colorClass: 'bg-danger'),
           ]),
           div(classes: 'input-group input-group-sm', styles: Styles(width: 220.px), [
-            span(classes: 'input-group-text bg-light', [i(classes: 'bi bi-search', [])]),
+            span(classes: 'input-group-text bg-body-tertiary border-end-0', [i(classes: 'bi bi-search', [])]),
             input(
               type: InputType.text,
-              classes: 'form-control',
+              classes: 'form-control border-start-0',
               value: searchQuery,
               attributes: {'placeholder': 'Cari No. Order / Pembeli...'},
               events: {
@@ -151,19 +151,19 @@ class _OrdersPageState extends State<OrdersPage> {
       ]),
 
       // 3. Orders Table
-      div(classes: 'card shadow-sm border-0 rounded-3 d-print-none', [
+      div(classes: 'card shadow-sm border-0 rounded-3 bg-body d-print-none', [
         div(classes: 'card-body p-0', [
           div(classes: 'table-responsive', [
             table(classes: 'table table-hover align-middle mb-0', [
               thead(classes: 'table-light fs-7', [
                 tr([
-                  th(classes: 'ps-3', [Component.text('No. Invoice & Tanggal')]),
-                  th([Component.text('Pelanggan')]),
-                  th([Component.text('Metode Pembayaran')]),
-                  th([Component.text('Ekspedisi & Resi')]),
-                  th([Component.text('Total Transaksi')]),
-                  th([Component.text('Status')]),
-                  th(classes: 'text-end pe-3', [Component.text('Aksi Status & Label')]),
+                  th(classes: 'ps-3 text-nowrap', [Component.text('No. Invoice & Tanggal')]),
+                  th(classes: 'text-nowrap', [Component.text('Pelanggan')]),
+                  th(classes: 'text-nowrap', [Component.text('Metode Pembayaran')]),
+                  th(classes: 'text-nowrap', [Component.text('Ekspedisi & Resi')]),
+                  th(classes: 'text-nowrap', [Component.text('Total Transaksi')]),
+                  th(classes: 'text-center text-nowrap', [Component.text('Status')]),
+                  th(classes: 'text-end pe-3 text-nowrap', [Component.text('Aksi Status & Label')]),
                 ]),
               ]),
               tbody([
@@ -177,7 +177,7 @@ class _OrdersPageState extends State<OrdersPage> {
                 else
                   for (var o in filteredOrders)
                     tr([
-                      td(classes: 'ps-3', [
+                      td(classes: 'ps-3 text-nowrap', [
                         div([
                           div(classes: 'fw-bold fs-7 text-primary', [Component.text(o.orderNo)]),
                           div(classes: 'text-muted fs-8', [Component.text(o.date)]),
@@ -185,7 +185,7 @@ class _OrdersPageState extends State<OrdersPage> {
                       ]),
                       td([
                         div([
-                          div(classes: 'fw-semibold fs-7 text-dark', [Component.text(o.customerName)]),
+                          div(classes: 'fw-semibold fs-7 text-body-emphasis', [Component.text(o.customerName)]),
                           button(
                             type: ButtonType.button,
                             classes: 'btn btn-link btn-sm p-0 text-success text-decoration-none fs-8',
@@ -197,30 +197,30 @@ class _OrdersPageState extends State<OrdersPage> {
                           ),
                         ]),
                       ]),
-                      td(classes: 'fs-7', [
-                        span(classes: 'badge bg-light text-dark border', [Component.text(o.paymentMethod)]),
+                      td(classes: 'fs-7 text-nowrap', [
+                        span(classes: 'badge bg-body-secondary text-body-emphasis border', [Component.text(o.paymentMethod)]),
                       ]),
-                      td(classes: 'fs-7', [
-                        div(classes: 'fw-semibold text-dark', [Component.text(o.courier)]),
+                      td(classes: 'fs-7 text-nowrap', [
+                        div(classes: 'fw-semibold text-body-emphasis', [Component.text(o.courier)]),
                         if (o.trackingNo.isNotEmpty)
                           small(classes: 'text-primary fw-bold fs-8', [Component.text('Resi: ${o.trackingNo}')])
                         else
                           small(classes: 'text-muted fs-8', [Component.text('Belum ada resi')]),
                       ]),
-                      td(classes: 'fw-bold fs-7 text-dark', [Component.text('Rp ${o.total.toInt()}')]),
-                      td([
+                      td(classes: 'fw-bold fs-7 text-body-emphasis text-nowrap', [Component.text('Rp ${o.total.toInt()}')]),
+                      td(classes: 'text-nowrap', [
                         span(classes: 'badge ${_getStatusBadge(o.status)} rounded-pill fs-8', [
                           Component.text(o.status),
                         ]),
                         if (o.cancelReason.isNotEmpty)
                           small(classes: 'text-danger d-block fs-8', [Component.text('Alasan: ${o.cancelReason}')]),
                       ]),
-                      td(classes: 'text-end pe-3', [
+                      td(classes: 'text-end pe-3 text-nowrap', [
                         div(classes: 'd-flex align-items-center justify-content-end gap-1', [
                           // 1. Detail Button
                           button(
                             type: ButtonType.button,
-                            classes: 'btn btn-sm btn-light border text-primary rounded-circle shadow-sm px-2 py-1',
+                            classes: 'btn btn-sm btn-outline-secondary border text-primary rounded-circle shadow-sm px-2 py-1',
                             attributes: {'title': 'Lihat Rincian & Detail Pesanan', 'data-bs-toggle': 'tooltip'},
                             events: {'click': (e) => setState(() => activeOrderForDetail = o)},
                             [i(classes: 'bi bi-eye-fill fs-7', [])],
@@ -312,15 +312,15 @@ class _OrdersPageState extends State<OrdersPage> {
                   [],
                 ),
               ]),
-              div(classes: 'modal-body p-4 bg-light', [
+              div(classes: 'modal-body p-4 bg-body-tertiary', [
                 div(classes: 'row g-3 mb-4', [
                   div(classes: 'col-md-6', [
-                    div(classes: 'p-3 bg-white rounded-3 border shadow-sm h-100', [
-                      h6(classes: 'fw-bold text-dark fs-7 mb-2 border-bottom pb-2', [
+                    div(classes: 'p-3 bg-body rounded-3 border shadow-sm h-100', [
+                      h6(classes: 'fw-bold text-body-emphasis fs-7 mb-2 border-bottom pb-2', [
                         i(classes: 'bi bi-person-fill text-primary me-2', []),
                         Component.text('Informasi Pemesan'),
                       ]),
-                      p(classes: 'mb-1 fs-7 text-dark fw-bold', [Component.text(activeOrderForDetail!.customerName)]),
+                      p(classes: 'mb-1 fs-7 text-body-emphasis fw-bold', [Component.text(activeOrderForDetail!.customerName)]),
                       p(classes: 'mb-1 fs-7 text-muted', [
                         i(classes: 'bi bi-telephone me-1', []),
                         Component.text(activeOrderForDetail!.customerPhone),
@@ -337,8 +337,8 @@ class _OrdersPageState extends State<OrdersPage> {
                     ]),
                   ]),
                   div(classes: 'col-md-6', [
-                    div(classes: 'p-3 bg-white rounded-3 border shadow-sm h-100', [
-                      h6(classes: 'fw-bold text-dark fs-7 mb-2 border-bottom pb-2', [
+                    div(classes: 'p-3 bg-body rounded-3 border shadow-sm h-100', [
+                      h6(classes: 'fw-bold text-body-emphasis fs-7 mb-2 border-bottom pb-2', [
                         i(classes: 'bi bi-truck text-primary me-2', []),
                         Component.text('Status & Pengiriman'),
                       ]),
@@ -348,9 +348,16 @@ class _OrdersPageState extends State<OrdersPage> {
                           Component.text(activeOrderForDetail!.status),
                         ]),
                       ]),
-                      p(classes: 'mb-1 fs-7 text-dark fw-semibold', [
+                      p(classes: 'mb-1 fs-7 text-body-emphasis fw-semibold', [
                         Component.text('Ekspedisi: ${activeOrderForDetail!.courier}'),
                       ]),
+                      p(classes: 'mb-1 fs-7 text-muted', [
+                        Component.text('Metode Bayar: ${activeOrderForDetail!.paymentMethod}'),
+                      ]),
+                      if (activeOrderForDetail!.vaNumber.isNotEmpty)
+                        p(classes: 'mb-1 fs-8 text-primary fw-bold font-monospace', [
+                          Component.text('No. VA: ${activeOrderForDetail!.vaNumber}'),
+                        ]),
                       if (activeOrderForDetail!.trackingNo.isNotEmpty)
                         p(classes: 'mb-0 fs-7 text-primary fw-bold font-monospace', [
                           Component.text('No Resi: ${activeOrderForDetail!.trackingNo}'),
@@ -360,13 +367,13 @@ class _OrdersPageState extends State<OrdersPage> {
                     ]),
                   ]),
                 ]),
-                div(classes: 'bg-white rounded-3 border shadow-sm p-3 mb-3', [
-                  h6(classes: 'fw-bold text-dark fs-7 mb-3 border-bottom pb-2', [
+                div(classes: 'bg-body rounded-3 border shadow-sm p-3 mb-3', [
+                  h6(classes: 'fw-bold text-body-emphasis fs-7 mb-3 border-bottom pb-2', [
                     i(classes: 'bi bi-bag-fill text-primary me-2', []),
                     Component.text('Daftar Produk Yang Dipesan'),
                   ]),
                   table(classes: 'table table-hover align-middle mb-0 fs-7', [
-                    thead(classes: 'table-light', [
+                    thead(classes: 'table-light fs-7', [
                       tr([
                         th([Component.text('Nama Produk')]),
                         th(classes: 'text-center', [Component.text('Jumlah')]),
@@ -377,7 +384,7 @@ class _OrdersPageState extends State<OrdersPage> {
                     tbody([
                       for (var item in activeOrderForDetail!.items)
                         tr([
-                          td(classes: 'fw-semibold text-dark', [
+                          td(classes: 'fw-semibold text-body-emphasis', [
                             Component.text(item.productName),
                             if (item.customColor.isNotEmpty || item.yarnType.isNotEmpty)
                               span(classes: 'badge bg-danger-subtle text-danger ms-2 fs-8', [
@@ -388,17 +395,17 @@ class _OrdersPageState extends State<OrdersPage> {
                           ]),
                           td(classes: 'text-center fw-bold', [Component.text('x${item.qty}')]),
                           td(classes: 'text-end text-muted', [Component.text('Rp ${item.price.toInt()}')]),
-                          td(classes: 'text-end fw-bold text-dark', [Component.text('Rp ${(item.price * item.qty).toInt()}')]),
+                          td(classes: 'text-end fw-bold text-body-emphasis', [Component.text('Rp ${(item.price * item.qty).toInt()}')]),
                         ]),
                     ]),
                   ]),
                   div(classes: 'd-flex justify-content-between align-items-center border-top pt-3 mt-3', [
-                    span(classes: 'fw-bold text-dark fs-6', [Component.text('Total Pembayaran:')]),
+                    span(classes: 'fw-bold text-body-emphasis fs-6', [Component.text('Total Pembayaran:')]),
                     span(classes: 'fw-extrabold text-danger fs-5', [Component.text('Rp ${activeOrderForDetail!.total.toInt()}')]),
                   ]),
                 ]),
               ]),
-              div(classes: 'modal-footer bg-white py-3', [
+              div(classes: 'modal-footer bg-body border-top py-3', [
                 button(
                   type: ButtonType.button,
                   classes: 'btn btn-secondary px-3 rounded-pill fw-semibold',
@@ -407,7 +414,7 @@ class _OrdersPageState extends State<OrdersPage> {
                 ),
                 button(
                   type: ButtonType.button,
-                  classes: 'btn btn-dark px-3 rounded-pill fw-semibold',
+                  classes: 'btn btn-primary px-3 rounded-pill fw-semibold',
                   events: {
                     'click': (e) {
                       final target = activeOrderForDetail!;
@@ -431,7 +438,7 @@ class _OrdersPageState extends State<OrdersPage> {
       if (activeOrderForTracking != null)
         div(classes: 'modal fade show d-block bg-dark bg-opacity-50 d-print-none', attributes: {'tabindex': '-1'}, [
           div(classes: 'modal-dialog modal-dialog-centered', [
-            div(classes: 'modal-content border-0 shadow-lg rounded-4 overflow-hidden', [
+            div(classes: 'modal-content bg-body text-body border-0 shadow-lg rounded-4 overflow-hidden', [
               div(classes: 'modal-header bg-primary text-white py-3', [
                 h5(classes: 'modal-title fw-bold fs-6', [
                   i(classes: 'bi bi-truck me-2', []),
@@ -444,7 +451,7 @@ class _OrdersPageState extends State<OrdersPage> {
                   [],
                 ),
               ]),
-              div(classes: 'modal-body p-4', [
+              div(classes: 'modal-body p-4 bg-body', [
                 p(classes: 'fs-7 text-muted mb-3', [
                   Component.text('Masukkan nomor resi resmi pengiriman untuk pesanan '),
                   strong([Component.text(activeOrderForTracking!.orderNo)]),
@@ -463,7 +470,7 @@ class _OrdersPageState extends State<OrdersPage> {
                   ),
                 ]),
               ]),
-              div(classes: 'modal-footer bg-light py-3', [
+              div(classes: 'modal-footer bg-body-tertiary border-top py-3', [
                 button(
                   type: ButtonType.button,
                   classes: 'btn btn-secondary px-3',
@@ -485,7 +492,7 @@ class _OrdersPageState extends State<OrdersPage> {
       if (activeOrderForCancel != null)
         div(classes: 'modal fade show d-block bg-dark bg-opacity-50 d-print-none', attributes: {'tabindex': '-1'}, [
           div(classes: 'modal-dialog modal-dialog-centered', [
-            div(classes: 'modal-content border-0 shadow-lg rounded-4 overflow-hidden', [
+            div(classes: 'modal-content bg-body text-body border-0 shadow-lg rounded-4 overflow-hidden', [
               div(classes: 'modal-header bg-danger text-white py-3', [
                 h5(classes: 'modal-title fw-bold fs-6', [
                   i(classes: 'bi bi-x-circle me-2', []),
@@ -498,7 +505,7 @@ class _OrdersPageState extends State<OrdersPage> {
                   [],
                 ),
               ]),
-              div(classes: 'modal-body p-4', [
+              div(classes: 'modal-body p-4 bg-body', [
                 p(classes: 'fs-7 text-muted mb-3', [
                   Component.text('Silakan pilih alasan pembatalan untuk pesanan '),
                   strong([Component.text(activeOrderForCancel!.orderNo)]),
@@ -521,7 +528,7 @@ class _OrdersPageState extends State<OrdersPage> {
                   ),
                 ]),
               ]),
-              div(classes: 'modal-footer bg-light py-3', [
+              div(classes: 'modal-footer bg-body-tertiary border-top py-3', [
                 button(
                   type: ButtonType.button,
                   classes: 'btn btn-secondary px-3',
@@ -546,7 +553,7 @@ class _OrdersPageState extends State<OrdersPage> {
       if (activeOrderForShippingLabel != null)
         div(classes: 'modal fade show d-block bg-dark bg-opacity-75', attributes: {'tabindex': '-1'}, [
           div(classes: 'modal-dialog modal-dialog-centered', [
-            div(classes: 'modal-content border-0 shadow-lg rounded-4 overflow-hidden', [
+            div(classes: 'modal-content bg-body text-body border-0 shadow-lg rounded-4 overflow-hidden', [
               div(classes: 'modal-header bg-dark text-white py-2 d-print-none', [
                 h6(classes: 'modal-title fw-bold mb-0', [Component.text('Pratinjau Label Resi Thermal')]),
                 button(
@@ -556,7 +563,7 @@ class _OrdersPageState extends State<OrdersPage> {
                   [],
                 ),
               ]),
-              div(classes: 'modal-body p-3 bg-light d-flex justify-content-center', [
+              div(classes: 'modal-body p-3 bg-body-tertiary d-flex justify-content-center', [
                 div(
                   classes: 'bg-white p-4 border border-2 border-dark rounded-3 shadow text-dark font-sans-serif',
                   styles: Styles(width: 380.px, minHeight: 520.px),
@@ -605,7 +612,7 @@ class _OrdersPageState extends State<OrdersPage> {
                   ],
                 ),
               ]),
-              div(classes: 'modal-footer bg-light py-3 d-print-none', [
+              div(classes: 'modal-footer bg-body border-top py-3 d-print-none', [
                 button(
                   type: ButtonType.button,
                   classes: 'btn btn-secondary px-3',
@@ -634,7 +641,7 @@ class _OrdersPageState extends State<OrdersPage> {
     return li(classes: 'nav-item', [
       button(
         type: ButtonType.button,
-        classes: 'nav-link rounded-pill px-3 py-1 fs-7 ${isActive ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-body-emphasis bg-light'}',
+        classes: 'nav-link rounded-pill px-3 py-1 fs-7 ${isActive ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-body-emphasis bg-body-tertiary'}',
         events: {'click': (e) => setState(() => selectedStatus = status)},
         [
           Component.text(status),

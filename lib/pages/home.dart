@@ -50,7 +50,7 @@ class _HomeState extends State<Home> {
         div(classes: 'container-fluid', [
           div(classes: 'row align-items-center', [
             div(classes: 'col-sm-6', [
-              h3(classes: 'mb-0 fw-bold text-dark', [Component.text('Dashboard V1 - Ringkasan Toko')]),
+              h3(classes: 'mb-0 fw-bold text-body-emphasis', [Component.text('Dashboard V1 - Ringkasan Toko')]),
               p(classes: 'text-muted mb-0 fs-7', [Component.text('Pantau kinerja penjualan, statistik stok, dan pesanan terbaru.')]),
             ]),
             div(classes: 'col-sm-6', [
@@ -71,7 +71,7 @@ class _HomeState extends State<Home> {
       ]),
 
       // 2.5 Status Database DB Widget (Embedded SQLite / Zero External Server Required)
-      div(classes: 'card border-0 shadow-sm rounded-4 mb-4 bg-gradient bg-light overflow-hidden', [
+      div(classes: 'card border shadow-sm rounded-4 mb-4 bg-body overflow-hidden', [
         div(classes: 'card-body p-3 p-md-4 d-flex align-items-center justify-content-between flex-wrap gap-3', [
           div(classes: 'd-flex align-items-center gap-3', [
             div(classes: 'bg-success text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm flex-shrink-0', styles: Styles(width: 48.px, height: 48.px), [
@@ -79,7 +79,7 @@ class _HomeState extends State<Home> {
             ]),
             div([
               div(classes: 'd-flex align-items-center gap-2 mb-1', [
-                h6(classes: 'fw-bold text-dark mb-0 fs-6', [Component.text('Status Database Engine: Active')]),
+                h6(classes: 'fw-bold text-body-emphasis mb-0 fs-6', [Component.text('Status Database Engine: Active')]),
                 span(classes: 'badge bg-success-subtle text-success border border-success-subtle rounded-pill fs-8 fw-bold', [
                   Component.text('SQLite / Local DB Engine'),
                 ]),
@@ -104,9 +104,9 @@ class _HomeState extends State<Home> {
         // Left Column (Charts & Map)
         div(classes: 'col-lg-8', [
           // Sales Value Chart Card
-          div(classes: 'card shadow-sm border-0 mb-4 rounded-3 overflow-hidden', [
-            div(classes: 'card-header bg-white py-3 d-flex align-items-center justify-content-between border-bottom-0', [
-              h5(classes: 'card-title fw-bold mb-0 text-dark', [
+          div(classes: 'card shadow-sm border-0 mb-4 rounded-3 overflow-hidden bg-body', [
+            div(classes: 'card-header bg-body py-3 d-flex align-items-center justify-content-between border-bottom', [
+              h5(classes: 'card-title fw-bold mb-0 text-body-emphasis', [
                 i(classes: 'bi bi-graph-up-arrow text-primary me-2', []),
                 Component.text('Grafik Tren Penjualan & Profit (2026)'),
               ]),
@@ -136,9 +136,9 @@ class _HomeState extends State<Home> {
           ]),
 
           // Top Selling Products Card
-          div(classes: 'card shadow-sm border-0 rounded-3', [
-            div(classes: 'card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between', [
-              h5(classes: 'card-title fw-bold mb-0 text-dark', [
+          div(classes: 'card shadow-sm border-0 rounded-3 bg-body', [
+            div(classes: 'card-header bg-body py-3 border-bottom d-flex align-items-center justify-content-between', [
+              h5(classes: 'card-title fw-bold mb-0 text-body-emphasis', [
                 i(classes: 'bi bi-fire text-danger me-2', []),
                 Component.text('Produk Terlaris (Top Sellers)'),
               ]),
@@ -163,7 +163,7 @@ class _HomeState extends State<Home> {
                           div(classes: 'd-flex align-items-center gap-2', [
                             img(src: p.image, classes: 'rounded-2 border', attributes: {'width': '36', 'height': '36', 'alt': p.name}),
                             div([
-                              div(classes: 'fw-semibold fs-7 text-dark', [Component.text(p.name)]),
+                              div(classes: 'fw-semibold fs-7 text-body-emphasis', [Component.text(p.name)]),
                               div(classes: 'text-muted fs-8', [Component.text('SKU: ${p.sku}')]),
                             ]),
                           ]),
@@ -187,7 +187,7 @@ class _HomeState extends State<Home> {
         // Right Column (Direct Chat & Recent Orders)
         div(classes: 'col-lg-4', [
           // Direct Chat Support Widget
-          div(classes: 'card shadow-sm border-0 mb-4 rounded-3 overflow-hidden', [
+          div(classes: 'card shadow-sm border-0 mb-4 rounded-3 overflow-hidden bg-body', [
             div(classes: 'card-header bg-primary text-white py-3 d-flex align-items-center justify-content-between', [
               h5(classes: 'card-title fw-bold mb-0 fs-6', [
                 i(classes: 'bi bi-chat-dots-fill me-2', []),
@@ -195,13 +195,13 @@ class _HomeState extends State<Home> {
               ]),
               span(classes: 'badge bg-white text-primary rounded-pill fs-8', [Component.text('Online')]),
             ]),
-            div(classes: 'card-body bg-light p-3', [
+            div(classes: 'card-body bg-body-tertiary p-3', [
               div(classes: 'chat-messages overflow-y-auto mb-3 pe-1', styles: Styles(maxHeight: 240.px), [
                 for (var msg in store.chatMessages)
                   div(classes: 'mb-2 d-flex flex-column ${msg.isAdmin ? 'align-items-end' : 'align-items-start'}', [
                     span(classes: 'fs-8 text-muted mb-1', [Component.text('${msg.sender} • ${msg.time}')]),
                     div(
-                      classes: 'p-2 rounded-3 fs-7 ${msg.isAdmin ? 'bg-primary text-white' : 'bg-white border shadow-sm text-dark'}',
+                      classes: 'p-2 rounded-3 fs-7 ${msg.isAdmin ? 'bg-primary text-white' : 'bg-body border shadow-sm text-body'}',
                       styles: Styles(maxWidth: 85.percent),
                       [Component.text(msg.text)],
                     ),
@@ -238,7 +238,7 @@ class _HomeState extends State<Home> {
 
           // Quick Action Box
           div(classes: 'card shadow-sm border-0 rounded-3 bg-body-tertiary p-3', [
-            h6(classes: 'fw-bold text-dark mb-3', [
+            h6(classes: 'fw-bold text-body-emphasis mb-3', [
               i(classes: 'bi bi-lightning-charge-fill text-warning me-2', []),
               Component.text('Aksi Cepat Manajemen'),
             ]),
@@ -259,7 +259,7 @@ class _HomeState extends State<Home> {
               ),
               Link(
                 to: AdminRouteCrypto.pathFor('promos'),
-                child: a(classes: 'btn btn-outline-warning text-dark btn-sm text-start d-flex align-items-center justify-content-between', href: AdminRouteCrypto.pathFor('promos'), [
+                child: a(classes: 'btn btn-outline-warning btn-sm text-start d-flex align-items-center justify-content-between', href: AdminRouteCrypto.pathFor('promos'), [
                   span([i(classes: 'bi bi-ticket-perforated me-2', []), Component.text('Buat Voucher Promo')]),
                   i(classes: 'bi bi-chevron-right', []),
                 ]),
@@ -272,6 +272,11 @@ class _HomeState extends State<Home> {
   }
 
   Component _buildSmallBox(String title, String subtitle, String icon, String colorClass, String route) {
+    final isWarning = colorClass.contains('warning');
+    final footerClass = isWarning
+        ? 'small-box-footer d-block text-dark text-decoration-none mt-3 pt-2 border-top border-dark border-opacity-25 fs-8 fw-semibold'
+        : 'small-box-footer d-block text-white text-decoration-none mt-3 pt-2 border-top border-white border-opacity-25 fs-8 fw-semibold';
+
     return div(classes: 'col-lg-3 col-sm-6', [
       div(classes: 'small-box $colorClass shadow-sm rounded-3 overflow-hidden position-relative p-3', [
         div(classes: 'inner', [
@@ -281,7 +286,7 @@ class _HomeState extends State<Home> {
         i(classes: 'bi $icon position-absolute bottom-0 end-0 fs-1 opacity-25 me-3 mb-2', []),
         Link(
           to: route,
-          child: a(classes: 'small-box-footer d-block text-white text-decoration-none mt-3 pt-2 border-top border-white border-opacity-25 fs-8 fw-semibold', href: route, [
+          child: a(classes: footerClass, href: route, [
             Component.text('Kelola Detail '),
             i(classes: 'bi bi-arrow-right-circle ms-1', []),
           ]),

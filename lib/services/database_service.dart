@@ -67,11 +67,23 @@ class DatabaseService {
           if (data.containsKey('categories')) {
             store.categories = (data['categories'] as List).map((e) => CategoryItem.fromJson(e)).toList();
           }
+          if (data.containsKey('brands')) {
+            store.brands = (data['brands'] as List).map((e) => BrandItem.fromJson(e)).toList();
+          }
+          if (data.containsKey('promos')) {
+            store.promos = (data['promos'] as List).map((e) => PromoItem.fromJson(e)).toList();
+          }
           if (data.containsKey('reviews')) {
             store.reviews = (data['reviews'] as List).map((e) => ReviewItem.fromJson(e)).toList();
           }
+          if (data.containsKey('chatMessages')) {
+            store.chatMessages = (data['chatMessages'] as List).map((e) => ChatMessageItem.fromJson(e)).toList();
+          }
           if (data.containsKey('settings')) {
             store.settings = StoreSettings.fromJson(data['settings']);
+          }
+          if (data.containsKey('landingConfig')) {
+            store.landingConfig = LandingConfig.fromJson(data['landingConfig']);
           }
 
           store.saveAll();
@@ -84,19 +96,29 @@ class DatabaseService {
     return false;
   }
 
-  // 3. REST API / Supabase Remote Database Sync Stub
+  // 3. REST API / Supabase Remote Database Sync
   Future<Map<String, dynamic>> syncWithCloudDatabase({
-    required String apiEndpoint,
-    required String apiKey,
+    String apiEndpoint = '',
+    String apiKey = '',
   }) async {
-    // Stub function ready to connect to external PostgreSQL / Supabase REST API
     final store = AppStore();
-    return {
-      'status': 'success',
-      'syncedProducts': store.products.length,
-      'syncedOrders': store.orders.length,
-      'endpoint': apiEndpoint.isEmpty ? 'https://api.supabase.co/rest/v1' : apiEndpoint,
-      'timestamp': DateTime.now().toIso8601String(),
-    };
+    try {
+      await store.syncWithSupabase();
+      return {
+        'status': 'success',
+        'syncedProducts': store.products.length,
+        'syncedOrders': store.orders.length,
+        'syncedCustomers': store.customers.length,
+        'endpoint': apiEndpoint.isEmpty ? 'https://lsyonosmjndjefhpmpoy.supabase.co/rest/v1' : apiEndpoint,
+        'timestamp': DateTime.now().toIso8601String(),
+      };
+    } catch (e) {
+      return {
+        'status': 'error',
+        'message': e.toString(),
+        'endpoint': apiEndpoint,
+        'timestamp': DateTime.now().toIso8601String(),
+      };
+    }
   }
 }

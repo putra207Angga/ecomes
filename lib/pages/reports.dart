@@ -59,7 +59,7 @@ class _ReportsPageState extends State<ReportsPage> {
         div(classes: 'container-fluid', [
           div(classes: 'row align-items-center', [
             div(classes: 'col-sm-6', [
-              h3(classes: 'mb-0 fw-bold text-dark', [Component.text('Laporan Keuangan & HPP Penjualan')]),
+              h3(classes: 'mb-0 fw-bold text-body-emphasis', [Component.text('Laporan Keuangan & HPP Penjualan')]),
               p(classes: 'text-muted mb-0 fs-7', [Component.text('Kalkulasi real-time omset kotor, HPP (modal benang & pengerjaan), dan laba bersih (Net Profit).')]),
             ]),
             div(classes: 'col-sm-6 text-sm-end mt-2 mt-sm-0', [
@@ -107,8 +107,8 @@ class _ReportsPageState extends State<ReportsPage> {
 
       // 3. Monthly Breakdown Table Card
       div(classes: 'card shadow-sm border-0 rounded-3', [
-        div(classes: 'card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between', [
-          h5(classes: 'card-title fw-bold mb-0 text-dark', [
+        div(classes: 'card-header bg-body py-3 border-bottom d-flex align-items-center justify-content-between', [
+          h5(classes: 'card-title fw-bold mb-0 text-body-emphasis', [
             i(classes: 'bi bi-calendar3 text-primary me-2', []),
             Component.text('Rekapitulasi Penjualan Per-Bulan Tahun 2026'),
           ]),
@@ -148,9 +148,9 @@ class _ReportsPageState extends State<ReportsPage> {
 
   Component _buildReportRow(String month, String orders, String omset, String ppn, String profit) {
     return tr([
-      td(classes: 'ps-3 text-start fw-semibold fs-7 text-dark text-nowrap', [Component.text(month)]),
+      td(classes: 'ps-3 text-start fw-semibold fs-7 text-body-emphasis text-nowrap', [Component.text(month)]),
       td(classes: 'fs-7 text-muted text-center text-nowrap', [Component.text('$orders Transaksi')]),
-      td(classes: 'fs-7 text-dark fw-bold text-start text-nowrap', [Component.text(omset)]),
+      td(classes: 'fs-7 text-body-emphasis fw-bold text-start text-nowrap', [Component.text(omset)]),
       td(classes: 'fs-7 text-muted text-start text-nowrap', [Component.text(ppn)]),
       td(classes: 'text-end pe-3 fs-7 fw-bold text-success text-nowrap', [Component.text(profit)]),
     ]);

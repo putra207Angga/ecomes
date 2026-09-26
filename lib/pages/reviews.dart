@@ -96,7 +96,7 @@ class _ReviewsPageState extends State<ReviewsPage> {
         div(classes: 'container-fluid', [
           div(classes: 'row align-items-center', [
             div(classes: 'col-sm-6', [
-              h3(classes: 'mb-0 fw-bold text-dark d-flex align-items-center gap-2', [
+              h3(classes: 'mb-0 fw-bold text-body-emphasis d-flex align-items-center gap-2', [
                 Component.text('Moderasi Ulasan & Rating Pembeli'),
                 if (pendingCount > 0)
                   span(classes: 'badge bg-danger rounded-pill fs-8', [
@@ -151,9 +151,9 @@ class _ReviewsPageState extends State<ReviewsPage> {
       ]),
 
       // 2. Reviews List Card
-      div(classes: 'card shadow-sm border-0 rounded-3', [
-        div(classes: 'card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between', [
-          h5(classes: 'card-title fw-bold mb-0 text-dark', [
+      div(classes: 'card shadow-sm border-0 rounded-3 bg-body', [
+        div(classes: 'card-header bg-body py-3 border-bottom d-flex align-items-center justify-content-between', [
+          h5(classes: 'card-title fw-bold mb-0 text-body-emphasis', [
             i(classes: 'bi bi-star-fill text-warning me-2', []),
             Component.text('Testimoni & Feedback Terbaru'),
           ]),
@@ -173,7 +173,7 @@ class _ReviewsPageState extends State<ReviewsPage> {
                   th([Component.text('Rating')]),
                   th([Component.text('Status Moderasi')]),
                   th([Component.text('Komentar Ulasan')]),
-                  th(classes: 'text-end pe-3', [Component.text('Aksi Moderasi')]),
+                  th(classes: 'text-end pe-3 text-nowrap', [Component.text('Aksi Moderasi')]),
                 ]),
               ]),
               tbody([
@@ -188,7 +188,7 @@ class _ReviewsPageState extends State<ReviewsPage> {
                     tr([
                       td(classes: 'ps-3', [
                         div([
-                          div(classes: 'fw-bold fs-7 text-dark', [Component.text(rev.customerName)]),
+                          div(classes: 'fw-bold fs-7 text-body-emphasis', [Component.text(rev.customerName)]),
                           div(classes: 'text-muted fs-8', [Component.text(rev.date)]),
                         ]),
                       ]),
@@ -196,7 +196,7 @@ class _ReviewsPageState extends State<ReviewsPage> {
                       td([
                         div(classes: 'text-warning fs-7', [
                           for (var idx = 0; idx < rev.rating; idx++) i(classes: 'bi bi-star-fill me-1', []),
-                          span(classes: 'text-dark fw-bold ms-1', [Component.text('${rev.rating}.0')]),
+                          span(classes: 'text-body-emphasis fw-bold ms-1', [Component.text('${rev.rating}.0')]),
                         ]),
                       ]),
                       td(classes: 'fs-7', [
@@ -211,15 +211,15 @@ class _ReviewsPageState extends State<ReviewsPage> {
                             Component.text('Disetujui Publik'),
                           ]),
                       ]),
-                      td(classes: 'fs-7 text-dark', styles: Styles(maxWidth: 240.px), [
+                      td(classes: 'fs-7 text-body', styles: Styles(maxWidth: 240.px), [
                         div([Component.text('"${rev.comment}"')]),
                         if (rev.replyText.isNotEmpty)
-                          div(classes: 'mt-1 p-2 bg-light rounded border text-muted fs-8', [
-                            strong(classes: 'text-dark d-block', [Component.text('Balasan Admin:')]),
+                          div(classes: 'mt-1 p-2 bg-body-tertiary rounded border text-muted fs-8', [
+                            strong(classes: 'text-body-emphasis d-block', [Component.text('Balasan Admin:')]),
                             Component.text(rev.replyText),
                           ]),
                       ]),
-                      td(classes: 'text-end pe-3', [
+                      td(classes: 'text-end pe-3 text-nowrap', [
                         if (rev.approvalStatus == 'Menunggu Moderasi')
                           button(
                             type: ButtonType.button,
@@ -257,7 +257,7 @@ class _ReviewsPageState extends State<ReviewsPage> {
       if (activeReviewForReply != null)
         div(classes: 'modal fade show d-block bg-dark bg-opacity-50', attributes: {'tabindex': '-1'}, [
           div(classes: 'modal-dialog modal-dialog-centered', [
-            div(classes: 'modal-content border-0 shadow-lg rounded-4 overflow-hidden', [
+            div(classes: 'modal-content border-0 shadow-lg rounded-4 overflow-hidden bg-body text-body', [
               div(classes: 'modal-header bg-primary text-white py-3', [
                 h5(classes: 'modal-title fw-bold fs-6', [
                   i(classes: 'bi bi-chat-left-quote me-2', []),
@@ -270,9 +270,9 @@ class _ReviewsPageState extends State<ReviewsPage> {
                   [],
                 ),
               ]),
-              div(classes: 'modal-body p-4', [
-                div(classes: 'p-3 bg-light rounded-3 border mb-3', [
-                  div(classes: 'fw-bold text-dark fs-7', [Component.text(activeReviewForReply!.customerName)]),
+              div(classes: 'modal-body p-4 bg-body', [
+                div(classes: 'p-3 bg-body-tertiary rounded-3 border mb-3', [
+                  div(classes: 'fw-bold text-body-emphasis fs-7', [Component.text(activeReviewForReply!.customerName)]),
                   div(classes: 'text-warning fs-8 mb-1', [
                     for (var idx = 0; idx < activeReviewForReply!.rating; idx++) i(classes: 'bi bi-star-fill me-1', []),
                   ]),
@@ -292,7 +292,7 @@ class _ReviewsPageState extends State<ReviewsPage> {
                   ),
                 ]),
               ]),
-              div(classes: 'modal-footer bg-light py-3', [
+              div(classes: 'modal-footer bg-body-tertiary border-top py-3', [
                 button(
                   type: ButtonType.button,
                   classes: 'btn btn-secondary px-3',
@@ -321,7 +321,7 @@ class _ReviewsPageState extends State<ReviewsPage> {
   Component _buildAddTestimonialModal() {
     return div(classes: 'modal fade show d-block bg-dark bg-opacity-50', attributes: {'tabindex': '-1'}, [
       div(classes: 'modal-dialog modal-dialog-centered', [
-        div(classes: 'modal-content border-0 shadow-lg rounded-4 overflow-hidden', [
+        div(classes: 'modal-content border-0 shadow-lg rounded-4 overflow-hidden bg-body text-body', [
           div(classes: 'modal-header bg-danger text-white py-3', [
             h5(classes: 'modal-title fw-bold fs-6', [
               i(classes: 'bi bi-star-fill me-2', []),
@@ -334,7 +334,7 @@ class _ReviewsPageState extends State<ReviewsPage> {
               [],
             ),
           ]),
-          div(classes: 'modal-body p-4 bg-light', [
+          div(classes: 'modal-body p-4 bg-body', [
             div(classes: 'row g-3', [
               div(classes: 'col-md-6', [
                 label(classes: 'form-label fw-bold fs-7', [Component.text('Nama Pelanggan / Pembeli')]),
@@ -377,7 +377,7 @@ class _ReviewsPageState extends State<ReviewsPage> {
               ]),
             ]),
           ]),
-          div(classes: 'modal-footer bg-white py-3', [
+          div(classes: 'modal-footer bg-body-tertiary border-top py-3', [
             button(
               type: ButtonType.button,
               classes: 'btn btn-secondary px-3 rounded-pill fw-semibold',

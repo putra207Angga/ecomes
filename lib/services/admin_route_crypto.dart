@@ -9,6 +9,7 @@ import '../pages/chat_page.dart';
 import '../pages/customers.dart';
 import '../pages/home.dart';
 import '../pages/invoice_page.dart';
+import '../pages/kanban.dart';
 import '../pages/landing_cms.dart';
 import '../pages/not_found.dart';
 import '../pages/orders.dart';
@@ -34,6 +35,7 @@ class AdminRouteCrypto {
     'dashboard': 'Dashboard V1 - E-Comes Admin',
     'products': 'Produk & Stok - E-Comes Admin',
     'orders': 'Pesanan Toko - E-Comes Admin',
+    'kanban': 'Fulfillment Kanban - E-Comes Admin',
     'customers': 'Pelanggan (CRM) - E-Comes Admin',
     'categories': 'Kategori & Brand - E-Comes Admin',
     'promos': 'Kupon & Diskon - E-Comes Admin',
@@ -168,6 +170,8 @@ class AdminRouteCrypto {
         return const ProductsPage();
       case 'orders':
         return const OrdersPage();
+      case 'kanban':
+        return const KanbanPage();
       case 'customers':
         return const CustomersPage();
       case 'categories':

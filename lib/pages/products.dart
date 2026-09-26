@@ -164,7 +164,7 @@ class _ProductsPageState extends State<ProductsPage> {
         div(classes: 'container-fluid', [
           div(classes: 'row align-items-center', [
             div(classes: 'col-sm-6', [
-              h3(classes: 'mb-0 fw-bold text-dark', [Component.text('Kelola Produk & Stok Inventaris')]),
+              h3(classes: 'mb-0 fw-bold text-body-emphasis', [Component.text('Kelola Produk & Stok Inventaris')]),
               p(classes: 'text-muted mb-0 fs-7', [Component.text('Manajemen katalog boneka amigurumi, produk rajutan handmade, penyesuaian stok, dan variasi harga.')]),
             ]),
             div(classes: 'col-sm-6 text-sm-end mt-2 mt-sm-0', [
@@ -210,16 +210,16 @@ class _ProductsPageState extends State<ProductsPage> {
       ]),
 
       // 3. Table Card
-      div(classes: 'card shadow-sm border-0 rounded-3', [
-        div(classes: 'card-header bg-white py-3 border-bottom d-flex flex-wrap align-items-center justify-content-between gap-2', [
+      div(classes: 'card shadow-sm border-0 rounded-3 bg-body', [
+        div(classes: 'card-header bg-body py-3 border-bottom d-flex flex-wrap align-items-center justify-content-between gap-2', [
           div(classes: 'd-flex align-items-center gap-2', [
             i(classes: 'bi bi-grid-3x3-gap-fill text-primary fs-5', []),
-            h5(classes: 'card-title fw-bold mb-0 text-dark', [Component.text('Daftar Produk Toko')]),
+            h5(classes: 'card-title fw-bold mb-0 text-body-emphasis', [Component.text('Daftar Produk Toko')]),
           ]),
           div(classes: 'd-flex flex-wrap align-items-center gap-2 ms-auto', [
             // Search Input
             div(classes: 'input-group input-group-sm', styles: Styles(width: 220.px), [
-              span(classes: 'input-group-text bg-light border-end-0', [i(classes: 'bi bi-search', [])]),
+              span(classes: 'input-group-text bg-body-tertiary border-end-0', [i(classes: 'bi bi-search', [])]),
               input(
                 type: InputType.text,
                 classes: 'form-control border-start-0',
@@ -315,7 +315,7 @@ class _ProductsPageState extends State<ProductsPage> {
                         div(classes: 'd-flex align-items-center gap-3', [
                           img(src: item.image, classes: 'rounded-3 border object-fit-cover', attributes: {'width': '48', 'height': '48', 'alt': item.name}),
                           div([
-                            div(classes: 'fw-bold fs-7 text-dark', [Component.text(item.name)]),
+                            div(classes: 'fw-bold fs-7 text-body-emphasis', [Component.text(item.name)]),
                             div(classes: 'text-muted fs-8', [Component.text('SKU: ${item.sku}')]),
                           ]),
                         ]),
@@ -331,7 +331,7 @@ class _ProductsPageState extends State<ProductsPage> {
                         ]),
                       ]),
                       td(classes: 'fs-7 text-center text-nowrap', [
-                        span(classes: 'fw-bold ${item.stock < 5 ? 'text-danger' : 'text-dark'}', [
+                        span(classes: 'fw-bold ${item.stock < 5 ? 'text-danger' : 'text-body-emphasis'}', [
                           Component.text('${item.stock} unit'),
                         ]),
                       ]),
@@ -340,7 +340,7 @@ class _ProductsPageState extends State<ProductsPage> {
                           Component.text(item.status),
                         ]),
                       ]),
-                      td(classes: 'text-end pe-3', [
+                      td(classes: 'text-end pe-3 text-nowrap', [
                         button(
                           type: ButtonType.button,
                           classes: 'btn btn-sm btn-outline-primary me-1',
@@ -366,7 +366,7 @@ class _ProductsPageState extends State<ProductsPage> {
       if (showAddModal)
         div(classes: 'modal fade show d-block bg-dark bg-opacity-50', attributes: {'tabindex': '-1'}, [
           div(classes: 'modal-dialog modal-dialog-centered modal-lg', [
-            div(classes: 'modal-content border-0 shadow-lg rounded-4 overflow-hidden', [
+            div(classes: 'modal-content bg-body text-body border-0 shadow-lg rounded-4 overflow-hidden', [
               div(classes: 'modal-header bg-primary text-white py-3', [
                 h5(classes: 'modal-title fw-bold fs-6', [
                   i(classes: 'bi bi-box-seam me-2', []),
@@ -379,7 +379,7 @@ class _ProductsPageState extends State<ProductsPage> {
                   [],
                 ),
               ]),
-              div(classes: 'modal-body p-4', [
+              div(classes: 'modal-body p-4 bg-body', [
                 form([
                   div(classes: 'row g-3', [
                     div(classes: 'col-md-8', [
@@ -506,7 +506,7 @@ class _ProductsPageState extends State<ProductsPage> {
                   ]),
                 ]),
               ]),
-              div(classes: 'modal-footer bg-light py-3', [
+              div(classes: 'modal-footer bg-body-tertiary border-top py-3', [
                 button(
                   type: ButtonType.button,
                   classes: 'btn btn-secondary px-3',

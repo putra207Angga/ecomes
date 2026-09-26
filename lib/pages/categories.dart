@@ -110,7 +110,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
         div(classes: 'container-fluid', [
           div(classes: 'row align-items-center', [
             div(classes: 'col-sm-6', [
-              h3(classes: 'mb-0 fw-bold text-dark', [Component.text('Taksonomi Kategori & Brand Mitra')]),
+              h3(classes: 'mb-0 fw-bold text-body-emphasis', [Component.text('Taksonomi Kategori & Brand Mitra')]),
               p(classes: 'text-muted mb-0 fs-7', [Component.text('Struktur pengelompokan produk dan lisensi brand resmi.')]),
             ]),
             div(classes: 'col-sm-6 text-sm-end mt-2 mt-sm-0', [
@@ -139,14 +139,14 @@ class _CategoriesPageState extends State<CategoriesPage> {
 
       // 2. Categories Grid Cards
       div(classes: 'mb-4', [
-        h5(classes: 'fw-bold text-dark mb-3', [
+        h5(classes: 'fw-bold text-body-emphasis mb-3', [
           i(classes: 'bi bi-grid-3x3-gap-fill text-primary me-2', []),
           Component.text('Kategori Utama Produk'),
         ]),
         div(classes: 'row g-3', [
           for (var cat in store.categories)
             div(classes: 'col-lg-4 col-md-6', [
-              div(classes: 'card shadow-sm border-0 rounded-3 p-3 position-relative', [
+              div(classes: 'card shadow-sm border-0 rounded-3 p-3 position-relative bg-body', [
                 div(classes: 'd-flex align-items-center justify-content-between', [
                   div(classes: 'd-flex align-items-center gap-3', [
                     div(
@@ -155,8 +155,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
                       [i(classes: 'bi ${cat.icon}', [])],
                     ),
                     div([
-                      h6(classes: 'fw-bold text-dark mb-1', [Component.text(cat.name)]),
-                      span(classes: 'badge bg-light text-dark border rounded-pill fs-8', [
+                      h6(classes: 'fw-bold text-body-emphasis mb-1', [Component.text(cat.name)]),
+                      span(classes: 'badge bg-body-secondary text-body-emphasis border rounded-pill fs-8', [
                         Component.text('${cat.productCount} Produk'),
                       ]),
                     ]),
@@ -182,9 +182,9 @@ class _CategoriesPageState extends State<CategoriesPage> {
       ]),
 
       // 3. Brands Table Card
-      div(classes: 'card shadow-sm border-0 rounded-3', [
-        div(classes: 'card-header bg-white py-3 border-bottom', [
-          h5(classes: 'card-title fw-bold mb-0 text-dark', [
+      div(classes: 'card shadow-sm border-0 rounded-3 bg-body', [
+        div(classes: 'card-header bg-body py-3 border-bottom', [
+          h5(classes: 'card-title fw-bold mb-0 text-body-emphasis', [
             i(classes: 'bi bi-award-fill text-warning me-2', []),
             Component.text('Daftar Brand Mitra Resmi'),
           ]),
@@ -206,7 +206,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                     td(classes: 'ps-3', [
                       div(classes: 'd-flex align-items-center gap-2', [
                         i(classes: 'bi ${b.logo} text-primary fs-5', []),
-                        span(classes: 'fw-bold fs-7 text-dark', [Component.text(b.name)]),
+                        span(classes: 'fw-bold fs-7 text-body-emphasis', [Component.text(b.name)]),
                       ]),
                     ]),
                     td(classes: 'fs-7', [Component.text(b.country)]),
@@ -236,7 +236,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
       if (showCatModal)
         div(classes: 'modal fade show d-block bg-dark bg-opacity-50', attributes: {'tabindex': '-1'}, [
           div(classes: 'modal-dialog modal-dialog-centered', [
-            div(classes: 'modal-content border-0 shadow-lg rounded-4 overflow-hidden', [
+            div(classes: 'modal-content bg-body text-body border-0 shadow-lg rounded-4 overflow-hidden', [
               div(classes: 'modal-header bg-primary text-white py-3', [
                 h5(classes: 'modal-title fw-bold fs-6', [
                   Component.text(editingCat == null ? 'Tambah Kategori Baru' : 'Edit Kategori'),
@@ -248,7 +248,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                   [],
                 ),
               ]),
-              div(classes: 'modal-body p-4', [
+              div(classes: 'modal-body p-4 bg-body', [
                 div(classes: 'mb-3', [
                   label(classes: 'form-label fw-semibold fs-7', [Component.text('Nama Kategori')]),
                   input(
@@ -281,7 +281,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                   ),
                 ]),
               ]),
-              div(classes: 'modal-footer bg-light py-3', [
+              div(classes: 'modal-footer bg-body-tertiary border-top py-3', [
                 button(
                   type: ButtonType.button,
                   classes: 'btn btn-secondary px-3',
@@ -303,7 +303,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
       if (showBrandModal)
         div(classes: 'modal fade show d-block bg-dark bg-opacity-50', attributes: {'tabindex': '-1'}, [
           div(classes: 'modal-dialog modal-dialog-centered', [
-            div(classes: 'modal-content border-0 shadow-lg rounded-4 overflow-hidden', [
+            div(classes: 'modal-content bg-body text-body border-0 shadow-lg rounded-4 overflow-hidden', [
               div(classes: 'modal-header bg-primary text-white py-3', [
                 h5(classes: 'modal-title fw-bold fs-6', [
                   Component.text(editingBrand == null ? 'Tambah Brand Baru' : 'Edit Brand Mitra'),
@@ -315,7 +315,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                   [],
                 ),
               ]),
-              div(classes: 'modal-body p-4', [
+              div(classes: 'modal-body p-4 bg-body', [
                 div(classes: 'mb-3', [
                   label(classes: 'form-label fw-semibold fs-7', [Component.text('Nama Brand / Merek')]),
                   input(
@@ -343,7 +343,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                   ),
                 ]),
               ]),
-              div(classes: 'modal-footer bg-light py-3', [
+              div(classes: 'modal-footer bg-body-tertiary border-top py-3', [
                 button(
                   type: ButtonType.button,
                   classes: 'btn btn-secondary px-3',

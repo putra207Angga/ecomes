@@ -75,7 +75,7 @@ class _PromosPageState extends State<PromosPage> {
         div(classes: 'container-fluid', [
           div(classes: 'row align-items-center', [
             div(classes: 'col-sm-6', [
-              h3(classes: 'mb-0 fw-bold text-dark', [Component.text('Kupon Diskon & Campaign Promosi')]),
+              h3(classes: 'mb-0 fw-bold text-body-emphasis', [Component.text('Kupon Diskon & Campaign Promosi')]),
               p(classes: 'text-muted mb-0 fs-7', [Component.text('Manajemen kode voucher, potongan harga, dan campaign Flash Sale.')]),
             ]),
             div(classes: 'col-sm-6 text-sm-end mt-2 mt-sm-0', [
@@ -94,9 +94,9 @@ class _PromosPageState extends State<PromosPage> {
       ]),
 
       // 2. Promos Table Card
-      div(classes: 'card shadow-sm border-0 rounded-3', [
-        div(classes: 'card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between', [
-          h5(classes: 'card-title fw-bold mb-0 text-dark', [
+      div(classes: 'card shadow-sm border-0 rounded-3 bg-body', [
+        div(classes: 'card-header bg-body py-3 border-bottom d-flex align-items-center justify-content-between', [
+          h5(classes: 'card-title fw-bold mb-0 text-body-emphasis', [
             i(classes: 'bi bi-tags-fill text-primary me-2', []),
             Component.text('Voucher Aktif & Campaign'),
           ]),
@@ -127,7 +127,7 @@ class _PromosPageState extends State<PromosPage> {
                         Component.text(p.code),
                       ]),
                     ]),
-                    td(classes: 'fw-bold fs-7 text-dark text-start text-nowrap', [Component.text(p.discountText)]),
+                    td(classes: 'fw-bold fs-7 text-body-emphasis text-start text-nowrap', [Component.text(p.discountText)]),
                     td(classes: 'fs-7 text-start text-nowrap', [Component.text('Rp ${p.minPurchase.toInt()}')]),
                     td(classes: 'fs-7 text-muted text-start text-nowrap', [Component.text('Rp ${p.maxDiscount.toInt()}')]),
                     td(classes: 'fs-7 text-center text-nowrap', [
@@ -145,7 +145,7 @@ class _PromosPageState extends State<PromosPage> {
                     td(classes: 'text-end pe-3 text-nowrap', [
                       button(
                         type: ButtonType.button,
-                        classes: 'btn btn-sm ${p.isActive ? 'btn-outline-warning text-dark' : 'btn-outline-success'} me-1',
+                        classes: 'btn btn-sm ${p.isActive ? 'btn-outline-warning' : 'btn-outline-success'} me-1',
                         events: {'click': (e) => _toggleStatus(p.id)},
                         [
                           i(classes: 'bi ${p.isActive ? 'bi-toggle-on' : 'bi-toggle-off'} me-1', []),
@@ -170,7 +170,7 @@ class _PromosPageState extends State<PromosPage> {
       if (showAddModal)
         div(classes: 'modal fade show d-block bg-dark bg-opacity-50', attributes: {'tabindex': '-1'}, [
           div(classes: 'modal-dialog modal-dialog-centered', [
-            div(classes: 'modal-content border-0 shadow-lg rounded-4 overflow-hidden', [
+            div(classes: 'modal-content bg-body text-body border-0 shadow-lg rounded-4 overflow-hidden', [
               div(classes: 'modal-header bg-primary text-white py-3', [
                 h5(classes: 'modal-title fw-bold fs-6', [Component.text('Buat Voucher Promo Baru')]),
                 button(
@@ -180,7 +180,7 @@ class _PromosPageState extends State<PromosPage> {
                   [],
                 ),
               ]),
-              div(classes: 'modal-body p-4', [
+              div(classes: 'modal-body p-4 bg-body', [
                 div(classes: 'mb-3', [
                   label(classes: 'form-label fw-semibold fs-7', [Component.text('Kode Voucher (Kapital)')]),
                   input(
@@ -264,7 +264,7 @@ class _PromosPageState extends State<PromosPage> {
                   ]),
                 ]),
               ]),
-              div(classes: 'modal-footer bg-light py-3', [
+              div(classes: 'modal-footer bg-body-tertiary border-top py-3', [
                 button(
                   type: ButtonType.button,
                   classes: 'btn btn-secondary px-3',
